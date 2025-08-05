@@ -1,67 +1,94 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+name: Deploy to EC2
 
 on:
   push:
-    branches: [ "2-chore-cicd" ]
-  pull_request:
-    branches: [ "2-chore-cicd" ]
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'admin'
+        required: true
+        default: 'user'
+      message:
+        description: 'message'
+        required: false
+        default: '수동 워크플로우 트리거'
+
+permissions:
+  contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      # 기본 체크아웃
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
-    # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+      - name: Make application-secret.yml without env
+        run: |
+          touch ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+          touch ./src/main/resources/application-prod.yml
+          echo "${{ secrets.APPLICATION_PROD }}" > ./src/main/resources/application-prod.yml
 
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      # JDK version 설정
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-    # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
-    # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
-    #
-    # - name: Setup Gradle
-    #   uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-    #   with:
-    #     gradle-version: '8.9'
-    #
-    # - name: Build with Gradle 8.9
-    #   run: gradle build
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
 
-  dependency-submission:
+      ## gradle build
+      - name: Build with Gradle
+        run: ./gradlew bootJar
 
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: Docker app build & push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/backend
 
-    # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
-    # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
-    - name: Generate and submit dependency graph
-      uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+      - name: Docker nginx build & push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./config/nginx/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/nginx
+
+      # ssh 접근 후 docker 이미지 pull 및 컨테이너 재시작
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu #  ec2-user 에서 변경
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd /home/ubuntu/ceos
+            
+            sudo touch .env
+            echo "${{ secrets.ENV }}" | sudo tee .env > /dev/null
+            
+            sudo curl -o docker-compose.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/2-chore-cicd/docker-compose.yml
+            
+            sudo chmod 666 /var/run/docker.sock
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/backend
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/nginx
+            docker compose -f docker-compose.yml --env-file .env up -d
+            docker image prune -f
