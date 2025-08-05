@@ -84,7 +84,7 @@ jobs:
             sudo touch .env
             echo "${{ secrets.ENV }}" | sudo tee .env > /dev/null
             
-            sudo curl -o docker-compose.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/main/docker-compose.yml
+            sudo curl -o docker-compose.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/2-chore-cicd/docker-compose.yml
             
             sudo chmod 666 /var/run/docker.sock
             sudo docker rm -f $(docker ps -qa)
