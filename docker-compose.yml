@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: nokKnock/backend
+    image: nokmaster/backend
     container_name: backend
     hostname: backend
     env_file:
@@ -11,7 +11,7 @@ services:
       - "8080"
 
   nginx:
-    image: nokKnock/nginx
+    image: nokmaster/nginx
     depends_on:
       - backend
     restart: always
