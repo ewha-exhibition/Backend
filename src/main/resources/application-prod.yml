@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${RDS_URL}:${RDS_PORT}/${RDS_DB_NAME}?createDatabaseIfNotExist=true
+    username: ${RDS_DB_HOST}
+    password: ${RDS_DB_PASSWORD}
+  mvc:
+    static-path-pattern: /static/**
+
+management:
+  server:
+    base-path: /actuator/health
+  endpoints:
+    web:
+      exposure:
+        include: health
+  health:
+    defaults:
+      status:
+        http-mapping:
+          UP: 200
+          DOWN: 503
+          OUT_OF_SERVICE: 503
+          UNKNOWN: 500
+
+server:
+  url: ${SERVER_PROD_URL}
