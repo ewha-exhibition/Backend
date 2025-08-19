@@ -79,7 +79,7 @@ jobs:
           username: ubuntu #  ec2-user 에서 변경
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd /home/ubuntu/ceos
+            cd /home/ubuntu/
             
             sudo touch .env
             echo "${{ secrets.ENV }}" | sudo tee .env > /dev/null
