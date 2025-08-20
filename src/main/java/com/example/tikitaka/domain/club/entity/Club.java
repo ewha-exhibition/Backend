@@ -1,4 +1,4 @@
-package com.example.tikitaka.domain.exhibition.entity;
+package com.example.tikitaka.domain.club.entity;
 
 import com.example.tikitaka.global.entity.BaseEntity;
 import jakarta.persistence.*;

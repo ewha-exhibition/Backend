@@ -1,6 +1,8 @@
 package com.example.tikitaka.domain.exhibition.entity;
 
+import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.global.entity.BaseEntity;
+import io.micrometer.core.annotation.Counted;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -66,6 +68,9 @@ public class Exhibition extends BaseEntity {
 
     @Column(name = "comment_count", nullable = false)
     private int commentCount;
+
+    @Column(name = "view_count", nullable = false)
+    private int viewCount;
 
     @ManyToOne
     @JoinColumn(name = "club_id")
