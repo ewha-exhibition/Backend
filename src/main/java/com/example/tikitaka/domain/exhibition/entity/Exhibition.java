@@ -76,6 +76,12 @@ public class Exhibition extends BaseEntity {
     @JoinColumn(name = "club_id")
     private Club club;
 
+    @Column(name = "category", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private String category;
 
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 }

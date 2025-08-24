@@ -11,7 +11,6 @@ import org.yaml.snakeyaml.comments.CommentType;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)

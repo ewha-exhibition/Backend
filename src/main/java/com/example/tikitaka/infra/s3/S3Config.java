@@ -10,10 +10,10 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
 public class S3Config {
-    @Value("${cloud.aws.credentials.accessKey}")
+    @Value("${S3_ACCESS_KEY}")
     private String accessKey;
 
-    @Value("${cloud.aws.credentials.secretKey")
+    @Value("${S3_SECRET_KEY}")
     private String secretKey;
 
     @Bean

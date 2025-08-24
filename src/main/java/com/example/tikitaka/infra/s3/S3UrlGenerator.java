@@ -14,7 +14,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 @Component
 @RequiredArgsConstructor
 public class S3UrlGenerator {
-    @Value("${aws.s3.bucket}")
+    @Value("${BUCKET_NAME}")
     private String BUCKET;
 
     private final S3Config s3Config;
