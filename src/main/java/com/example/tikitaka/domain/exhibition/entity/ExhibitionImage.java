@@ -22,8 +22,8 @@ public class ExhibitionImage extends BaseEntity {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @Column(name = "order", nullable = false)
-    private int order;
+    @Column(name = "sequence", nullable = false)
+    private int sequence;
 
     @ManyToOne
     @JoinColumn(name = "exhibition_id")

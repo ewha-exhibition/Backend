@@ -41,7 +41,9 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(ActuatorPatterns)
                         .permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll()
+                        //.anyRequest().authenticated()
+                )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);
 
