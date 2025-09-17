@@ -21,13 +21,11 @@ public class Host extends BaseEntity {
     @Column(name = "host_id")
     private Long hostId;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Column(name = "member_id", unique = true)
+    private String memberId;
 
-    @ManyToOne
-    @JoinColumn(name = "exhibition_id")
-    private Exhibition exhibition;
+    @Column(name = "exhibition_id", unique = true)
+    private String exhibitionId;
 
     @Column(name = "is_root", nullable = false)
     private Boolean isRoot;
