@@ -1,6 +1,7 @@
 package com.example.tikitaka.domain.exhibition.controller;
 
-import com.example.tikitaka.domain.exhibition.dto.CreateExhibitionRequest;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionPostRequest;
 import com.example.tikitaka.domain.exhibition.service.ExhibitionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,7 @@ public class ExhibitionController {
 
     @PostMapping
     public void exhibitionAdd(
-            @RequestBody CreateExhibitionRequest request
+            @RequestBody ExhibitionPostRequest request
     ) {
         exhibitionService.addExhibition(request);
     }

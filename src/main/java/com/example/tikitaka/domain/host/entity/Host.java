@@ -32,4 +32,5 @@ public class Host extends BaseEntity {
 
     @Column(name = "is_root", nullable = false)
     private Boolean isRoot;
+
 }

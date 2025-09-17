@@ -2,15 +2,19 @@ package com.example.tikitaka.domain.exhibition.service;
 
 import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.domain.club.repository.ClubRepository;
-import com.example.tikitaka.domain.exhibition.dto.CreateExhibitionRequest;
-import com.example.tikitaka.domain.exhibition.entity.Category;
+import com.example.tikitaka.domain.club.service.ClubService;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionPostRequest;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
-import com.example.tikitaka.domain.exhibition.entity.Status;
+import com.example.tikitaka.domain.exhibition.mapper.ExhibitionMapper;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
+import com.example.tikitaka.domain.host.dto.HostCreate;
 import com.example.tikitaka.domain.host.entity.Host;
 import com.example.tikitaka.domain.host.repository.HostRepository;
+import com.example.tikitaka.domain.host.service.HostService;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.repository.MemberRepository;
+import com.example.tikitaka.domain.member.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,61 +25,29 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ExhibitionService {
-    private final MemberRepository memberRepository;
-    private final ClubRepository clubRepository;
     private final ExhibitionRepository exhibitionRepository;
-    private final HostRepository hostRepository;
+    private final MemberValidator memberValidator;
+    private final ClubService clubService;
+    private final HostService hostService;
+    private final ExhibitionMapper exhibitionMapper;
 
     @Transactional
-    public void addExhibition(CreateExhibitionRequest request) {
+    public void addExhibition(ExhibitionPostRequest request) {
         // 멤버 찾기
-        Member member = memberRepository.findByMemberId(request.getMemberId())
-                .orElseThrow();
+        Member member = memberValidator.validateMember(request.getMemberId());
 
         // 클럽 찾기 (없으면 생성 있으면 참조)
-        Club club = clubRepository.findByName(request.getClub())
-                .orElseGet(() -> clubRepository.save(
-                        Club.builder()
-                                .name(request.getClub())
-                                .build()
-                ));
-
-        // 랜덤 코드 생성
-        String code = UUID.randomUUID().toString().substring(0, 8);
-
+        String clubId = clubService.clubGetOrAdd(request.getClub());
 
         // 전시 생성
-        var exhibition = Exhibition.builder()
-                .exhibitionName(request.getExhibitionName())
-                .posterUrl(request.getPosterUrl())
-                .place(request.getPlace())
-                .startDate(request.getStartDate())
-                .endDate(request.getStartDate())
-                .startTime(request.getStartTime())
-                .endTime(request.getEndTime())
-                .dateException(request.getDateException())
-                .price(request.getPrice())
-                .link(request.getLink())
-                .content(request.getContent())
-                .code(code)
-                .scrapCount(0)
-                .reviewCount(0)
-                .commentCount(0)
-                .viewCount(0)
-                .club(club)
-                .category(Category.valueOf(request.getCategory()))
-                .status(Status.ACTIVE)
-                .build();
-
+        Exhibition exhibition = exhibitionMapper.toExhibition(request.getExhibition(), clubId);
         exhibitionRepository.save(exhibition);
 
         // host 등록
-        Host host = Host.builder()
-                .member(member)
-                .exhibition(exhibition)
-                .isRoot(true)
-                .build();
-        hostRepository.save(host);
+        hostService.hostAdd(HostCreate.of(
+                member.getMemberId(),
+                exhibition.getExhibitionId(),
+                true));
 
     }
 }

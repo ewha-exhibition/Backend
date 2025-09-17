@@ -21,8 +21,11 @@ import java.time.LocalTime;
 public class Exhibition extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "exhibition_idx")
+    private Long exhibitionIdx;
+
     @Column(name = "exhibition_id")
-    private Long exhibitionId;
+    private String exhibitionId;
 
     @Column(name = "exhibition_name", nullable = false)
     private String exhibitionName;
@@ -60,6 +63,17 @@ public class Exhibition extends BaseEntity {
     @Column(name = "code", nullable = false)
     private String code;
 
+    @Column(name = "club_id")
+    private String clubId;
+
+    @Column(name = "category", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @Column(name = "scrap_count", nullable = false)
     private int scrapCount;
 
@@ -72,16 +86,6 @@ public class Exhibition extends BaseEntity {
     @Column(name = "view_count", nullable = false)
     private int viewCount;
 
-    @ManyToOne
-    @JoinColumn(name = "club_id")
-    private Club club;
 
-    @Column(name = "category", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Category category;
-
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
 }
