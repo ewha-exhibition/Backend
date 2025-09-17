@@ -80,8 +80,11 @@ public class Exhibition extends BaseEntity {
     @Column(name = "review_count", nullable = false)
     private int reviewCount;
 
-    @Column(name = "comment_count", nullable = false)
-    private int commentCount;
+    @Column(name = "cheering_count", nullable = false)
+    private int cheeringCount;
+
+    @Column(name = "question_count", nullable = false)
+    private int questionCount;
 
     @Column(name = "view_count", nullable = false)
     private int viewCount;
