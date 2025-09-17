@@ -18,8 +18,11 @@ import lombok.NoArgsConstructor;
 public class Host extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "host_id")
-    private Long hostId;
+    @Column(name = "host_idx")
+    private Long hostIdx;
+
+    @Column(name = "host_id", unique = true)
+    private String hostId;
 
     @Column(name = "member_id", unique = true)
     private String memberId;
