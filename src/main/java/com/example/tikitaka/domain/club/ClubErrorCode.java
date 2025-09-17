@@ -1,4 +1,4 @@
-package com.example.tikitaka.domain.club.error;
+package com.example.tikitaka.domain.club;
 
 import com.example.tikitaka.global.exception.BaseErrorCode;
 import com.example.tikitaka.global.exception.ErrorReason;

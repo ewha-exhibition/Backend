@@ -1,9 +1,8 @@
 package com.example.tikitaka.domain.club.validator;
 
-import com.example.tikitaka.domain.club.error.ClubErrorCode;
+import com.example.tikitaka.domain.club.ClubErrorCode;
 import com.example.tikitaka.domain.club.repository.ClubRepository;
 import com.example.tikitaka.global.exception.BaseErrorException;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
