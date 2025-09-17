@@ -13,8 +13,10 @@ import org.springframework.stereotype.Component;
 public class MemberValidator {
     private final MemberRepository memberRepository;
 
-    public void validateMember(String memberId) {
+    public Member validateMember(String memberId) {
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new BaseErrorException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        return member;
     }
 }
