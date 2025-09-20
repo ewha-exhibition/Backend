@@ -48,7 +48,7 @@ jobs:
         id: create
         uses: atlassian/gajira-create@v3
         with:
-          project: nokKnock
+          project: SCRUM
           issuetype: '${{ steps.issue-parser.outputs.issueparser_taskType }}'
           summary: '${{ github.event.issue.title }}'
           description: '${{ steps.md2jira.outputs.output-text }}'
