@@ -25,7 +25,11 @@ public class ExhibitionImage extends BaseEntity {
     @Column(name = "sequence", nullable = false)
     private int sequence;
 
-    @ManyToOne
-    @JoinColumn(name = "exhibition_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exhibition_idx")
     private Exhibition exhibition;
+
+//    void setExhibition(Exhibition exhibition) {
+//        this.exhibition = exhibition;
+//    }
 }

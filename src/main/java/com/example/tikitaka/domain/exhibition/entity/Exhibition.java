@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -63,8 +65,9 @@ public class Exhibition extends BaseEntity {
     @Column(name = "code", nullable = false)
     private String code;
 
-    @Column(name = "club_id")
-    private String clubId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn()
+    private Club club;
 
     @Column(name = "category", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -88,6 +91,26 @@ public class Exhibition extends BaseEntity {
 
     @Column(name = "view_count", nullable = false)
     private int viewCount;
+
+//    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OrderBy("sequence ASC")
+//    private List<ExhibitionImage> images = new ArrayList<>();
+//
+//    public void addImage(ExhibitionImage image) {
+//        if (image == null) return;
+//        if (!this.images.contains(image)) {
+//            this.images.add(image);
+//        }
+//
+//        image.setExhibition(this);
+//    }
+//
+//    public void removeImage(ExhibitionImage image) {
+//        if (image == null) return;
+//        this.images.remove(image);
+//        image.setExhibition(null);
+//    }
+
 
 
 

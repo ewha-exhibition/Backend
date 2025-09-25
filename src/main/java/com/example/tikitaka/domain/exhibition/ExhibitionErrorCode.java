@@ -1,4 +1,4 @@
-package com.example.tikitaka.domain.member;
+package com.example.tikitaka.domain.exhibition;
 
 import com.example.tikitaka.global.exception.BaseErrorCode;
 import com.example.tikitaka.global.exception.ErrorReason;
@@ -9,8 +9,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Getter
 @AllArgsConstructor
-public enum MemberErrorCode implements BaseErrorCode {
-    MEMBER_NOT_FOUND(NOT_FOUND, "MEMBER_404_1", "해당하는 유저를 조회할 수 없습니다.");
+public enum ExhibitionErrorCode implements BaseErrorCode {
+    EXHIBITION_NOT_FOUND(NOT_FOUND, "EXHIBITION_404_1", "해당하는 전시를 조회할 수 없습니다.");
 
     private HttpStatus status;
     private String code;

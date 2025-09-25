@@ -19,7 +19,7 @@ public class ClubService {
     private final ClubRepository clubRepository;
 
     @Transactional
-    public String clubAdd(ClubCreate clubCreate) {
+    public Club clubAdd(ClubCreate clubCreate) {
         // 입력 받은 단체명의 공백 제거
         String name = clubCreate.getName().replace(" ", "");
 
@@ -36,11 +36,11 @@ public class ClubService {
 
         clubRepository.save(club);
 
-        return club.getClubId();
+        return club;
 
     }
 
-    public String clubGetOrAdd(ClubCreate clubCreate) {
+    public Club clubGetOrAdd(ClubCreate clubCreate) {
         // clubAdd 메서드와 동일 로직 작동 -> 코드 중복 줄이는 리팩토링 필요
         String name = clubCreate.getName().replace(" ", "");
 
