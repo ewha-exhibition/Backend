@@ -35,8 +35,8 @@ body:
     id: taskType
     attributes:
       label: '🗃️업무 유형'
-      description: 'Docs/Feature/Refactor/Fix/Hotfix 중 하나를 작성해주세요'
-      placeholder: 'Docs/Feature/Refactor/Fix/Hotfix'
+      description: 'Task'
+      placeholder: 'Task'
     validations:
       required: true
 
