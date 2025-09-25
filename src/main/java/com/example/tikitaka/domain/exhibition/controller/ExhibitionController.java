@@ -39,4 +39,13 @@ public class ExhibitionController {
     ) {
         exhibitionService.deleteExhibition(exhibitionIdx);
     }
+
+    @PutMapping("/{exhibitionIdx}")
+    public void exhibitionUpdate(
+            // 로그인 기능 추가 후 유저 정보 받기
+            @PathVariable Long exhibitionIdx,
+            @RequestBody ExhibitionCreate request
+    ) {
+        exhibitionService.updateExhibition(exhibitionIdx, request);
+    }
 }

@@ -4,10 +4,7 @@ import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.global.entity.BaseEntity;
 import io.micrometer.core.annotation.Counted;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Setter
 @Getter
 @Builder
 @NoArgsConstructor
@@ -95,9 +93,7 @@ public class Exhibition extends BaseEntity {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    public void markAsDeleted() {
-        this.isDeleted = true;
-    }
+
 
 
 //    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -119,7 +115,9 @@ public class Exhibition extends BaseEntity {
 //        image.setExhibition(null);
 //    }
 
-
+    public void markAsDeleted() {
+        this.isDeleted = true;
+    }
 
 
 }

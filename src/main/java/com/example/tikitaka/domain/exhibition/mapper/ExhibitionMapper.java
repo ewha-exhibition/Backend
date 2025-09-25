@@ -68,4 +68,5 @@ public class ExhibitionMapper {
                 .userRole("") // 추후 추가 예정
                 .build();
     }
+
 }

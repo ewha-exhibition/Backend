@@ -6,6 +6,7 @@ import com.example.tikitaka.domain.club.service.ClubService;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionDetailResponse;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionPostRequest;
+import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.mapper.ExhibitionMapper;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionImageRepository;
@@ -77,11 +78,32 @@ public class ExhibitionService {
 
     }
 
+    @Transactional
     public void deleteExhibition(Long exhibitionIdx) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionIdx);
 
         //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
         exhibition.markAsDeleted();
         exhibitionRepository.save(exhibition);
+    }
+
+    @Transactional
+    public void updateExhibition(Long exhibitionIdx, ExhibitionCreate request) {
+        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionIdx);
+
+        //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
+
+        exhibition.setExhibitionName(request.getExhibitionName());
+        exhibition.setPosterUrl(request.getPosterUrl());
+        exhibition.setPlace(request.getPlace());
+        exhibition.setStartDate(request.getStartDate());
+        exhibition.setEndDate(request.getEndDate());
+        exhibition.setDateException(request.getDateException());
+        exhibition.setPrice(request.getPrice());
+        exhibition.setLink(request.getLink());
+        exhibition.setContent(request.getContent());
+        exhibition.setCategory(Category.valueOf(request.getCategory()));
+
+
     }
 }
