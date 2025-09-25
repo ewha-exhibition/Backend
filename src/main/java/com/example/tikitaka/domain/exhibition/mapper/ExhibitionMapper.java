@@ -8,6 +8,7 @@ import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.entity.Status;
 import com.example.tikitaka.domain.exhibition.vo.ExhibitionVo;
 import com.example.tikitaka.global.util.formatting.DateFormatting;
+import com.example.tikitaka.global.util.formatting.PriceFormatting;
 import com.example.tikitaka.global.util.formatting.TimeFormatting;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +54,7 @@ public class ExhibitionMapper {
                 .exhibtionName(exhibition.getExhibitionName())
                 .posterUrl(exhibition.getPosterUrl())
                 .place(exhibition.getPlace())
-                .price(exhibition.getPrice())
+                .price(new PriceFormatting(exhibition.getPrice()))
                 .clubName(exhibition.getClub().getName())
                 .period(new DateFormatting(exhibition.getStartDate(), exhibition.getEndDate()))
                 .duration(new TimeFormatting(exhibition.getStartTime(), exhibition.getEndTime()))

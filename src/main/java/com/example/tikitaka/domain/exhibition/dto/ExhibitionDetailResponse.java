@@ -1,6 +1,7 @@
 package com.example.tikitaka.domain.exhibition.dto;
 
 import com.example.tikitaka.global.util.formatting.DateFormatting;
+import com.example.tikitaka.global.util.formatting.PriceFormatting;
 import com.example.tikitaka.global.util.formatting.TimeFormatting;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class ExhibitionDetailResponse {
     private String exhibtionName;
     private String posterUrl;
     private String place;
-    private int price;
+    private PriceFormatting price;
     private String clubName;
     private DateFormatting period;
     private TimeFormatting duration;
