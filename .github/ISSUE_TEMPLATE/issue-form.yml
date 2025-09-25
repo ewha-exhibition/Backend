@@ -31,12 +31,12 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: hidden
     id: taskType
     attributes:
       label: '🗃️업무 유형'
       description: 'Task'
-      placeholder: 'Task'
+      value: 'Task'
     validations:
       required: true
 
