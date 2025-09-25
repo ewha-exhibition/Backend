@@ -56,7 +56,7 @@ jobs:
           fields: |
             {
               "parent": { "key": "${{ steps.issue-parser.outputs.issueparser_parentKey }}" },
-              "labels": ${{ toJson(github.event.issue.labels.*.name) }}
+              "labels": ${{ toJson(github.event.issue.labels.*.name) }},
               "assignee": { "name": "${{ github.event.issue.assignee.login }}" }
             }
 
