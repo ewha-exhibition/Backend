@@ -24,11 +24,19 @@ public class ExhibitionController {
     }
 
     @GetMapping("/{exhibitionIdx}")
-    public List<Exhibition> exhibitionDetail(
+    public ExhibitionDetailResponse exhibitionDetail(
             // 로그인 기능 추가 후 유저 정보 받기
             @PathVariable
             Long exhibitionIdx
     ){
         return exhibitionService.findExhibtion(exhibitionIdx);
+    }
+
+    @DeleteMapping("/{exhibitionIdx}")
+    public void exhibitionDelete(
+            // 로그인 기능 추가 후 유저 정보 받기
+            @PathVariable Long exhibitionIdx
+    ) {
+        exhibitionService.deleteExhibition(exhibitionIdx);
     }
 }

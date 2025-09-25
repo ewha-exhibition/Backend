@@ -92,6 +92,14 @@ public class Exhibition extends BaseEntity {
     @Column(name = "view_count", nullable = false)
     private int viewCount;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
+    public void markAsDeleted() {
+        this.isDeleted = true;
+    }
+
+
 //    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
 //    @OrderBy("sequence ASC")
 //    private List<ExhibitionImage> images = new ArrayList<>();

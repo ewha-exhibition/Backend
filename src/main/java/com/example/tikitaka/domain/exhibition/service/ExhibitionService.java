@@ -15,6 +15,7 @@ import com.example.tikitaka.domain.host.dto.HostCreate;
 import com.example.tikitaka.domain.host.entity.Host;
 import com.example.tikitaka.domain.host.repository.HostRepository;
 import com.example.tikitaka.domain.host.service.HostService;
+import com.example.tikitaka.domain.host.validator.HostValidator;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.repository.MemberRepository;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
@@ -43,6 +44,7 @@ public class ExhibitionService {
 
     // Mapper
     private final ExhibitionMapper exhibitionMapper;
+    private final HostValidator hostValidator;
 
     //
 
@@ -73,5 +75,13 @@ public class ExhibitionService {
 
         return exhibitionMapper.toDetailResponse(exhibition, images);
 
+    }
+
+    public void deleteExhibition(Long exhibitionIdx) {
+        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionIdx);
+
+        //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
+        exhibition.markAsDeleted();
+        exhibitionRepository.save(exhibition);
     }
 }

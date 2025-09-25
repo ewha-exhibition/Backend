@@ -10,13 +10,13 @@ import java.util.Optional;
 
 @Repository
 public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
-    @Query("""
-    SELECT DISTINCT e
-    FROM Exhibition e
-    LEFT JOIN FETCH e.images
-    WHERE e.exhibitionIdx = :exhibitionIdx
-    """)
-    Optional<Exhibition> findDetailById(Long exhibitionIdx);
+//    @Query("""
+//    SELECT DISTINCT e
+//    FROM Exhibition e
+//    LEFT JOIN FETCH e.images
+//    WHERE e.exhibitionIdx = :exhibitionIdx
+//    """)
+//    Optional<Exhibition> findDetailById(Long exhibitionIdx);
 
     Optional<Exhibition> findByExhibitionIdx(Long exhibitionIdx);
 }

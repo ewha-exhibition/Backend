@@ -24,11 +24,13 @@ public class Host extends BaseEntity {
     @Column(name = "host_id", unique = true)
     private String hostId;
 
-    @Column(name = "member_id", unique = true)
-    private String memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_idx", nullable = false)
+    private Member member;
 
-    @Column(name = "exhibition_id", unique = true)
-    private String exhibitionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exhibition_idx", nullable = false)
+    private Exhibition exhibition;
 
     @Column(name = "is_root", nullable = false)
     private Boolean isRoot;

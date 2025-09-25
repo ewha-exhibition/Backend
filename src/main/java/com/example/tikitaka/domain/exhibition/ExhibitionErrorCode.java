@@ -5,12 +5,15 @@ import com.example.tikitaka.global.exception.ErrorReason;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Getter
 @AllArgsConstructor
 public enum ExhibitionErrorCode implements BaseErrorCode {
-    EXHIBITION_NOT_FOUND(NOT_FOUND, "EXHIBITION_404_1", "해당하는 전시를 조회할 수 없습니다.");
+    EXHIBITION_NOT_FOUND(NOT_FOUND, "EXHIBITION_404_1", "해당하는 전시를 조회할 수 없습니다."),
+    EXHIBITION_ACCESS_FORBIDDEN(FORBIDDEN, "EXHIBITION_403_1", "해당 전시에 대한 권한이 없습니다.");
 
     private HttpStatus status;
     private String code;

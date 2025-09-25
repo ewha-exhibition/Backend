@@ -42,6 +42,7 @@ public class ExhibitionMapper {
                 .club(club)
                 .category(Category.valueOf(req.getCategory()))
                 .status(Status.ACTIVE)
+                .isDeleted(false)
                 .build();
     }
 
