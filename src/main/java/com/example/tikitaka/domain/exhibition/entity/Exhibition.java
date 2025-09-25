@@ -78,7 +78,7 @@ public class Exhibition extends BaseEntity {
 
     @Column(name = "category", nullable = false)
     @Enumerated(EnumType.STRING)
-    private String category;
+    private Category category;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
