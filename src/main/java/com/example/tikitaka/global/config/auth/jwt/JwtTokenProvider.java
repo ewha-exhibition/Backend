@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -95,8 +96,18 @@ public class JwtTokenProvider {
         if (header != null && header.startsWith("Bearer ")) {
             return header.substring(7);
         }
+
+        // cookie fallback
+        if (request.getCookies() != null) {
+            for (Cookie c : request.getCookies()) {
+                if ("ACCESS_TOKEN".equals(c.getName())) {
+                    return c.getValue();
+                }
+            }
+        }
         return null;
     }
+
 
     // === 내부 유틸 ===
     private Claims parseClaims(String token) {
