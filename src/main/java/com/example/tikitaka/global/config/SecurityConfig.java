@@ -1,6 +1,10 @@
 package com.example.tikitaka.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import com.example.tikitaka.global.config.auth.OAuth2AuthenticationSuccessHandler;
+import com.example.tikitaka.global.config.auth.jwt.JwtAuthFilter;
+import com.example.tikitaka.global.config.auth.user.CustomOAuth2UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,15 +17,24 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     @Value("${server.server-url}")
     private String SERVER_URL;
 
     @Value("${server.front-urls}")
     private String[] FRONT_URLS;
+
+
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final JwtAuthFilter jwtAuthFilter;
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,7 +46,7 @@ public class SecurityConfig {
     };
 
     private final String[] SecurityPatterns = {
-            "/signup", "/", "/login", "/Oauth2/**"
+            "/signup", "/", "/login", "/Oauth2/**", "/oauth2/**", "/login/oauth2/**"
     };
 
     private final String[] ActuatorPatterns = {
@@ -52,9 +65,14 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(ActuatorPatterns)
                         .permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()  // 서버 교환 엔드포인트는 공개
                         .anyRequest().authenticated())
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable);
+                // OAuth2 로그인: 사용자 정보 서비스 + 성공 핸들러(JWT 발급/리다이렉트)
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
