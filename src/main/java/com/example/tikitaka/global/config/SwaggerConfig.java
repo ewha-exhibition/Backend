@@ -13,15 +13,15 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 @Configuration
 public class SwaggerConfig {
-    @Value("${server.url}")
+    @Value("${server.server-url}")
     private String SERVER_URL;
 
     @Bean
     public OpenAPI open() {
         Info info = new Info()
-                .title("Runway")
+                .title("TikiTaka")
                 .version("1.0")
-                .description("Runway API");
+                .description("TikiTaka API");
 
         // jwt 설정
         String jwtScheme = "jwtAuth";
