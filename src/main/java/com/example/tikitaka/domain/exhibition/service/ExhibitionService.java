@@ -8,6 +8,7 @@ import com.example.tikitaka.domain.exhibition.dto.ExhibitionDetailResponse;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionPostRequest;
 import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
+import com.example.tikitaka.domain.exhibition.entity.ExhibitionImage;
 import com.example.tikitaka.domain.exhibition.mapper.ExhibitionMapper;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionImageRepository;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
@@ -33,7 +34,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ExhibitionService {
-    // 서비스 계층
+    // 서비스
     private final ClubService clubService;
     private final HostService hostService;
 
@@ -64,6 +65,12 @@ public class ExhibitionService {
         // 전시 생성
         Exhibition exhibition = exhibitionMapper.toExhibition(request.getExhibition(), club);
         exhibitionRepository.save(exhibition);
+
+        // 전시 이미지 등록
+        if (request.getImages() != null) {
+            List<ExhibitionImage> images = exhibitionMapper.toExhibitionImages(exhibition, request.getImages());
+            exhibitionImageRepository.saveAll(images);
+        }
 
         // host 등록
         hostService.hostAdd(HostCreate.of(
@@ -98,7 +105,7 @@ public class ExhibitionService {
         //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
 
 
-        // TODO: 추후 리팩토링
+        // TODO: 추후 리팩토링 - null 바인딩 여부 확인 후 값 수정
         exhibition.setExhibitionName(request.getExhibitionName());
         exhibition.setPosterUrl(request.getPosterUrl());
         exhibition.setPlace(request.getPlace());
@@ -109,7 +116,6 @@ public class ExhibitionService {
         exhibition.setLink(request.getLink());
         exhibition.setContent(request.getContent());
         exhibition.setCategory(Category.valueOf(request.getCategory()));
-
 
     }
 

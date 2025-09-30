@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 public class ExhibitionImage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "exhibition_image_id")
-    private Long exhibitionImageId;
+    @Column(name = "exhibition_image_idx")
+    private Long exhibitionImageIdx;
 
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
@@ -26,7 +26,7 @@ public class ExhibitionImage extends BaseEntity {
     private int sequence;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exhibition_idx")
+    @JoinColumn(name = "exhibition")
     private Exhibition exhibition;
 
 //    void setExhibition(Exhibition exhibition) {

@@ -3,26 +3,28 @@ package com.example.tikitaka.domain.exhibition.mapper;
 import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionDetailResponse;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionImageCreate;
 import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
+import com.example.tikitaka.domain.exhibition.entity.ExhibitionImage;
 import com.example.tikitaka.domain.exhibition.entity.Status;
-import com.example.tikitaka.domain.exhibition.vo.ExhibitionVo;
 import com.example.tikitaka.global.util.formatting.DateFormatting;
 import com.example.tikitaka.global.util.formatting.PriceFormatting;
 import com.example.tikitaka.global.util.formatting.TimeFormatting;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Component
 public class ExhibitionMapper {
+
+    //
     public Exhibition toExhibition(ExhibitionCreate req, Club club) {
         String code = UUID.randomUUID().toString().substring(0, 8);
-        String id = UUID.randomUUID().toString();
 
         return Exhibition.builder()
-                .exhibitionId(id)
                 .exhibitionName(req.getExhibitionName())
                 .posterUrl(req.getPosterUrl())
                 .place(req.getPlace())
@@ -47,10 +49,19 @@ public class ExhibitionMapper {
                 .build();
     }
 
+    public List<ExhibitionImage> toExhibitionImages(Exhibition exhibition, List<ExhibitionImageCreate> images) {
+        return images.stream().map(
+                image -> ExhibitionImage.builder()
+                        .exhibition(exhibition)
+                        .imageUrl(image.getUrl())
+                        .sequence(image.getSequence())
+                        .build()
+        ).toList();
+    }
+
     public ExhibitionDetailResponse toDetailResponse(Exhibition exhibition, List<String> images) {
         return ExhibitionDetailResponse.builder()
-                .exhibitionIdx(exhibition.getExhibitionIdx())
-                .exhibitionId(exhibition.getExhibitionName())
+                .exhibitionId(exhibition.getExhibitionId())
                 .exhibtionName(exhibition.getExhibitionName())
                 .posterUrl(exhibition.getPosterUrl())
                 .place(exhibition.getPlace())
@@ -69,5 +80,7 @@ public class ExhibitionMapper {
                 .userRole("") // 추후 추가 예정
                 .build();
     }
+
+
 
 }

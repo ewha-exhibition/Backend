@@ -11,8 +11,7 @@ import java.util.List;
 @Getter
 @Builder
 public class ExhibitionDetailResponse {
-    private Long exhibitionIdx;
-    private String exhibitionId;
+    private Long exhibitionId;
     private String exhibtionName;
     private String posterUrl;
     private String place;

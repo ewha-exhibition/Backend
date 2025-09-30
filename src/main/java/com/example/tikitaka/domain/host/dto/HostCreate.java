@@ -6,13 +6,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class HostCreate {
-    private String memberId;
-    private String exhibitionId;
+    private Long memberId;
+    private Long exhibitionId;
     private Boolean isRoot;
 
     public static HostCreate of(
-            String memberId,
-            String exhibitionId,
+            Long memberId,
+            Long exhibitionId,
             Boolean isRoot
     ) {
         return new HostCreate(

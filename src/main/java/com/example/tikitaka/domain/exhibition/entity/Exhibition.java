@@ -21,11 +21,8 @@ import java.util.List;
 public class Exhibition extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "exhibition_idx")
-    private Long exhibitionIdx;
-
     @Column(name = "exhibition_id")
-    private String exhibitionId;
+    private Long exhibitionId;
 
     @Column(name = "exhibition_name", nullable = false)
     private String exhibitionName;
@@ -60,7 +57,7 @@ public class Exhibition extends BaseEntity {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "code", nullable = false)
+    @Column(name = "code", nullable = false, unique = true)
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
