@@ -1,10 +1,9 @@
 package com.example.tikitaka.global.entity;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
-import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.global.config.auth.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.yaml.snakeyaml.comments.CommentType;
@@ -32,8 +31,8 @@ public class Comment extends BaseEntity{
     private boolean hasAnswer;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "exhibition_id", nullable = false)

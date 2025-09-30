@@ -1,7 +1,6 @@
 package com.example.tikitaka.domain.exhibition.service;
 
 import com.example.tikitaka.domain.club.entity.Club;
-import com.example.tikitaka.domain.club.repository.ClubRepository;
 import com.example.tikitaka.domain.club.service.ClubService;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionDetailResponse;
@@ -14,13 +13,10 @@ import com.example.tikitaka.domain.exhibition.repository.ExhibitionImageReposito
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.host.dto.HostCreate;
-import com.example.tikitaka.domain.host.entity.Host;
-import com.example.tikitaka.domain.host.repository.HostRepository;
 import com.example.tikitaka.domain.host.service.HostService;
 import com.example.tikitaka.domain.host.validator.HostValidator;
-import com.example.tikitaka.domain.member.entity.Member;
-import com.example.tikitaka.domain.member.repository.MemberRepository;
-import com.example.tikitaka.domain.member.validator.MemberValidator;
+import com.example.tikitaka.domain.member.validator.UserValidator;
+import com.example.tikitaka.global.config.auth.user.User;
 import com.example.tikitaka.infra.s3.S3Url;
 import com.example.tikitaka.infra.s3.S3UrlHandler;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -43,7 +38,7 @@ public class ExhibitionService {
     private final ExhibitionImageRepository exhibitionImageRepository;
 
     // validator
-    private final MemberValidator memberValidator;
+    private final UserValidator userValidator;
     private final ExhibitionValidator exhibitionValidator;
 
     // Mapper
@@ -57,7 +52,7 @@ public class ExhibitionService {
     @Transactional
     public void addExhibition(ExhibitionPostRequest request) {
         // 멤버 찾기
-        Member member = memberValidator.validateMember(request.getMemberId());
+        User user = userValidator.validateUser(request.getUserId());
 
         // 클럽 찾기 (없으면 생성 있으면 참조)
         Club club = clubService.clubGetOrAdd(request.getClub());
@@ -74,8 +69,8 @@ public class ExhibitionService {
 
         // host 등록
         hostService.hostAdd(HostCreate.of(
-                member.getMemberId(),
-                exhibition.getExhibitionId(),
+                user,
+                exhibition,
                 true));
 
     }

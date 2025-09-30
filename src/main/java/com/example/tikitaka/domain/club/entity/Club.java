@@ -16,11 +16,8 @@ import lombok.NoArgsConstructor;
 public class Club extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "club_idx")
-    private Long clubIdx;
-
-    @Column(name = "club_id", unique = true)
-    private String clubId;
+    @Column(name = "club_id")
+    private Long clubId;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

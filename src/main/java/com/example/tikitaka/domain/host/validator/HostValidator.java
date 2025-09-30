@@ -1,8 +1,6 @@
 package com.example.tikitaka.domain.host.validator;
 
-import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.host.repository.HostRepository;
-import com.example.tikitaka.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

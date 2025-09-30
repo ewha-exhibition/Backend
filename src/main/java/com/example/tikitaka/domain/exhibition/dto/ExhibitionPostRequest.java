@@ -10,7 +10,7 @@ import static lombok.Builder.*;
 
 @Getter
 public class ExhibitionPostRequest {
-    private String memberId; // 인증 인가 구현 후 삭제 예정
+    private Long userId; // 인증 인가 구현 후 삭제 예정
 
     private ExhibitionCreate exhibition;
 

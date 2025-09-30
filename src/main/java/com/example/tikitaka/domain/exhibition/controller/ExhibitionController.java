@@ -9,6 +9,7 @@ import com.example.tikitaka.domain.exhibition.service.ExhibitionService;
 import com.example.tikitaka.infra.s3.S3Url;
 import com.example.tikitaka.infra.s3.S3UrlHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

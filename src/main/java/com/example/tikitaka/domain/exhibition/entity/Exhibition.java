@@ -61,7 +61,7 @@ public class Exhibition extends BaseEntity {
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn()
+    @JoinColumn(name = "club")
     private Club club;
 
     @Column(name = "category", nullable = false)
