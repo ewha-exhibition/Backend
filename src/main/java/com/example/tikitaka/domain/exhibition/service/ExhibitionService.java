@@ -20,6 +20,8 @@ import com.example.tikitaka.domain.host.validator.HostValidator;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.repository.MemberRepository;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
+import com.example.tikitaka.infra.s3.S3Url;
+import com.example.tikitaka.infra.s3.S3UrlHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +49,9 @@ public class ExhibitionService {
     private final ExhibitionMapper exhibitionMapper;
     private final HostValidator hostValidator;
 
-    //
+    // S3
+    private final S3UrlHandler s3UrlHandler;
+
 
     @Transactional
     public void addExhibition(ExhibitionPostRequest request) {
@@ -93,6 +97,8 @@ public class ExhibitionService {
 
         //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
 
+
+        // TODO: 추후 리팩토링
         exhibition.setExhibitionName(request.getExhibitionName());
         exhibition.setPosterUrl(request.getPosterUrl());
         exhibition.setPlace(request.getPlace());
@@ -105,5 +111,9 @@ public class ExhibitionService {
         exhibition.setCategory(Category.valueOf(request.getCategory()));
 
 
+    }
+
+    public S3Url getImageUploadUrl() {
+        return s3UrlHandler.handle("exhibition/posters");
     }
 }
