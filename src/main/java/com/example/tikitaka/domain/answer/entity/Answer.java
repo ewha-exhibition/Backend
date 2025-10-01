@@ -1,6 +1,6 @@
 package com.example.tikitaka.domain.answer.entity;
 
-import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.global.config.auth.user.User;
 import com.example.tikitaka.global.entity.BaseEntity;
 import com.example.tikitaka.global.entity.Comment;
 import jakarta.persistence.*;
@@ -26,6 +26,6 @@ public class Answer extends BaseEntity {
     private Comment comment;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "user")
+    private User user;
 }

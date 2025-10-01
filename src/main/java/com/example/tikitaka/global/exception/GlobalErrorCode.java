@@ -19,7 +19,7 @@ public enum GlobalErrorCode implements BaseErrorCode {
     EXPIRED_TOKEN(UNAUTHORIZED, "AUTH_401_3", "만료된 토큰입니다"),
     ACCESS_DENIED(FORBIDDEN, "AUTH_403_1", "접근 권한이 없습니다")
 
-    ;;
+    ;
 
     private HttpStatus status;
     private String code;

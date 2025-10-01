@@ -1,7 +1,7 @@
 package com.example.tikitaka.domain.view.entity;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
-import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.global.config.auth.user.User;
 import com.example.tikitaka.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ public class View extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member member;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "exhibition_id")
