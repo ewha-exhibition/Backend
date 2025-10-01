@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HostRepository extends JpaRepository<Host, Long> {
-    boolean existsByMemberAndExhibition(User user, Exhibition exhibition);
+    boolean existsByUserAndExhibition(User user, Exhibition exhibition);
 }

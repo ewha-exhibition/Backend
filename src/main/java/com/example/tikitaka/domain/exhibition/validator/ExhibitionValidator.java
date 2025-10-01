@@ -14,8 +14,8 @@ import java.util.List;
 public class ExhibitionValidator {
     private final ExhibitionRepository exhibitionRepository;
 
-    public Exhibition validateExhibition(Long exhibitionIdx) {
-        return exhibitionRepository.findByExhibitionIdx(exhibitionIdx).orElseThrow(
+    public Exhibition validateExhibition(Long exhibitionId) {
+        return exhibitionRepository.findByExhibitionId(exhibitionId).orElseThrow(
                 () -> new BaseErrorException(ExhibitionErrorCode.EXHIBITION_NOT_FOUND)
         );
 //        return exhibitionRepository.findDetailById(exhibitionIdx).orElseThrow(

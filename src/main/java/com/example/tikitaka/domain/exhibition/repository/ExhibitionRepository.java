@@ -18,5 +18,5 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
 //    """)
 //    Optional<Exhibition> findDetailById(Long exhibitionIdx);
 
-    Optional<Exhibition> findByExhibitionIdx(Long exhibitionIdx);
+    Optional<Exhibition> findByExhibitionId(Long exhibitionId);
 }

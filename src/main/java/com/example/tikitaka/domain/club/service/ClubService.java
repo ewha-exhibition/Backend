@@ -26,11 +26,7 @@ public class ClubService {
         // 이미 존재하는 단체인지 확인 (이미 존재하는 단체면 CLUB_ALREADY_EXIST 에러 발생)
         clubValidator.alreadyExist(clubCreate.getName());
 
-        // 단체 생성 (이 부분 추후 정적 팩토리 메서드로 리팩토링 예정)
-        String clubId = UUID.randomUUID().toString();
-
         Club club = Club.builder()
-                .clubId(clubId)
                 .name(name)
                 .build();
 

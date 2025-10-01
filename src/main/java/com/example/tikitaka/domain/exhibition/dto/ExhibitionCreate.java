@@ -1,7 +1,5 @@
 package com.example.tikitaka.domain.exhibition.dto;
 
-import com.example.tikitaka.domain.exhibition.vo.ExhibitionImageVo;
-import com.example.tikitaka.domain.exhibition.vo.ExhibitionVo;
 import lombok.Getter;
 
 import java.time.LocalDate;

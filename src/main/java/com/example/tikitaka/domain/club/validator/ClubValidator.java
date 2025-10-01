@@ -12,7 +12,7 @@ public class ClubValidator {
     public  final ClubRepository clubRepository;
 
     public void alreadyExist(String name) {
-        if(clubRepository.existByName(name)) {
+        if(clubRepository.existsByName(name)) {
             throw new BaseErrorException(ClubErrorCode.CLUB_ALREADY_EXIST);
         }
     }
