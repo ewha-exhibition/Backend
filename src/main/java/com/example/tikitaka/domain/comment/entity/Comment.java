@@ -1,8 +1,8 @@
-package com.example.tikitaka.domain.answer.entity;
+package com.example.tikitaka.domain.comment.entity;
 
 import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.global.entity.BaseEntity;
-import com.example.tikitaka.global.entity.Comment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,16 +14,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "answer")
-public class Answer extends BaseEntity {
+@Table(name = "comments")
+public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id")
     private Long answerId;
 
     @ManyToOne
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
