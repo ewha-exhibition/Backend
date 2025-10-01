@@ -75,9 +75,9 @@ public class ExhibitionService {
 
     }
 
-    public ExhibitionDetailResponse findExhibtion(Long exhibitionIdx) {
-        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionIdx);
-        List<String> images = exhibitionImageRepository.findByExhibitionIdxOrderBySequenceAsc(exhibitionIdx);
+    public ExhibitionDetailResponse findExhibtion(Long exhibitionId) {
+        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
+        List<String> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
 
 
         return exhibitionMapper.toDetailResponse(exhibition, images);
@@ -85,8 +85,8 @@ public class ExhibitionService {
     }
 
     @Transactional
-    public void deleteExhibition(Long exhibitionIdx) {
-        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionIdx);
+    public void deleteExhibition(Long exhibitionId) {
+        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
         //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
         exhibition.markAsDeleted();
@@ -94,8 +94,8 @@ public class ExhibitionService {
     }
 
     @Transactional
-    public void updateExhibition(Long exhibitionIdx, ExhibitionCreate request) {
-        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionIdx);
+    public void updateExhibition(Long exhibitionId, ExhibitionCreate request) {
+        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
         //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
 

@@ -28,7 +28,7 @@ public class ExhibitionController {
         exhibitionService.addExhibition(request);
     }
 
-    @GetMapping("/{exhibitionIdx}")
+    @GetMapping("/{exhibitionId}")
     public ExhibitionDetailResponse exhibitionDetail(
             // 로그인 기능 추가 후 유저 정보 받기
             @PathVariable
@@ -37,21 +37,21 @@ public class ExhibitionController {
         return exhibitionService.findExhibtion(exhibitionIdx);
     }
 
-    @DeleteMapping("/{exhibitionIdx}")
+    @DeleteMapping("/{exhibitionId}")
     public void exhibitionDelete(
             // 로그인 기능 추가 후 유저 정보 받기
-            @PathVariable Long exhibitionIdx
+            @PathVariable Long exhibitionId
     ) {
-        exhibitionService.deleteExhibition(exhibitionIdx);
+        exhibitionService.deleteExhibition(exhibitionId);
     }
 
-    @PatchMapping("/{exhibitionIdx}")
+    @PatchMapping("/{exhibitionId}")
     public void exhibitionUpdate(
             // 로그인 기능 추가 후 유저 정보 받기
-            @PathVariable Long exhibitionIdx,
+            @PathVariable Long exhibitionId,
             @RequestBody ExhibitionCreate request
     ) {
-        exhibitionService.updateExhibition(exhibitionIdx, request);
+        exhibitionService.updateExhibition(exhibitionId, request);
     }
 
     @GetMapping("/posters")

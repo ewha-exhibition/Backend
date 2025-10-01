@@ -10,8 +10,8 @@ public interface ExhibitionImageRepository extends JpaRepository<ExhibitionImage
     @Query("""
             SELECT ei.imageUrl
             FROM ExhibitionImage ei
-            WHERE ei.exhibition.exhibitionIdx = :exhibitionIdx
+            WHERE ei.exhibition.exhibitionId = :exhibitionId
             ORDER BY ei.sequence ASC
             """)
-    List<String> findByExhibitionIdxOrderBySequenceAsc(Long exhibitionIdx);
+    List<String> findByExhibitionIdOrderBySequenceAsc(Long exhibitionId);
 }
