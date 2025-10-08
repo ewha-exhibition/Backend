@@ -13,7 +13,7 @@ public record TimeFormatting(LocalTime start, LocalTime end) {
     public String asString() {
         LocalTime s = start, e = end;
 
-        if (s.isAfter(end)) { var t = s; s = e; e = t;}
+        if (s.isAfter(e)) { var t = s; s = e; e = t;}
 
         if(s.getHour() < 10) {
             if (e.getHour() < 10) {

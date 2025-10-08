@@ -22,11 +22,11 @@ public class Host extends BaseEntity {
     private Long hostId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exhibition", nullable = false)
+    @JoinColumn(name = "exhibition_id", nullable = false)
     private Exhibition exhibition;
 
     @Column(name = "is_root", nullable = false)

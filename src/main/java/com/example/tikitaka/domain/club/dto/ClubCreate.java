@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class ClubCreate {
-    String name;
+    private String name;
 }

@@ -32,9 +32,9 @@ public class ExhibitionController {
     public ExhibitionDetailResponse exhibitionDetail(
             // 로그인 기능 추가 후 유저 정보 받기
             @PathVariable
-            Long exhibitionIdx
+            Long exhibitionId
     ){
-        return exhibitionService.findExhibtion(exhibitionIdx);
+        return exhibitionService.findExhibition(exhibitionId);
     }
 
     @DeleteMapping("/{exhibitionId}")

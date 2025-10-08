@@ -62,7 +62,7 @@ public class ExhibitionService {
         exhibitionRepository.save(exhibition);
 
         // 전시 이미지 등록
-        if (request.getImages() != null) {
+        if (request.getImages().isEmpty()) {
             List<ExhibitionImage> images = exhibitionMapper.toExhibitionImages(exhibition, request.getImages());
             exhibitionImageRepository.saveAll(images);
         }
@@ -75,7 +75,7 @@ public class ExhibitionService {
 
     }
 
-    public ExhibitionDetailResponse findExhibtion(Long exhibitionId) {
+    public ExhibitionDetailResponse findExhibition(Long exhibitionId) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
         List<String> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
 

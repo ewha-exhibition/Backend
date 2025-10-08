@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 public class ExhibitionDetailResponse {
     private Long exhibitionId;
-    private String exhibtionName;
+    private String exhibitionName;
     private String posterUrl;
     private String place;
     private PriceFormatting price;

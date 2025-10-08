@@ -22,7 +22,7 @@ public class Scrap extends BaseEntity {
     private Long scrapId;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne

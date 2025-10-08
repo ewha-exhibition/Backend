@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ClubValidator {
-    public  final ClubRepository clubRepository;
+    private final ClubRepository clubRepository;
 
     public void alreadyExist(String name) {
         if(clubRepository.existsByName(name)) {

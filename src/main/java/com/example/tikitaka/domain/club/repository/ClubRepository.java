@@ -12,6 +12,5 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     Optional<Club> findByName(String name);
     Boolean existsByName(String name);
 
-    @Query("SELECT c FROM Club c WHERE c.name = :name")
-    Optional<Club> findClubIdByName(String name);
+
 }

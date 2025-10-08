@@ -62,7 +62,7 @@ public class ExhibitionMapper {
     public ExhibitionDetailResponse toDetailResponse(Exhibition exhibition, List<String> images) {
         return ExhibitionDetailResponse.builder()
                 .exhibitionId(exhibition.getExhibitionId())
-                .exhibtionName(exhibition.getExhibitionName())
+                .exhibitionName(exhibition.getExhibitionName())
                 .posterUrl(exhibition.getPosterUrl())
                 .place(exhibition.getPlace())
                 .price(new PriceFormatting(exhibition.getPrice()))

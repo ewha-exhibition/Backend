@@ -24,7 +24,7 @@ public class ClubService {
         String name = clubCreate.getName().replace(" ", "");
 
         // 이미 존재하는 단체인지 확인 (이미 존재하는 단체면 CLUB_ALREADY_EXIST 에러 발생)
-        clubValidator.alreadyExist(clubCreate.getName());
+        clubValidator.alreadyExist(name);
 
         Club club = Club.builder()
                 .name(name)
@@ -40,8 +40,12 @@ public class ClubService {
         // clubAdd 메서드와 동일 로직 작동 -> 코드 중복 줄이는 리팩토링 필요
         String name = clubCreate.getName().replace(" ", "");
 
-        return clubRepository.findClubIdByName(name)
-                .orElse(clubAdd(clubCreate));
+        return clubRepository.findByName(name).orElseGet(() -> {
+            Club newClub = Club.builder()
+                    .name(name)
+                    .build();
+            return clubRepository.save(newClub);
+        });
     }
 
 }
