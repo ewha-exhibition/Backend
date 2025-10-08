@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "answer_id")
-    private Long answerId;
+    @Column(name = "comment_id")
+    private Long commentId;
 
     @ManyToOne
     @JoinColumn(name = "post_id")

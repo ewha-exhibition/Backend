@@ -18,6 +18,10 @@ public class PostImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postImageId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
     @Column(name = "post_image_url", nullable = false)
     private String postImageUrl;
 

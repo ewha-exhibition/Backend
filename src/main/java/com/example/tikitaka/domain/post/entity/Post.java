@@ -36,6 +36,7 @@ public class Post extends BaseEntity {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
+//    추후 User 수정 후 주석 해제 예정
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibition_id", nullable = false)
