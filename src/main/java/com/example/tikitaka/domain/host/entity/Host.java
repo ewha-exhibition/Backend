@@ -1,7 +1,7 @@
 package com.example.tikitaka.domain.host.entity;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
-import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.global.config.auth.user.User;
 import com.example.tikitaka.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,14 +21,15 @@ public class Host extends BaseEntity {
     @Column(name = "host_id")
     private Long hostId;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "exhibition_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exhibition_id", nullable = false)
     private Exhibition exhibition;
 
     @Column(name = "is_root", nullable = false)
     private Boolean isRoot;
+
 }

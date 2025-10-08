@@ -4,15 +4,15 @@ import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.global.entity.BaseEntity;
 import io.micrometer.core.annotation.Counted;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Setter
 @Getter
 @Builder
 @NoArgsConstructor
@@ -54,25 +54,13 @@ public class Exhibition extends BaseEntity {
     @Column(name = "link", nullable = false)
     private String link;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "code", nullable = false)
+    @Column(name = "code", nullable = false, unique = true)
     private String code;
 
-    @Column(name = "scrap_count", nullable = false)
-    private int scrapCount;
-
-    @Column(name = "review_count", nullable = false)
-    private int reviewCount;
-
-    @Column(name = "comment_count", nullable = false)
-    private int commentCount;
-
-    @Column(name = "view_count", nullable = false)
-    private int viewCount;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
     private Club club;
 
@@ -83,5 +71,50 @@ public class Exhibition extends BaseEntity {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Column(name = "scrap_count", nullable = false)
+    private int scrapCount;
+
+    @Column(name = "review_count", nullable = false)
+    private int reviewCount;
+
+    @Column(name = "cheering_count", nullable = false)
+    private int cheeringCount;
+
+    @Column(name = "question_count", nullable = false)
+    private int questionCount;
+
+    @Column(name = "view_count", nullable = false)
+    private int viewCount;
+
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
+
+
+
+//    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OrderBy("sequence ASC")
+//    private List<ExhibitionImage> images = new ArrayList<>();
+//
+//    public void addImage(ExhibitionImage image) {
+//        if (image == null) return;
+//        if (!this.images.contains(image)) {
+//            this.images.add(image);
+//        }
+//
+//        image.setExhibition(this);
+//    }
+//
+//    public void removeImage(ExhibitionImage image) {
+//        if (image == null) return;
+//        this.images.remove(image);
+//        image.setExhibition(null);
+//    }
+
+    public void markAsDeleted() {
+        this.isDeleted = true;
+    }
+
 
 }
