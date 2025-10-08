@@ -1,4 +1,4 @@
-package com.example.tikitaka.domain.exhibition.dto;
+package com.example.tikitaka.domain.exhibition.dto.response;
 
 import com.example.tikitaka.global.util.formatting.DateFormatting;
 import com.example.tikitaka.global.util.formatting.PriceFormatting;

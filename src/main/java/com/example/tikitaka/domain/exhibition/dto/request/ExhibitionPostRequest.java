@@ -1,12 +1,11 @@
-package com.example.tikitaka.domain.exhibition.dto;
+package com.example.tikitaka.domain.exhibition.dto.request;
 
 import com.example.tikitaka.domain.club.dto.ClubCreate;
-import lombok.Builder;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionImageCreate;
 import lombok.Getter;
 
 import java.util.List;
-
-import static lombok.Builder.*;
 
 @Getter
 public class ExhibitionPostRequest {

@@ -3,8 +3,7 @@ package com.example.tikitaka.domain.exhibition.service;
 import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.domain.club.service.ClubService;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
-import com.example.tikitaka.domain.exhibition.dto.ExhibitionDetailResponse;
-import com.example.tikitaka.domain.exhibition.dto.ExhibitionPostRequest;
+import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPostRequest;
 import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.entity.ExhibitionImage;
@@ -75,7 +74,7 @@ public class ExhibitionService {
 
     }
 
-    public ExhibitionDetailResponse findExhibition(Long exhibitionId) {
+    public ExhibitionCreate.ExhibitionDetailResponse findExhibition(Long exhibitionId) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
         List<String> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
 
