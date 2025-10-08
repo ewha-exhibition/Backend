@@ -17,6 +17,8 @@ public class RecentExhibition {
     // 추후 스크랩 여부 함께 반환
     // private boolean isScrap;
 
+    private boolean isOpen; // 현재 진행 중인지 여부
+
 
 
     public static RecentExhibition from(Exhibition exhibition) {
@@ -26,6 +28,7 @@ public class RecentExhibition {
                 .posterUrl(exhibition.getPosterUrl())
                 .duration(new DateFormatting(exhibition.getStartDate(), exhibition.getEndDate()))
                 .place(exhibition.getPlace())
+                .isOpen(!exhibition.isEnded())
                 .build();
     }
 }

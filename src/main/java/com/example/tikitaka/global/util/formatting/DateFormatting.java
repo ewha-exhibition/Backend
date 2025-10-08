@@ -11,8 +11,8 @@ public record DateFormatting(LocalDate start, LocalDate end) {
 
     @JsonValue
     public String asString() {
-        if (start == null) return null;
-        if (end == null) return FULL.format(start);
+        if (end == null) return null;
+        if (start == null) return FULL.format(end);
 
         LocalDate s = start, e = end;
         if (s.isAfter(e)) { var t = s; s = e; e = t; }

@@ -1,7 +1,8 @@
 package com.example.tikitaka.domain.exhibition.service;
 
 import com.example.tikitaka.domain.exhibition.dto.RecentExhibition;
-import com.example.tikitaka.domain.exhibition.dto.response.RecentExhibitionListResponse;
+import com.example.tikitaka.domain.exhibition.dto.response.ExhibitionListResponse;
+import com.example.tikitaka.domain.exhibition.dto.response.PopularExhibitionResponse;
 import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
@@ -21,7 +22,7 @@ import java.util.List;
 public class HomeService {
     private final ExhibitionRepository exhibitionRepository;
 
-    public RecentExhibitionListResponse findRecentExhibition(String category, int pageNum, int limit) {
+    public ExhibitionListResponse findRecentExhibition(String category, int pageNum, int limit) {
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Exhibition> exhibitions;
 
@@ -37,7 +38,21 @@ public class HomeService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, exhibitions.getTotalPages(), exhibitions.getTotalElements());
         List<RecentExhibition> recentExhibitions = exhibitions.getContent().stream().map(RecentExhibition::from).toList();
 
-        return new RecentExhibitionListResponse(recentExhibitions, pageInfo);
+        return new ExhibitionListResponse(recentExhibitions, pageInfo);
     }
+
+    public ExhibitionListResponse findKeywordExhibition(String keyword, int pageNum, int limit) {
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Exhibition> exhibitions = exhibitionRepository.findByKeyword(keyword, pageRequest);
+        PageInfo pageInfo = PageInfo.of(pageNum, limit, exhibitions.getTotalPages(), exhibitions.getTotalElements());
+        List<RecentExhibition> recentExhibitions = exhibitions.getContent().stream().map(RecentExhibition::from).toList();
+
+        return new ExhibitionListResponse(recentExhibitions, pageInfo);
+    }
+
+    public List<PopularExhibitionResponse> findPopularExhibition() {
+        return exhibitionRepository.findPopularExhibitions().stream().map(PopularExhibitionResponse::from).toList();
+    }
+
 
 }

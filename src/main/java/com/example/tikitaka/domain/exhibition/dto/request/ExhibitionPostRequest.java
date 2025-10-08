@@ -15,6 +15,6 @@ public class ExhibitionPostRequest {
 
     private ClubCreate club;
 
-    private List<ExhibitionImageCreate> images = List.of();
+    private List<ExhibitionImageCreate> images;
 
 }

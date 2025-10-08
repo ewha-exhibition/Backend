@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class RecentExhibitionListResponse {
+public class ExhibitionListResponse {
     private List<RecentExhibition> exhibitions;
     private PageInfo pageInfo;
 }
