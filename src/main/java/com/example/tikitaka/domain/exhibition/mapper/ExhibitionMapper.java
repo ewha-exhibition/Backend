@@ -2,7 +2,6 @@ package com.example.tikitaka.domain.exhibition.mapper;
 
 import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
-import com.example.tikitaka.domain.exhibition.dto.ExhibitionDetailResponse;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionImageCreate;
 import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
@@ -13,7 +12,6 @@ import com.example.tikitaka.global.util.formatting.PriceFormatting;
 import com.example.tikitaka.global.util.formatting.TimeFormatting;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,8 +57,8 @@ public class ExhibitionMapper {
         ).toList();
     }
 
-    public ExhibitionDetailResponse toDetailResponse(Exhibition exhibition, List<String> images) {
-        return ExhibitionDetailResponse.builder()
+    public ExhibitionCreate.ExhibitionDetailResponse toDetailResponse(Exhibition exhibition, List<String> images) {
+        return ExhibitionCreate.ExhibitionDetailResponse.builder()
                 .exhibitionId(exhibition.getExhibitionId())
                 .exhibitionName(exhibition.getExhibitionName())
                 .posterUrl(exhibition.getPosterUrl())

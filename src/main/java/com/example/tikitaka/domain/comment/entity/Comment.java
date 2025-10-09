@@ -1,6 +1,5 @@
 package com.example.tikitaka.domain.comment.entity;
 
-import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -25,7 +24,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+//    @ManyToOne
+//    @JoinColumn(name = "member_id")
+//    private Member member;
 }

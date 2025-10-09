@@ -6,7 +6,9 @@ import io.micrometer.core.annotation.Counted;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +35,10 @@ public class Exhibition extends BaseEntity {
     @Column(name = "place", nullable = false)
     private String place;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date", nullable = true)
     private LocalDate startDate;
 
-    @Column(name = "end_date", nullable = true)
+    @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
     @Column(name = "start_time", nullable = false)
@@ -116,5 +118,18 @@ public class Exhibition extends BaseEntity {
         this.isDeleted = true;
     }
 
+    public boolean isEnded() {
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime exhibitionEndMoment = crossesMidnight()
+                ? LocalDateTime.of(endDate.plusDays(1), endTime)
+                : LocalDateTime.of(endDate, endTime);
+
+        return !now.isBefore(exhibitionEndMoment);
+    }
+
+    private boolean crossesMidnight() {
+        return endTime.isBefore(startTime);
+    }
 
 }
