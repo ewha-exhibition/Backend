@@ -46,14 +46,13 @@ public class JwtTokenProvider {
     }
 
     // === 토큰 생성 ===
-    public String createToken(Long userId, String role, String email) {
+    public String createAccessToken(Long memberId) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expMillis);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(userId)) // sub = 우리 서비스의 사용자 PK
-                .claim("role", role)                // 예: "ROLE_USER"
-                .claim("email", email)              // 필요 시
+                .setSubject(String.valueOf(memberId)) // sub = 우리 서비스의 사용자 PK
+                .claim("typ", "access")
                 .setIssuedAt(now)
                 .setExpiration(exp)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -64,19 +63,16 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
 
-        String userId = claims.getSubject();
-        Object roleClaim = claims.get("role");
-        // 단일 권한
-        Collection<SimpleGrantedAuthority> authorities = List.of(
-                new SimpleGrantedAuthority(roleClaim != null ? roleClaim.toString() : "ROLE_USER")
+        String memberId = claims.getSubject();
+        return new UsernamePasswordAuthenticationToken(
+                memberId,                   // principal: memberId 문자열
+                null,
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
-
-        // 굳이 UserDetails 구현체가 없어도 UsernamePasswordAuthenticationToken으로 충분
-        return new UsernamePasswordAuthenticationToken(userId, null, authorities);
     }
 
-    // === 토큰에서 sub(=userId) 가져오기 ===
-    public Long getUserId(String token) {
+    // === 토큰에서 sub(=memberId) 가져오기 ===
+    public Long getMemberId(String token) {
         return Long.valueOf(parseClaims(token).getSubject());
     }
 

@@ -1,11 +1,16 @@
 package com.example.tikitaka.global.config.auth;
 
+import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.domain.member.entity.RegisterPath;
+import com.example.tikitaka.domain.member.entity.Status;
+import com.example.tikitaka.domain.member.repository.MemberRepository;
 import com.example.tikitaka.global.config.auth.jwt.JwtTokenProvider;
 import com.example.tikitaka.global.config.auth.user.User;
 import com.example.tikitaka.global.config.auth.user.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +22,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     // WebClient 는 빈으로 주입해도 되고, 간단히 빌더로 만들어도 됩니다.
@@ -76,28 +82,51 @@ public class AuthController {
                 .bodyToMono(Map.class)
                 .block();
 
+        log.info("Kakao userInfo = {}", userInfo);
+        System.out.println("=== Kakao userInfo ===");
+        System.out.println("userInfo = " + userInfo);
+
+
         if (userInfo == null || userInfo.get("id") == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "user_info_failed"));
         }
 
         Long kakaoId = ((Number) userInfo.get("id")).longValue();
+
         Map<String, Object> kakaoAccount = (Map<String, Object>) userInfo.get("kakao_account");
-        String email = kakaoAccount != null ? (String) kakaoAccount.get("email") : null;
-        Map<String, Object> profile = kakaoAccount != null ? (Map<String, Object>) kakaoAccount.get("profile") : null;
-        String nickname = profile != null ? (String) profile.get("nickname") : null;
+        if (kakaoAccount == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "kakao_account_missing"));
+        }
+        String email = (String) kakaoAccount.get("email");
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+        System.out.println("profile keys: " + profile.keySet());
 
-        // 3) 우리 유저 upsert (provider=KAKAO, providerId=kakaoId)
-        User user = userRepository.findByProviderAndProviderId("KAKAO", String.valueOf(kakaoId))
-                .map(u -> u.updateFromKakao(nickname, email))
-                .orElseGet(() -> userRepository.save(User.fromKakao(kakaoId, email, nickname)));
-
-        // 저장되지 않은 업데이트라면 저장
-        if (user.getId() == null) {
-            user = userRepository.save(user);
+        String nickname = profile != null ? (String) profile.get("nickname") : "카카오사용자";
+        String profileUrl = "";
+        if (profile != null) {
+            profileUrl = (String) profile.getOrDefault("profile_image_url", "");
+            if (profileUrl.isBlank()) {
+                profileUrl = (String) profile.getOrDefault("thumbnail_image_url", "");
+            }
         }
 
+        // 3) 우리 유저 upsert (provider=KAKAO, providerId=kakaoId)
+        RegisterPath path = RegisterPath.KAKAO;
+        String finalProfileUrl = profileUrl;
+        Member member = memberRepository.findByEmailAndPath(email, path)
+                .orElseGet(() -> memberRepository.save(
+                        Member.builder()
+                                .email(email)
+                                .username(nickname)
+                                .profileUrl(finalProfileUrl)
+                                .path(path)
+                                .status(Status.ACTIVE)
+                                .build()
+                ));
+
+
         // 4) JWT 발급
-        String accessToken = jwtTokenProvider.createToken(user.getId(), user.getRole(), user.getEmail());
+        String accessToken = jwtTokenProvider.createAccessToken(member.getMemberId());
 
         // 5) httpOnly 쿠키로 내려주기 (프론트는 로컬스토리지에 저장할 필요 없음)
         ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", accessToken)
@@ -112,8 +141,8 @@ public class AuthController {
                 .header("Set-Cookie", accessCookie.toString())
                 .body(Map.of(
                         "ok", true,
-                        "userId", user.getId(),
-                        "nickname", user.getNickname()
+                        "memberId", member.getMemberId(),
+                        "nickname", member.getUsername()
                 ));
     }
 

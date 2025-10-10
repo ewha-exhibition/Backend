@@ -1,5 +1,8 @@
 package com.example.tikitaka.global.config.auth;
 // 성공 핸들러 : 우리JWT발급 -> 프론트로 리다이렉트
+import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.domain.member.entity.RegisterPath;
+import com.example.tikitaka.domain.member.repository.MemberRepository;
 import com.example.tikitaka.global.config.auth.jwt.JwtTokenProvider;
 import com.example.tikitaka.global.config.auth.user.User;
 import com.example.tikitaka.global.config.auth.user.UserRepository;
@@ -14,12 +17,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -28,13 +33,21 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication) throws IOException {
         // 1) 카카오 사용자 식별 → 우리 유저 조회/생성
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        Long kakaoId = ((Number) oAuth2User.getAttributes().get("id")).longValue();
+        Map<String, Object> attrs = oAuth2User.getAttributes();
 
-        User user = userRepository.findByProviderAndProviderId("KAKAO", String.valueOf(kakaoId))
-                .orElseThrow(); // 이 시점엔 있어야 정상
+        Long kakaoId = ((Number) attrs.get("id")).longValue();
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attrs.get("kakao_account");
+        String email = kakaoAccount != null ? (String) kakaoAccount.get("email") : null;
+
+        RegisterPath path = RegisterPath.KAKAO;
+
+        Member member = Optional.ofNullable(email)
+                .flatMap(em -> memberRepository.findByEmailAndPath(em, path))
+                .orElseThrow(() -> new IllegalStateException(
+                        "Member not found after OAuth2 success (email consent required). kakaoId=" + kakaoId));
 
         // 2) 우리 토큰 발급
-        String accessToken = jwtTokenProvider.createToken(user.getId(), user.getRole(), user.getEmail());
+        String accessToken = jwtTokenProvider.createAccessToken(member.getMemberId());
 
         // 3) httpOnly 쿠키로 내려주기 (URL에 토큰 노출 X)
         // 로컬 개발은 Secure=false 가능하지만, 가능하면 true + https 환경 권장
