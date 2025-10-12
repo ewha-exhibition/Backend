@@ -96,7 +96,7 @@ public class AuthController {
         }
         String email = (String) kakaoAccount.get("email");
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
-        System.out.println("profile keys: " + profile.keySet());
+       
 
         String nickname = profile != null ? (String) profile.get("nickname") : "카카오사용자";
         String profileUrl = "";
