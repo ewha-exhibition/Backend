@@ -1,7 +1,6 @@
 package com.example.tikitaka.global.config;
 
 import com.example.tikitaka.global.config.auth.CustomAuthenticationEntryPoint;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import com.example.tikitaka.global.config.auth.OAuth2AuthenticationSuccessHandler;
 import com.example.tikitaka.global.config.auth.jwt.JwtAuthFilter;
@@ -9,15 +8,13 @@ import com.example.tikitaka.global.config.auth.user.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -51,16 +48,19 @@ public class SecurityConfig {
     };
 
     private final String[] SecurityPatterns = {
-            "/signup", "/", "/login", "/Oauth2/**", "/oauth2/**", "/login/oauth2/**", "/error"
+            "/signup", "/", "/login", "/Oauth2/**", "/oauth2/**", "/login/oauth2/**", "/api/auth/**", "/error"
     };
 
     private final String[] ActuatorPatterns = {
             "/actuator/health"
     };
 
+    private final String[] GetPermittedPatterns = {
+            "/exhibition/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -71,7 +71,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(ActuatorPatterns)
                         .permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()  // 서버 교환 엔드포인트는 공개
+                        .requestMatchers(HttpMethod.GET, GetPermittedPatterns)
+                        .permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint()) // 지정하지 않은 api는 403
@@ -81,7 +82,6 @@ public class SecurityConfig {
                         .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
                         .successHandler(oAuth2AuthenticationSuccessHandler)
                 )
-
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
