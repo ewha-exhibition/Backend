@@ -82,9 +82,6 @@ public class AuthController {
                 .bodyToMono(Map.class)
                 .block();
 
-        log.info("Kakao userInfo = {}", userInfo);
-        System.out.println("=== Kakao userInfo ===");
-        System.out.println("userInfo = " + userInfo);
 
 
         if (userInfo == null || userInfo.get("id") == null) {
