@@ -75,7 +75,6 @@ public class CustomOAuth2UserService
                                 .build()
                 ));
 
-        System.out.println("member"+ member);
 
         // SecurityContext 에 넣을 principal (권한 포함)
         return new DefaultOAuth2User(
