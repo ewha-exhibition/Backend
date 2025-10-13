@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public record DateFormatting(LocalDate start, LocalDate end) {
+public record PeriodFormatting(LocalDate start, LocalDate end) {
     private static final DateTimeFormatter FULL = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private static final DateTimeFormatter SHORT = DateTimeFormatter.ofPattern("MM.dd");
 
