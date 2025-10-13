@@ -20,5 +20,9 @@ public class ReviewController {
         return reviewImageService.getImageUploadUrl("reviews/images");
     }
 
+    // TODO: 질문 생성
+
+    // TODO: 특정 전시 질문 상세 (페이지네이션)
+
 
 }
