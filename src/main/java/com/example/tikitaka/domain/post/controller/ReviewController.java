@@ -1,12 +1,11 @@
 package com.example.tikitaka.domain.post.controller;
 
+import com.example.tikitaka.domain.post.dto.response.ExhibitionReviewListResponse;
 import com.example.tikitaka.domain.post.service.ReviewImageService;
 import com.example.tikitaka.domain.post.service.ReviewService;
 import com.example.tikitaka.infra.s3.S3Url;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,9 +21,18 @@ public class ReviewController {
 
     // TODO: 질문 생성
 
-    // TODO: 특정 전시 질문 상세 (페이지네이션)
+    // TODO: 추후 유저 내용 추가
     @GetMapping("/{exhibitionId}")
-    public
+    public ExhibitionReviewListResponse exhibitionReviewList(
+            @PathVariable
+            Long exhibitionId,
+            @RequestParam(required = true)
+            int pageNum,
+            @RequestParam(required = true)
+            int limit
+    ) {
+        return reviewService.getExhibitionReviews(exhibitionId, pageNum, limit);
+    }
 
 
 
