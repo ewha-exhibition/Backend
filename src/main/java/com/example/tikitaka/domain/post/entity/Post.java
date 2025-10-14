@@ -43,13 +43,13 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "exhibition_id", nullable = false)
     private Exhibition exhibition;
 
-    public static Post toEntity(Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType) {
+    public static Post toEntity(Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType, Long displayNo) {
         return Post.builder()
                 .postType(postType)
                 .content(reviewPostRequest.getContent())
                 .hasAnswer(false)
                 .exhibition(exhibition)
-                .displayNo(exhibition.getReviewNo()+1)
+                .displayNo(displayNo)
                 .build();
     }
 

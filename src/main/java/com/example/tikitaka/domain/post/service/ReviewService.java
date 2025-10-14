@@ -32,15 +32,17 @@ public class ReviewService {
     public void addReview(Long exhibitionId, ReviewPostRequest reviewPostRequest) {
         // TODO: 유저 조회
 
-        // TODO: 작성 경험 존재한 유저인지 확인
-
         // 전시 조회
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
+        // TODO: 작성 경험 존재한 유저인지 확인 (있으면 number 꺼내쓰고, 없으면 exhibition에 no + 1)
+        Long number = exhibition.getReviewNo() + 1;
+
         // 리뷰 생성
-        Post review = Post.toEntity(exhibition, reviewPostRequest, PostType.REVIEW);
+        Post review = Post.toEntity(exhibition, reviewPostRequest, PostType.REVIEW, number);
         postRepository.save(review);
         exhibition.increaseReviewNo();
+        exhibition.increaseReviewCount();
 
         // 리뷰 이미지 저장
         for (String url : reviewPostRequest.getImages()) {

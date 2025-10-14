@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.post.controller;
 
+import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionReviewListResponse;
 import com.example.tikitaka.domain.post.service.ReviewImageService;
 import com.example.tikitaka.domain.post.service.ReviewService;
@@ -20,6 +21,13 @@ public class ReviewController {
     }
 
     // TODO: 질문 생성
+    @PostMapping("/{exhibitionId}")
+    public void exhibitionReviewList(
+            ReviewPostRequest reviewPostRequest,
+            @PathVariable
+            Long exhibitionId) {
+        reviewService.addReview(exhibitionId, reviewPostRequest);
+    }
 
     // TODO: 추후 유저 내용 추가
     @GetMapping("/{exhibitionId}")

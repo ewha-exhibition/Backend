@@ -153,4 +153,9 @@ public class Exhibition extends BaseEntity {
         this.questionNo++;
     }
 
+    public void increaseReviewCount() { this.reviewCount++; }
+
+    public void decreaseReviewCount() { this.reviewCount--; }
+
+
 }
