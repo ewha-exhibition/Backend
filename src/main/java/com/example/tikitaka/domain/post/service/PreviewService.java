@@ -31,7 +31,10 @@ public class PreviewService {
     @Transactional
     public void addPreview(Long exhibitionId, PreviewPostRequest previewPostRequest, PostType postType) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
+
+        // 추후 유저가 이미 post를 생성한 경우를 고려하기 위한 변수
         boolean flag = true;
+
         Long number = 0L;
         if (flag & postType == PostType.QUESTION) {
             number = exhibition.getQuestionNo() + 1;

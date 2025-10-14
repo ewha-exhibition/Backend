@@ -31,7 +31,9 @@ public class QuestionController {
     public ExhibitionPostListResponse exhibitionQuestionList(
             @PathVariable
             Long exhibitionId,
+            @RequestParam(required = true)
             int pageNum,
+            @RequestParam(required = true)
             int limit
     ) {
         return previewService.getExhibitionPreviews(exhibitionId, PostType.QUESTION, pageNum, limit);

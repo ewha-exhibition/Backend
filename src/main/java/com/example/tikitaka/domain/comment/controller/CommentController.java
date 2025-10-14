@@ -15,6 +15,7 @@ public class CommentController {
     public void commentAdd(
             @PathVariable
             Long postId,
+            @RequestBody
             CommentPostRequest commentPostRequest) {
         commentService.addComment(postId, commentPostRequest);
     }

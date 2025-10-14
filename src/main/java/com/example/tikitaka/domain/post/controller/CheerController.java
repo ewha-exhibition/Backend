@@ -19,7 +19,7 @@ public class CheerController {
     @PostMapping("/{exhibitionId}")
     public void cheerAdd(
             @PathVariable
-            Long exhibitionId,
+            Long exhibitionId,@RequestBody
             PreviewPostRequest previewPostRequest) {
         previewService.addPreview(exhibitionId, previewPostRequest, PostType.CHEER);
     }
@@ -30,7 +30,9 @@ public class CheerController {
     public ExhibitionPostListResponse exhibitionCheerList(
             @PathVariable
             Long exhibitionId,
+            @RequestParam(required = true)
             int pageNum,
+            @RequestParam(required = true)
             int limit
     ) {
         return previewService.getExhibitionPreviews(exhibitionId, PostType.CHEER, pageNum, limit);

@@ -23,6 +23,7 @@ public class CommentService {
     public void addComment(Long postId, CommentPostRequest commentPostRequest) {
         Post post = postValidator.validatePostByPostId(postId);
         commentRepository.save(Comment.toEntity(post, commentPostRequest.getContent()));
+        post.switchAsAnswered();
 
     }
 
@@ -30,6 +31,7 @@ public class CommentService {
     public void deleteComment(Long commentId) {
         Comment comment = commentValidator.validateCommentByCommentId(commentId);
         commentRepository.delete(comment);
+        comment.getPost().switchAsAnswered();
     }
 
 }

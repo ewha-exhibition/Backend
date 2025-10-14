@@ -3,6 +3,7 @@ package com.example.tikitaka.domain.exhibition.mapper;
 import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionImageCreate;
+import com.example.tikitaka.domain.exhibition.dto.response.ExhibitionDetailResponse;
 import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.entity.ExhibitionImage;
@@ -37,7 +38,7 @@ public class ExhibitionMapper {
                 .code(code)
                 .scrapCount(0)
                 .reviewCount(0)
-                .cheeringCount(0)
+                .cheerCount(0)
                 .questionCount(0)
                 .cheerNo(0L)
                 .reviewNo(0L)
@@ -60,8 +61,8 @@ public class ExhibitionMapper {
         ).toList();
     }
 
-    public ExhibitionCreate.ExhibitionDetailResponse toDetailResponse(Exhibition exhibition, List<String> images) {
-        return ExhibitionCreate.ExhibitionDetailResponse.builder()
+    public ExhibitionDetailResponse toDetailResponse(Exhibition exhibition, List<String> images) {
+        return ExhibitionDetailResponse.builder()
                 .exhibitionId(exhibition.getExhibitionId())
                 .exhibitionName(exhibition.getExhibitionName())
                 .posterUrl(exhibition.getPosterUrl())
@@ -76,7 +77,7 @@ public class ExhibitionMapper {
                 .link(exhibition.getLink())
                 .scrapCount(exhibition.getScrapCount())
                 .reviewCount(exhibition.getReviewCount())
-                .cheeringCount(exhibition.getCheeringCount())
+                .cheerCount(exhibition.getCheerCount())
                 .questionCount(exhibition.getQuestionCount())
                 .userRole("") // 추후 추가 예정
                 .build();

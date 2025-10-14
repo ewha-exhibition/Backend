@@ -22,8 +22,8 @@ public class PostImageService {
         return s3UrlHandler.handle(prefix);
     }
 
-    public List<String> getReviewImageUrls(Long postId) {
-        return postImageRepository.findPostImageUrlsByPostId(postId);
+    public List<String> getReviewImageUrls(Post post) {
+        return postImageRepository.findPostImageUrlsByPost(post);
     }
 
     public void createReviewImages(Post post, String url) {

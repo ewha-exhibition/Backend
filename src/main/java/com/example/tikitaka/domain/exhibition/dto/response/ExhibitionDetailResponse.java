@@ -25,7 +25,7 @@ public class ExhibitionDetailResponse {
     private String link;
     private int scrapCount;
     private int reviewCount;
-    private int cheeringCount;
+    private int cheerCount;
     private int questionCount;
     private String userRole;
 

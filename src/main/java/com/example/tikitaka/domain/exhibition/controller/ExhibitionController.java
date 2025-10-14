@@ -2,6 +2,7 @@ package com.example.tikitaka.domain.exhibition.controller;
 
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
 import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPostRequest;
+import com.example.tikitaka.domain.exhibition.dto.response.ExhibitionDetailResponse;
 import com.example.tikitaka.domain.exhibition.service.ExhibitionImageService;
 import com.example.tikitaka.domain.exhibition.service.ExhibitionService;
 import com.example.tikitaka.infra.s3.S3Url;
@@ -23,7 +24,7 @@ public class ExhibitionController {
     }
 
     @GetMapping("/{exhibitionId}")
-    public ExhibitionCreate.ExhibitionDetailResponse exhibitionDetail(
+    public ExhibitionDetailResponse exhibitionDetail(
             // 로그인 기능 추가 후 유저 정보 받기
             @PathVariable
             Long exhibitionId

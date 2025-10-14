@@ -67,7 +67,7 @@ public class ReviewService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
 
         List<ExhibitionPost> exhibitionReviews = reviews.getContent().stream().map(
-                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review.getPostId()))
+                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review))
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);

@@ -25,6 +25,7 @@ public class ReviewController {
     // TODO: 질문 생성, 추후 유저 내용 추가
     @PostMapping("/{exhibitionId}")
     public void exhibitionReviewAdd(
+            @RequestBody
             ReviewPostRequest reviewPostRequest,
             @PathVariable
             Long exhibitionId) {
@@ -45,7 +46,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{postId}")
-    public void questionDelete(@PathVariable Long postId) {
+    public void reviewDelete(@PathVariable Long postId) {
         postService.deletePost(postId);
     }
 

@@ -159,7 +159,7 @@ public class Exhibition extends BaseEntity {
 
     public void increaseCheerCount() { this.cheerCount++; }
 
-    public void decreaseCheeringCount() { this.cheerCount--; }
+    public void decreaseCheerCount() { this.cheerCount--; }
 
     public void increaseQuestionCount() { this.questionCount++; }
 
