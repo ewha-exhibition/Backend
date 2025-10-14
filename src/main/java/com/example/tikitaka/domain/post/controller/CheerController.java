@@ -2,17 +2,16 @@ package com.example.tikitaka.domain.post.controller;
 
 import com.example.tikitaka.domain.post.dto.request.PreviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
-import com.example.tikitaka.domain.post.service.CheerService;
-import com.example.tikitaka.infra.s3.S3Url;
+import com.example.tikitaka.domain.post.entity.PostType;
+import com.example.tikitaka.domain.post.service.PreviewService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cheers")
 public class CheerController {
-    private final CheerService cheerService;
+    private final PreviewService previewService;
     // TODO: 추후 유저 추가
 
     @PostMapping("/{exhibitionId}")
@@ -20,7 +19,7 @@ public class CheerController {
             @PathVariable
             Long exhibitionId,
             PreviewPostRequest previewPostRequest) {
-        cheerService.addCheer(exhibitionId, previewPostRequest);
+        previewService.addCheer(exhibitionId, previewPostRequest);
     }
 
 
@@ -32,7 +31,7 @@ public class CheerController {
             int pageNum,
             int limit
     ) {
-        return cheerService.getExhibitionCheers(exhibitionId, pageNum, limit);
+        return previewService.getExhibitionPreviews(exhibitionId, PostType.CHEER, pageNum, limit);
     }
 
 

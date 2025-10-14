@@ -5,7 +5,6 @@ import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionPreview;
-import com.example.tikitaka.domain.post.dto.ExhibitionReview;
 import com.example.tikitaka.domain.post.dto.request.PreviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
 import com.example.tikitaka.domain.post.entity.Post;
@@ -21,12 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CheerService {
+public class PreviewService {
     private final ExhibitionValidator exhibitionValidator;
     private final CommentValidator commentValidator;
     private final PostRepository postRepository;
@@ -44,19 +41,20 @@ public class CheerService {
         exhibition.increaseCheerNo();
     }
 
-    public ExhibitionPostListResponse getExhibitionCheers(
+    public ExhibitionPostListResponse getExhibitionPreviews(
             Long exhibitionId,
+            PostType postType,
             int pageNum,
             int limit
     ) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Post> cheers = postRepository.findCheerByExhibition(exhibition, pageRequest);
-        PageInfo pageInfo = PageInfo.of(pageNum, limit, cheers.getTotalPages(), cheers.getTotalElements());
+        Page<Post> previews = postRepository.findByExhibitionAndPostType(exhibition, postType, pageRequest);
+        PageInfo pageInfo = PageInfo.of(pageNum, limit, previews.getTotalPages(), previews.getTotalElements());
 
-        List<ExhibitionPost> exhibitionCheers = cheers.getContent().stream().map(
-                cheer -> (ExhibitionPost) ExhibitionPreview.of(cheer, commentValidator.validateCommentContent(cheer))
+        List<ExhibitionPost> exhibitionCheers = previews.getContent().stream().map(
+                preview -> (preview.isHasAnswer())?(ExhibitionPost) ExhibitionPreview.of(preview, commentValidator.validateCommentContent(preview)): (ExhibitionPost) ExhibitionPreview.of(preview, null)
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionCheers, pageInfo);
