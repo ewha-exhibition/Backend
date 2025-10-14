@@ -17,7 +17,7 @@ public class CheerController {
     // TODO: 추후 유저 추가
 
     @PostMapping("/{exhibitionId}")
-    public void addCheer(
+    public void cheerAdd(
             @PathVariable
             Long exhibitionId,
             PreviewPostRequest previewPostRequest) {
@@ -37,7 +37,7 @@ public class CheerController {
     }
 
     @DeleteMapping("/{postId}")
-    public void deleteCheer(@PathVariable Long postId) {
+    public void cheerDelete(@PathVariable Long postId) {
         postService.deletePost(postId);
     }
 

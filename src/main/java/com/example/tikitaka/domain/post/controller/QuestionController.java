@@ -17,7 +17,7 @@ public class QuestionController {
 
     // TODO: 질문 생성
     @PostMapping("/{exhibitionId}")
-    public void addQuestion(
+    public void questionAdd(
             @PathVariable
             Long exhibitionId,
             @RequestBody
@@ -38,7 +38,7 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{postId}")
-    public void deleteQuestion(@PathVariable Long postId) {
+    public void questionDelete(@PathVariable Long postId) {
         postService.deletePost(postId);
     }
 }

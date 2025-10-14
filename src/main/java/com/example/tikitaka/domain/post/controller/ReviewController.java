@@ -45,7 +45,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{postId}")
-    public void deleteQuestion(@PathVariable Long postId) {
+    public void questionDelete(@PathVariable Long postId) {
         postService.deletePost(postId);
     }
 
