@@ -20,7 +20,7 @@ public class ReviewController {
         return reviewImageService.getImageUploadUrl("reviews/images");
     }
 
-    // TODO: 질문 생성
+    // TODO: 질문 생성, 추후 유저 내용 추가
     @PostMapping("/{exhibitionId}")
     public void exhibitionReviewAdd(
             ReviewPostRequest reviewPostRequest,

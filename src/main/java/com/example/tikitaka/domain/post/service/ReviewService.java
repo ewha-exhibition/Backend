@@ -38,11 +38,12 @@ public class ReviewService {
 
         // TODO: 작성 경험 존재한 유저인지 확인 (있으면 number 꺼내쓰고, 없으면 exhibition에 no + 1)
         Long number = exhibition.getReviewNo() + 1;
+        exhibition.increaseReviewNo();
 
         // 리뷰 생성
-        Post review = Post.toEntity(exhibition, reviewPostRequest, PostType.REVIEW, number);
+        Post review = Post.toReviewEntity(exhibition, reviewPostRequest, PostType.REVIEW, number);
         postRepository.save(review);
-        exhibition.increaseReviewNo();
+
         exhibition.increaseReviewCount();
 
         // 리뷰 이미지 저장

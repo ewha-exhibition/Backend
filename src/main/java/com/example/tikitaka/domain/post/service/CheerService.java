@@ -6,8 +6,10 @@ import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionPreview;
 import com.example.tikitaka.domain.post.dto.ExhibitionReview;
+import com.example.tikitaka.domain.post.dto.request.PreviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
 import com.example.tikitaka.domain.post.entity.Post;
+import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
 import com.example.tikitaka.global.dto.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,19 @@ public class CheerService {
     private final ExhibitionValidator exhibitionValidator;
     private final CommentValidator commentValidator;
     private final PostRepository postRepository;
+
+    @Transactional
+    public void addCheer(Long exhibitionId, PreviewPostRequest previewPostRequest) {
+        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
+
+        Long number = exhibition.getCheerNo() + 1;
+        exhibition.increaseCheerNo();
+
+        Post cheer = Post.toPreviewEntity(exhibition, previewPostRequest, PostType.CHEER, number);
+        postRepository.save(cheer);
+
+        exhibition.increaseCheerNo();
+    }
 
     public ExhibitionPostListResponse getExhibitionCheers(
             Long exhibitionId,
