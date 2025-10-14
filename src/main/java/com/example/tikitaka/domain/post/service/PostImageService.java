@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ReviewImageService {
+public class PostImageService {
     private final S3UrlHandler s3UrlHandler;
     private final PostImageRepository postImageRepository;
 
@@ -29,4 +29,12 @@ public class ReviewImageService {
     public void createReviewImages(Post post, String url) {
         postImageRepository.save(PostImage.toEntity(post, url));
     }
+
+    public void deletePostImages(Post post) {
+        List<PostImage> postImages = postImageRepository.findAllByPost(post);
+        // TODO: 추후 S3 url 삭제 로직 구현
+        postImageRepository.deleteAll(postImages);
+    }
+
+
 }

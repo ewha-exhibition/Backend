@@ -2,7 +2,8 @@ package com.example.tikitaka.domain.post.controller;
 
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
-import com.example.tikitaka.domain.post.service.ReviewImageService;
+import com.example.tikitaka.domain.post.service.PostImageService;
+import com.example.tikitaka.domain.post.service.PostService;
 import com.example.tikitaka.domain.post.service.ReviewService;
 import com.example.tikitaka.infra.s3.S3Url;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/reviews")
 public class ReviewController {
     private final ReviewService reviewService;
-    private final ReviewImageService reviewImageService;
+    private final PostImageService postImageService;
+    private final PostService postService;
 
     @GetMapping("/images")
     public S3Url getPosterUploadUrl() {
-        return reviewImageService.getImageUploadUrl("reviews/images");
+        return postImageService.getImageUploadUrl("reviews/images");
     }
 
     // TODO: 질문 생성, 추후 유저 내용 추가
@@ -42,6 +44,10 @@ public class ReviewController {
         return reviewService.getExhibitionReviews(exhibitionId, pageNum, limit);
     }
 
+    @DeleteMapping("/{postId}")
+    public void deleteQuestion(@PathVariable Long postId) {
+        postService.deletePost(postId);
+    }
 
 
 }

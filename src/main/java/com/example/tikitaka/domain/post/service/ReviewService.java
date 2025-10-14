@@ -26,7 +26,7 @@ public class ReviewService {
 
     private final ExhibitionValidator exhibitionValidator;
     private final PostRepository postRepository;
-    private final ReviewImageService reviewImageService;
+    private final PostImageService postImageService;
 
     // TODO: 추후 유저 추가
     @Transactional
@@ -48,7 +48,7 @@ public class ReviewService {
 
         // 리뷰 이미지 저장
         for (String url : reviewPostRequest.getImages()) {
-            reviewImageService.createReviewImages(review, url);
+            postImageService.createReviewImages(review, url);
         }
 
 
@@ -67,7 +67,7 @@ public class ReviewService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
 
         List<ExhibitionPost> exhibitionReviews = reviews.getContent().stream().map(
-                review -> (ExhibitionPost) ExhibitionReview.of(review, reviewImageService.getReviewImageUrls(review.getPostId()))
+                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review.getPostId()))
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);

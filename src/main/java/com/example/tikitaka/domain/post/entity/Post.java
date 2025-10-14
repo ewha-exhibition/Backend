@@ -35,6 +35,9 @@ public class Post extends BaseEntity {
     @Column(name = "display_no", nullable = false)
     private Long displayNo; // '벗0'에서 숫자 의미
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
+
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
@@ -44,6 +47,15 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "exhibition_id", nullable = false)
     private Exhibition exhibition;
 
+    public void markAsDeleted() {
+        this.isDeleted = true;
+    }
+
+    public void switchAsAnswered() {
+        this.hasAnswer = !this.hasAnswer;
+    }
+
+
     public static Post toReviewEntity(Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType, Long displayNo) {
         return Post.builder()
                 .postType(postType)
@@ -51,6 +63,7 @@ public class Post extends BaseEntity {
                 .hasAnswer(false)
                 .exhibition(exhibition)
                 .displayNo(displayNo)
+                .isDeleted(false)
                 .build();
     }
 
@@ -61,6 +74,7 @@ public class Post extends BaseEntity {
                 .hasAnswer(false)
                 .exhibition(exhibition)
                 .displayNo(displayNo)
+                .isDeleted(false)
                 .build();
     }
 
