@@ -26,4 +26,10 @@ public class CommentService {
 
     }
 
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = commentValidator.validateCommentByCommentId(commentId);
+        commentRepository.delete(comment);
+    }
+
 }

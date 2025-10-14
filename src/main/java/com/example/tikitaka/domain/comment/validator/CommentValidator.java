@@ -19,4 +19,10 @@ public class CommentValidator {
                 () -> new BaseErrorException(CommentErrorCode.COMMENT_NOT_FOUND)
         );
     }
+
+    public Comment validateCommentByCommentId(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(
+                () -> new BaseErrorException(CommentErrorCode.COMMENT_NOT_FOUND)
+        );
+    }
 }

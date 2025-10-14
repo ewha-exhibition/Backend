@@ -4,10 +4,7 @@ import com.example.tikitaka.domain.comment.dto.CommentPostRequest;
 import com.example.tikitaka.domain.comment.repository.CommentRepository;
 import com.example.tikitaka.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,5 +17,10 @@ public class CommentController {
             Long postId,
             CommentPostRequest commentPostRequest) {
         commentService.addComment(postId, commentPostRequest);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public void commentDelete(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
     }
 }
