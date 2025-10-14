@@ -29,16 +29,25 @@ public class PreviewService {
     private final PostRepository postRepository;
 
     @Transactional
-    public void addCheer(Long exhibitionId, PreviewPostRequest previewPostRequest) {
+    public void addPreview(Long exhibitionId, PreviewPostRequest previewPostRequest, PostType postType) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
+        boolean flag = true;
+        Long number = 0L;
+        if (flag & postType == PostType.QUESTION) {
+            number = exhibition.getQuestionNo() + 1;
+            exhibition.increaseQuestionNo();
+            exhibition.increaseQuestionCount();
+        }
+        else if (flag & postType == PostType.CHEER) {
+            number = exhibition.getCheerNo() + 1;
+            exhibition.increaseCheerNo();
+            exhibition.increaseCheerCount();
+        }
 
-        Long number = exhibition.getCheerNo() + 1;
-        exhibition.increaseCheerNo();
 
-        Post cheer = Post.toPreviewEntity(exhibition, previewPostRequest, PostType.CHEER, number);
+        Post cheer = Post.toPreviewEntity(exhibition, previewPostRequest, postType, number);
         postRepository.save(cheer);
 
-        exhibition.increaseCheerNo();
     }
 
     public ExhibitionPostListResponse getExhibitionPreviews(

@@ -1,13 +1,11 @@
 package com.example.tikitaka.domain.post.controller;
 
+import com.example.tikitaka.domain.post.dto.request.PreviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.service.PreviewService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +14,15 @@ public class QuestionController {
     private final PreviewService previewService;
 
     // TODO: 질문 생성
+    @PostMapping("/{exhibitionId}")
+    public void addQuestion(
+            @PathVariable
+            Long exhibitionId,
+            @RequestBody
+            PreviewPostRequest previewPostRequest) {
+        previewService.addPreview(exhibitionId, previewPostRequest, PostType.QUESTION);
+    }
+
 
 
     @GetMapping("/{exhibitionId}")

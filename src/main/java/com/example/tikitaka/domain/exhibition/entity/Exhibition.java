@@ -81,7 +81,7 @@ public class Exhibition extends BaseEntity {
     private int reviewCount;
 
     @Column(name = "cheering_count", nullable = false)
-    private int cheeringCount;
+    private int cheerCount;
 
     @Column(name = "question_count", nullable = false)
     private int questionCount;
@@ -156,6 +156,14 @@ public class Exhibition extends BaseEntity {
     public void increaseReviewCount() { this.reviewCount++; }
 
     public void decreaseReviewCount() { this.reviewCount--; }
+
+    public void increaseCheerCount() { this.cheerCount++; }
+
+    public void decreaseCheeringCount() { this.cheerCount--; }
+
+    public void increaseQuestionCount() { this.questionCount++; }
+
+    public void decreaseQuestionCount() { this.questionCount--; }
 
 
 }

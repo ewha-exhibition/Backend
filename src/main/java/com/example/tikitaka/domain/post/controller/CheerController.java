@@ -19,7 +19,7 @@ public class CheerController {
             @PathVariable
             Long exhibitionId,
             PreviewPostRequest previewPostRequest) {
-        previewService.addCheer(exhibitionId, previewPostRequest);
+        previewService.addPreview(exhibitionId, previewPostRequest, PostType.CHEER);
     }
 
 
