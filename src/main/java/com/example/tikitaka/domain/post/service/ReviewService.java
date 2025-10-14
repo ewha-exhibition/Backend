@@ -2,9 +2,10 @@ package com.example.tikitaka.domain.post.service;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
+import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionReview;
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
-import com.example.tikitaka.domain.post.dto.response.ExhibitionReviewListResponse;
+import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
@@ -53,7 +54,7 @@ public class ReviewService {
 
     }
 
-    public ExhibitionReviewListResponse getExhibitionReviews(
+    public ExhibitionPostListResponse getExhibitionReviews(
             Long exhibitionId,
             int pageNum,
             int limit
@@ -64,11 +65,11 @@ public class ReviewService {
         Page<Post> reviews = postRepository.findReviewByExhibition(exhibition, pageRequest);
         PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
 
-        List<ExhibitionReview> exhibitionReviews = reviews.getContent().stream().map(
-                review -> ExhibitionReview.of(review, reviewImageService.getReviewImageUrls(review.getPostId()))
+        List<ExhibitionPost> exhibitionReviews = reviews.getContent().stream().map(
+                review -> (ExhibitionPost) ExhibitionReview.of(review, reviewImageService.getReviewImageUrls(review.getPostId()))
         ).toList();
 
-        return ExhibitionReviewListResponse.of(exhibitionReviews, pageInfo);
+        return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);
     }
 
 

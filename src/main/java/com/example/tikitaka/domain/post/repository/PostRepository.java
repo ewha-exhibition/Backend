@@ -17,4 +17,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     """
     )
     Page<Post> findReviewByExhibition(Exhibition exhibition, Pageable pageable);
+
+    @Query("""
+    SELECT p
+    FROM Post p
+    WHERE p.exhibition = :exhibition AND p.postType = 'CHEER'
+    """
+    )
+    Page<Post> findCheerByExhibition(Exhibition exhibition, Pageable pageable);
 }

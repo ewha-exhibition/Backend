@@ -1,7 +1,7 @@
 package com.example.tikitaka.domain.post.controller;
 
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
-import com.example.tikitaka.domain.post.dto.response.ExhibitionReviewListResponse;
+import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
 import com.example.tikitaka.domain.post.service.ReviewImageService;
 import com.example.tikitaka.domain.post.service.ReviewService;
 import com.example.tikitaka.infra.s3.S3Url;
@@ -31,7 +31,7 @@ public class ReviewController {
 
     // TODO: 추후 유저 내용 추가
     @GetMapping("/{exhibitionId}")
-    public ExhibitionReviewListResponse exhibitionReviewList(
+    public ExhibitionPostListResponse exhibitionReviewList(
             @PathVariable
             Long exhibitionId,
             @RequestParam(required = true)
