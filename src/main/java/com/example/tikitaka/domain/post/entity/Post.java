@@ -1,6 +1,7 @@
 package com.example.tikitaka.domain.post.entity;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
+import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,15 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "exhibition_id", nullable = false)
     private Exhibition exhibition;
 
+    public static Post toEntity(Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType) {
+        return Post.builder()
+                .postType(postType)
+                .content(reviewPostRequest.getContent())
+                .hasAnswer(false)
+                .exhibition(exhibition)
+                .displayNo(exhibition.getReviewNo()+1)
+                .build();
+    }
 
 
 }

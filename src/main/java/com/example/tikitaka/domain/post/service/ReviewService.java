@@ -3,8 +3,10 @@ package com.example.tikitaka.domain.post.service;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionReview;
+import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionReviewListResponse;
 import com.example.tikitaka.domain.post.entity.Post;
+import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
 import com.example.tikitaka.global.dto.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,30 @@ public class ReviewService {
     private final ExhibitionValidator exhibitionValidator;
     private final PostRepository postRepository;
     private final ReviewImageService reviewImageService;
+
+    // TODO: 추후 유저 추가
+    @Transactional
+    public void addReview(Long exhibitionId, ReviewPostRequest reviewPostRequest) {
+        // TODO: 유저 조회
+
+        // TODO: 작성 경험 존재한 유저인지 확인
+
+        // 전시 조회
+        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
+
+        // 리뷰 생성
+        Post review = Post.toEntity(exhibition, reviewPostRequest, PostType.REVIEW);
+        postRepository.save(review);
+        exhibition.increaseReviewNo();
+
+        // 리뷰 이미지 저장
+        for (String url : reviewPostRequest.getImages()) {
+            reviewImageService.createReviewImages(review, url);
+        }
+
+
+
+    }
 
     public ExhibitionReviewListResponse getExhibitionReviews(
             Long exhibitionId,

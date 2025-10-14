@@ -1,5 +1,8 @@
 package com.example.tikitaka.domain.post.service;
 
+import com.example.tikitaka.domain.post.dto.ExhibitionReview;
+import com.example.tikitaka.domain.post.entity.Post;
+import com.example.tikitaka.domain.post.entity.PostImage;
 import com.example.tikitaka.domain.post.repository.PostImageRepository;
 import com.example.tikitaka.domain.post.repository.PostRepository;
 import com.example.tikitaka.infra.s3.S3Url;
@@ -23,5 +26,9 @@ public class ReviewImageService {
 
     public List<String> getReviewImageUrls(Long postId) {
         return postImageRepository.findPostImageUrlsByPostId(postId);
+    }
+
+    public void createReviewImages(Post post, String url) {
+        postImageRepository.save(PostImage.toEntity(post, url));
     }
 }

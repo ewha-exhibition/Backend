@@ -92,6 +92,15 @@ public class Exhibition extends BaseEntity {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
+    @Column(name = "review_no", nullable = false)
+    private Long reviewNo;
+
+    @Column(name = "cheer_no", nullable = false)
+    private Long cheerNo;
+
+    @Column(name = "question_no", nullable = false)
+    private Long questionNo;
+
 
 
 
@@ -130,6 +139,18 @@ public class Exhibition extends BaseEntity {
 
     private boolean crossesMidnight() {
         return endTime.isBefore(startTime);
+    }
+
+    public void increaseReviewNo() {
+        this.reviewNo++;
+    }
+
+    public void increaseCheerNo() {
+        this.cheerNo++;
+    }
+
+    public void increaseQuestionNo() {
+        this.questionNo++;
     }
 
 }
