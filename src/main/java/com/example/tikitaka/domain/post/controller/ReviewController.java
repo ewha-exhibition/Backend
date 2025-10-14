@@ -22,7 +22,7 @@ public class ReviewController {
 
     // TODO: 질문 생성
     @PostMapping("/{exhibitionId}")
-    public void exhibitionReviewList(
+    public void exhibitionReviewAdd(
             ReviewPostRequest reviewPostRequest,
             @PathVariable
             Long exhibitionId) {
