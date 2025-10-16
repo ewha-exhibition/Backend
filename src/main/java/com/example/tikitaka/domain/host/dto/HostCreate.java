@@ -1,24 +1,24 @@
 package com.example.tikitaka.domain.host.dto;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
-import com.example.tikitaka.global.config.auth.user.User;
+import com.example.tikitaka.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public class HostCreate {
-    private User user;
+    private Member user;
     private Exhibition exhibition;
     private Boolean isRoot;
 
     public static HostCreate of(
-            User user,
+            Member member,
             Exhibition exhibition,
             Boolean isRoot
     ) {
         return new HostCreate(
-                user,
+                member,
                 exhibition,
                 isRoot
         );
