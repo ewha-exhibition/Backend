@@ -4,8 +4,6 @@ import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.entity.RegisterPath;
 import com.example.tikitaka.domain.member.repository.MemberRepository;
 import com.example.tikitaka.global.config.auth.jwt.JwtTokenProvider;
-import com.example.tikitaka.global.config.auth.user.User;
-import com.example.tikitaka.global.config.auth.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
