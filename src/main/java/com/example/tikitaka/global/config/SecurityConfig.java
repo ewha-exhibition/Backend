@@ -35,6 +35,8 @@ public class SecurityConfig {
     private final CustomOAuth2MemberService customOAuth2MemberService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final JwtAuthFilter jwtAuthFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint; // ✅ 추가
+
 
 
 
@@ -75,7 +77,7 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()) // 지정하지 않은 api는 403
+                        .authenticationEntryPoint(customAuthenticationEntryPoint) // 지정하지 않은 api는 403
                 )
                 // OAuth2 로그인: 사용자 정보 서비스 + 성공 핸들러(JWT 발급/리다이렉트)
                 .oauth2Login(oauth2 -> oauth2
