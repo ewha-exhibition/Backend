@@ -1,6 +1,8 @@
 package com.example.tikitaka.domain.post.entity;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
+import com.example.tikitaka.domain.post.dto.request.PreviewPostRequest;
+import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,6 +35,9 @@ public class Post extends BaseEntity {
     @Column(name = "display_no", nullable = false)
     private Long displayNo; // '벗0'에서 숫자 의미
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
+
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
@@ -42,6 +47,36 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "exhibition_id", nullable = false)
     private Exhibition exhibition;
 
+    public void markAsDeleted() {
+        this.isDeleted = true;
+    }
+
+    public void switchAsAnswered() {
+        this.hasAnswer = !this.hasAnswer;
+    }
+
+
+    public static Post toReviewEntity(Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType, Long displayNo) {
+        return Post.builder()
+                .postType(postType)
+                .content(reviewPostRequest.getContent())
+                .hasAnswer(false)
+                .exhibition(exhibition)
+                .displayNo(displayNo)
+                .isDeleted(false)
+                .build();
+    }
+
+    public static Post toPreviewEntity(Exhibition exhibition, PreviewPostRequest previewPostRequest, PostType postType, Long displayNo) {
+        return Post.builder()
+                .postType(postType)
+                .content(previewPostRequest.getContent())
+                .hasAnswer(false)
+                .exhibition(exhibition)
+                .displayNo(displayNo)
+                .isDeleted(false)
+                .build();
+    }
 
 
 }

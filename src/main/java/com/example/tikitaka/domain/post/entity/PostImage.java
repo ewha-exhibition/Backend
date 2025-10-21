@@ -25,4 +25,11 @@ public class PostImage extends BaseEntity {
     @Column(name = "post_image_url", nullable = false)
     private String postImageUrl;
 
+    public static PostImage toEntity(Post post, String url) {
+        return PostImage.builder()
+                .post(post)
+                .postImageUrl(url)
+                .build();
+    }
+
 }

@@ -81,7 +81,7 @@ public class Exhibition extends BaseEntity {
     private int reviewCount;
 
     @Column(name = "cheering_count", nullable = false)
-    private int cheeringCount;
+    private int cheerCount;
 
     @Column(name = "question_count", nullable = false)
     private int questionCount;
@@ -91,6 +91,15 @@ public class Exhibition extends BaseEntity {
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
+
+    @Column(name = "review_no", nullable = false)
+    private Long reviewNo;
+
+    @Column(name = "cheer_no", nullable = false)
+    private Long cheerNo;
+
+    @Column(name = "question_no", nullable = false)
+    private Long questionNo;
 
 
 
@@ -131,5 +140,30 @@ public class Exhibition extends BaseEntity {
     private boolean crossesMidnight() {
         return endTime.isBefore(startTime);
     }
+
+    public void increaseReviewNo() {
+        this.reviewNo++;
+    }
+
+    public void increaseCheerNo() {
+        this.cheerNo++;
+    }
+
+    public void increaseQuestionNo() {
+        this.questionNo++;
+    }
+
+    public void increaseReviewCount() { this.reviewCount++; }
+
+    public void decreaseReviewCount() { this.reviewCount--; }
+
+    public void increaseCheerCount() { this.cheerCount++; }
+
+    public void decreaseCheerCount() { this.cheerCount--; }
+
+    public void increaseQuestionCount() { this.questionCount++; }
+
+    public void decreaseQuestionCount() { this.questionCount--; }
+
 
 }
