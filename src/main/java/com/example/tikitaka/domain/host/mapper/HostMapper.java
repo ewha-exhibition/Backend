@@ -10,7 +10,7 @@ import java.util.UUID;
 public class HostMapper {
     public Host toHost(HostCreate req) {
         return Host.builder()
-                .user(req.getUser())
+                .member(req.getUser())
                 .exhibition(req.getExhibition())
                 .isRoot(req.getIsRoot())
                 .build();

@@ -1,7 +1,7 @@
 package com.example.tikitaka.domain.scrap.entity;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
-import com.example.tikitaka.global.config.auth.user.User;
+import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ public class Scrap extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "exhibition_id")
