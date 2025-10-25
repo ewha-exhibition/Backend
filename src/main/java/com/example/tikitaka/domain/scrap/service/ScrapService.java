@@ -67,5 +67,64 @@ public class ScrapService {
     }
 
 
+    /**
+     * 스크랩 추가 (idempotent)
+     * - 이미 스크랩되어 있으면 아무 동작 없이 리턴
+     * - 새로 추가되면 isViewed=false 기본 설정
+     */
+    @Transactional
+    public void addScrap(Long memberId, Long exhibitionId) {
+        // 이미 존재? → 조용히 종료 (컨트롤러는 204)
+        if (scrapRepository.existsByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)) {
+            return;
+        }
+
+        // 연관 엔티티(프록시) 참조
+        Member member = memberRepository.getReferenceById(memberId);
+        Exhibition exhibition = exhibitionRepository.getReferenceById(exhibitionId);
+
+        // (선택) 전시 삭제/만료 정책 체크가 필요하면 여기서 검사
+        // if (Boolean.TRUE.equals(exhibition.getIsDeleted())) { throw new IllegalStateException("삭제된 전시입니다."); }
+
+        Scrap scrap = Scrap.builder()
+                .member(member)
+                .exhibition(exhibition)
+                .isViewed(false) // 새 스크랩은 미관람 상태
+                .build();
+
+        scrapRepository.save(scrap);
+
+        // (선택) 집계 필드 업데이트가 필요하면 여기서 처리
+        // exhibition.setScrapCount(exhibition.getScrapCount() + 1);
+    }
+
+    /**
+     * 스크랩 취소 (idempotent)
+     * - 존재하지 않아도 조용히 통과
+     */
+    @Transactional
+    public void removeScrap(Long memberId, Long exhibitionId) {
+        // 먼저 존재 여부 확인 없이 바로 삭제 호출 가능하지만,
+        // DB에 따라 반환 값이 필요하면 exists 체크 or 커스텀 delete 쿼리 사용
+        scrapRepository.deleteByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId);
+
+        // (선택) 집계 필드 감소
+        // try {
+        //     Exhibition exhibition = exhibitionRepository.getReferenceById(exhibitionId);
+        //     exhibition.setScrapCount(Math.max(0, exhibition.getScrapCount() - 1));
+        // } catch (EntityNotFoundException ignore) {}
+    }
+
+    /**
+     * 관람 표시/해제 (스크랩된 전시만 가능)
+     * - 스크랩이 없으면 예외
+     *  트랜잭션 커밋 시점에 자동으로 update scrap set is_viewed=? where scrap_id=?가 실행된다.
+     */
+    @Transactional
+    public void markViewed(Long memberId, Long exhibitionId, boolean viewed) {
+        Scrap scrap = scrapRepository.findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)
+                .orElseThrow(() -> new IllegalArgumentException("스크랩하지 않은 전시는 관람표시할 수 없습니다."));
+        scrap.setViewed(viewed); // 엔티티에 setViewed(boolean) 메서드가 있어야 함
+    }
 
 }
