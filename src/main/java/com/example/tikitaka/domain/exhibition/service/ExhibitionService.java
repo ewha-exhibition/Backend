@@ -11,6 +11,7 @@ import com.example.tikitaka.domain.exhibition.entity.ExhibitionImage;
 import com.example.tikitaka.domain.exhibition.mapper.ExhibitionMapper;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionImageRepository;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
+import com.example.tikitaka.domain.exhibition.util.HostCodeGenerator;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.host.dto.HostCreate;
 import com.example.tikitaka.domain.host.service.HostService;
@@ -48,6 +49,8 @@ public class ExhibitionService {
     // S3
     private final S3UrlHandler s3UrlHandler;
 
+    // generaor
+    private final HostCodeGenerator hostCodeGenerator;
 
     @Transactional
     public void addExhibition(ExhibitionPostRequest request) {
@@ -67,11 +70,16 @@ public class ExhibitionService {
             exhibitionImageRepository.saveAll(images);
         }
 
+        // 초대 코드 생성(8자리)
+        String code = hostCodeGenerator.generator();
+        exhibition.setCode(code);
+
         // host 등록
         hostService.hostAdd(HostCreate.of(
                 member,
                 exhibition,
                 true));
+
 
     }
 
