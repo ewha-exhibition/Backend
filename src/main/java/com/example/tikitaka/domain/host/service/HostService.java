@@ -29,6 +29,7 @@ public class HostService {
     private final ExhibitionRepository exhibitionRepository;
 
     // 1. 전시 생성 직후: 루트 호스트 생성 ( 초대코드 발급은 ExhibitionService에서)
+    @Transactional
     public void hostAdd(HostCreate hostCreate) {
         Host host = hostMapper.toHost(hostCreate);
         hostRepository.save(host);  //루트 호스트 생성
