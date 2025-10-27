@@ -70,8 +70,11 @@ public class ExhibitionService {
             exhibitionImageRepository.saveAll(images);
         }
 
-        // 초대 코드 생성(8자리)
-        String code = hostCodeGenerator.generator();
+        // 초대 코드 생성(8자리) -> 코드 중복 해결
+        String code;
+        do {
+            code = hostCodeGenerator.generator();
+        } while (exhibitionRepository.findByCode(code).isPresent());
         exhibition.setCode(code);
 
         // host 등록
