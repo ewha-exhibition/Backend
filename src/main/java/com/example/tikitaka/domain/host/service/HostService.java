@@ -36,6 +36,7 @@ public class HostService {
     }
 
     // 2. 초대 코드로 공동 호스트 합류 (idempotent)
+    @Transactional
     public void joinByInviteCode(Long memberId, String code) {
         // 2.1. 초대 코드에 해당하는 전시가 없는 경우 -> 404
         Exhibition exhibition = exhibitionRepository.findByCode(code)
