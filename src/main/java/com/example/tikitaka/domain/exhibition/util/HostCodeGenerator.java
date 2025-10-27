@@ -1,4 +1,4 @@
-package com.example.tikitaka.domain.host;
+package com.example.tikitaka.domain.exhibition.util;
 
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ public class HostCodeGenerator {
     private static final int LEN = 8;
     private final SecureRandom rnd = new SecureRandom();
 
-    public String generate() {
+    public String generator() {
         StringBuilder sb = new StringBuilder(LEN);
         for (int i = 0; i < LEN; i++) sb.append(POOL[rnd.nextInt(POOL.length)]);
         return sb.toString();
