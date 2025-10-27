@@ -22,7 +22,7 @@ import java.time.LocalTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@ActiveProfiles("test") // ✅ test 프로필 강제
+@ActiveProfiles("test") //  test 프로필 강제
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class ScrapRepositoryTest {
 
@@ -68,11 +68,12 @@ class ScrapRepositoryTest {
         return exhibitionRepository.save(e);
     }
 
-    private Scrap saveScrap(Member m, Exhibition e, boolean viewed) {
+    private Scrap saveScrap(Member m, Exhibition e, boolean viewed, boolean reviewed) {
         Scrap s = Scrap.builder()
                 .member(m)
                 .exhibition(e)
                 .isViewed(viewed)
+                .isReviewed(reviewed)
                 .build();
         return scrapRepository.save(s);
     }
@@ -87,10 +88,10 @@ class ScrapRepositoryTest {
         Exhibition e3 = saveEx("피카소", LocalDate.of(2025,10,10), LocalDate.of(2025,10,20), false);
         Exhibition e4 = saveEx("고야",   LocalDate.of(2025,9,29),  LocalDate.of(2025,10,1),  true); // 삭제됨
 
-        saveScrap(m1, e1, true);
-        saveScrap(m1, e2, false);
-        saveScrap(m1, e3, false);
-        saveScrap(m1, e4, false); // 삭제 전시와의 스크랩(필터링 대상)
+        saveScrap(m1, e1, true, false);
+        saveScrap(m1, e2, false, false);
+        saveScrap(m1, e3, false, false);
+        saveScrap(m1, e4, false, false); // 삭제 전시와의 스크랩(필터링 대상)
 
         // when: pageSize=2, page0
         Pageable pageable = PageRequest.of(0, 2); // 기본 정렬은 레포 JPQL order by

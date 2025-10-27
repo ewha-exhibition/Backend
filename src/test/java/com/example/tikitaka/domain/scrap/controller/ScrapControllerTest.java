@@ -51,13 +51,13 @@ class ScrapControllerTest {
     @MockitoBean
     ScrapService scrapService;
 
-    // ✅ Jwt 관련 빈들을 목으로 주입해서 컨텍스트 에러 방지
+    // Jwt 관련 빈들을 목으로 주입해서 컨텍스트 에러 방지
     @MockitoBean
     JwtAuthFilter jwtAuthFilter;
     @MockitoBean
     JwtTokenProvider jwtTokenProvider;
 
-    // ✅ @AuthenticationPrincipal Member 파라미터를 채워줄 테스트용 ArgumentResolver
+    // @AuthenticationPrincipal Member 파라미터를 채워줄 테스트용 ArgumentResolver
     @TestConfiguration
     static class TestConfig implements WebMvcConfigurer {
         @Override
