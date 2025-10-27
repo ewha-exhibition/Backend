@@ -23,6 +23,3 @@ management:
           OUT_OF_SERVICE: 503
           UNKNOWN: 500
 
-server:
-  server-url: ${SERVER_PROD_URL}
-  front-urls: ${FRONT_PROD_URL}
