@@ -12,7 +12,6 @@ import com.example.tikitaka.domain.host.repository.HostRepository;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.global.exception.BaseErrorException;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
