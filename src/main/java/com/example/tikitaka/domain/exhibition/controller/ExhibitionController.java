@@ -6,7 +6,6 @@ import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPostRequest;
 import com.example.tikitaka.domain.exhibition.dto.response.ExhibitionDetailResponse;
 import com.example.tikitaka.domain.exhibition.service.ExhibitionImageService;
 import com.example.tikitaka.domain.exhibition.service.ExhibitionService;
-import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.global.annotation.OptionalAuth;
 import com.example.tikitaka.infra.s3.S3Url;
 import lombok.RequiredArgsConstructor;
