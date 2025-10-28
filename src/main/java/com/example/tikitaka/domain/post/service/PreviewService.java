@@ -41,12 +41,12 @@ public class PreviewService {
         Post post = postRepository.findByMemberAndExhibitionAndPostType(member, exhibition, postType);
 
         Long number = 0L;
-        if (post == null & postType == PostType.QUESTION) {
+        if (post == null && postType == PostType.QUESTION) {
             number = exhibition.getQuestionNo() + 1;
             exhibition.increaseQuestionNo();
             exhibition.increaseQuestionCount();
         }
-        else if (post == null & postType == PostType.CHEER) {
+        else if (post == null && postType == PostType.CHEER) {
             number = exhibition.getCheerNo() + 1;
             exhibition.increaseCheerNo();
             exhibition.increaseCheerCount();
