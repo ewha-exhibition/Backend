@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -69,6 +70,7 @@ public class ReviewService {
     }
 
     public ExhibitionPostListResponse getExhibitionReviews(
+            String memberId,
             Long exhibitionId,
             int pageNum,
             int limit
@@ -80,7 +82,7 @@ public class ReviewService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
 
         List<ExhibitionPost> exhibitionReviews = reviews.getContent().stream().map(
-                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review))
+                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review),Objects.equals(memberId, String.valueOf(review.getMember().getMemberId())))
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);

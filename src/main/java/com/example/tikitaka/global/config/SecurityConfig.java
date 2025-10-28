@@ -58,7 +58,7 @@ public class SecurityConfig {
     };
 
     private final String[] GetPermittedPatterns = {
-            "/exhibition/**"
+            "/exhibition/**", "/reviews/**", "/cheers/**", "/questions/**"
     };
 
     @Bean

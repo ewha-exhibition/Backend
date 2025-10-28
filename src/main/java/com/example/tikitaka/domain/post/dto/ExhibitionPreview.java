@@ -1,9 +1,10 @@
 package com.example.tikitaka.domain.post.dto;
 
-import com.example.tikitaka.domain.exhibition.entity.Exhibition;
+
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.global.util.formatting.DateFormatting;
 import com.example.tikitaka.global.util.formatting.PostWriterFormatting;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,6 +15,8 @@ public class ExhibitionPreview implements ExhibitionPost{
     private PostWriterFormatting writer;
     private DateFormatting createdAt;
     private String content;
+
+    @JsonProperty("isWriter")
     private boolean isWriter;
     private boolean hasAnswer;
     private String answer;

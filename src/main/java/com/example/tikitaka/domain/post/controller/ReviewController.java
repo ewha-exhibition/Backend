@@ -34,9 +34,11 @@ public class ReviewController {
         reviewService.addReview(memberId, exhibitionId, reviewPostRequest);
     }
 
-    // TODO: 추후 유저 내용 추가
+
     @GetMapping("/{exhibitionId}")
     public ExhibitionPostListResponse exhibitionReviewList(
+            @AuthenticationPrincipal
+            String memberId,
             @PathVariable
             Long exhibitionId,
             @RequestParam(required = true)
@@ -44,7 +46,7 @@ public class ReviewController {
             @RequestParam(required = true)
             int limit
     ) {
-        return reviewService.getExhibitionReviews(exhibitionId, pageNum, limit);
+        return reviewService.getExhibitionReviews(memberId, exhibitionId, pageNum, limit);
     }
 
     @DeleteMapping("/{postId}")
