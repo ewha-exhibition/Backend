@@ -16,8 +16,8 @@ public class PostService {
     private final PostImageService postImageService;
 
     @Transactional
-    public void deletePost(Long postId) {
-        Post post = postRepository.findById(postId)
+    public void deletePost(String memberId, Long postId) {
+        Post post = postRepository.findByMemberIdAndPostId(Long.parseLong(memberId), postId)
                 .orElseThrow(() -> new BaseErrorException(PostErrorCode.POST_NOT_FOUND));
 
         postImageService.deletePostImages(post);

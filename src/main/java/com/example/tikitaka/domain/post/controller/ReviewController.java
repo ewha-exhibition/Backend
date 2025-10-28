@@ -50,8 +50,10 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{postId}")
-    public void reviewDelete(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public void reviewDelete(
+            @AuthenticationPrincipal String memberId,
+            @PathVariable Long postId) {
+        postService.deletePost(memberId, postId);
     }
 
 

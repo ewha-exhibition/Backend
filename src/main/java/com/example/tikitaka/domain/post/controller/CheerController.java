@@ -41,8 +41,10 @@ public class CheerController {
     }
 
     @DeleteMapping("/{postId}")
-    public void cheerDelete(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public void cheerDelete(
+            @AuthenticationPrincipal String memberId,
+            @PathVariable Long postId) {
+        postService.deletePost(memberId, postId);
     }
 
 

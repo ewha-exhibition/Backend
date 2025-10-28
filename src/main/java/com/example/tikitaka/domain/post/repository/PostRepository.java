@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
@@ -29,4 +31,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByExhibitionAndPostType(Exhibition exhibition, PostType postType, Pageable pageable);
 
     Post findByMemberAndExhibitionAndPostType(Member member, Exhibition exhibition, PostType postType);
+
+    @Query("""
+    SELECT p
+    FROM Post p
+    WHERE p.member.memberId = :memberId AND p.postId = :postId
+    """)
+    Optional<Post> findByMemberIdAndPostId(Long memberId, Long postId);
 }

@@ -44,7 +44,9 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{postId}")
-    public void questionDelete(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public void questionDelete(
+            @AuthenticationPrincipal String memberId,
+            @PathVariable Long postId) {
+        postService.deletePost(memberId, postId);
     }
 }
