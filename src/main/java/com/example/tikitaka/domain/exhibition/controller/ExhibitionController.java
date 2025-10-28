@@ -10,21 +10,25 @@ import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.global.annotation.OptionalAuth;
 import com.example.tikitaka.infra.s3.S3Url;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/exhibition")
+@Slf4j
 public class ExhibitionController {
     private final ExhibitionService exhibitionService;
     private final ExhibitionImageService exhibitionImageService;
 
     @PostMapping
     public void exhibitionAdd(
+            @AuthenticationPrincipal String member,
             @RequestBody ExhibitionPostRequest request
     ) {
-        exhibitionService.addExhibition(request);
+        log.debug("ExhibitionController.exhibitionAdd called with memberId: {}", member);
+        exhibitionService.addExhibition(member, request);
     }
 
     @OptionalAuth

@@ -52,9 +52,8 @@ public class ExhibitionService {
 
 
     @Transactional
-    public void addExhibition(ExhibitionPostRequest request) {
-        // 멤버 찾기
-        Member member = memberValidator.validateMember(request.getUserId());
+    public void addExhibition(String memberId, ExhibitionPostRequest request) {
+        Member member = memberValidator.validateMember(Long.parseLong(memberId));
 
         // 클럽 찾기 (없으면 생성 있으면 참조)
         Club club = clubService.clubGetOrAdd(request.getClub());
