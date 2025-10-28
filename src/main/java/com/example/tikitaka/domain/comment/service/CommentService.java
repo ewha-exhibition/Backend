@@ -34,8 +34,8 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long commentId) {
-        Comment comment = commentValidator.validateCommentByCommentId(commentId);
+    public void deleteComment(String memberId, Long commentId) {
+        Comment comment = commentValidator.validateCommentByMemberIdAndCommentId(memberId, commentId);
         commentRepository.delete(comment);
         comment.getPost().switchAsAnswered();
     }

@@ -23,7 +23,10 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public void commentDelete(@PathVariable Long commentId) {
-        commentService.deleteComment(commentId);
+    public void commentDelete(
+            @AuthenticationPrincipal String memberId,
+            @PathVariable Long commentId
+    ) {
+        commentService.deleteComment(memberId, commentId);
     }
 }

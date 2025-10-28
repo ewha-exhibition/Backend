@@ -20,9 +20,9 @@ public class CommentValidator {
         );
     }
 
-    public Comment validateCommentByCommentId(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(
-                () -> new BaseErrorException(CommentErrorCode.COMMENT_NOT_FOUND)
+    public Comment validateCommentByMemberIdAndCommentId(String memberId, Long commentId) {
+        return commentRepository.findByMemberIdAndCommentId(Long.parseLong(memberId), commentId).orElseThrow(
+                () -> new BaseErrorException(CommentErrorCode.COMMENT_FORBIDDEN)
         );
     }
 }
