@@ -24,11 +24,10 @@ public class ExhibitionController {
 
     @PostMapping
     public void exhibitionAdd(
-            @AuthenticationPrincipal String member,
+            @AuthenticationPrincipal String memberId,
             @RequestBody ExhibitionPostRequest request
     ) {
-        log.debug("ExhibitionController.exhibitionAdd called with memberId: {}", member);
-        exhibitionService.addExhibition(member, request);
+        exhibitionService.addExhibition(memberId, request);
     }
 
     @OptionalAuth
@@ -43,10 +42,10 @@ public class ExhibitionController {
 
     @DeleteMapping("/{exhibitionId}")
     public void exhibitionDelete(
-            // 로그인 기능 추가 후 유저 정보 받기
+            @AuthenticationPrincipal String memberId,
             @PathVariable Long exhibitionId
     ) {
-        exhibitionService.deleteExhibition(exhibitionId);
+        exhibitionService.deleteExhibition(memberId, exhibitionId);
     }
 
     @PatchMapping("/{exhibitionId}")

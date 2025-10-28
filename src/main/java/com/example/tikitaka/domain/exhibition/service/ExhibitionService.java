@@ -94,10 +94,11 @@ public class ExhibitionService {
     }
 
     @Transactional
-    public void deleteExhibition(Long exhibitionId) {
+    public void deleteExhibition(String memberId, Long exhibitionId) {
+        Member member = memberValidator.validateMember(Long.parseLong(memberId));
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
-        //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
+        hostValidator.validateHostOrThrow(member, exhibition);
         exhibition.markAsDeleted();
         exhibitionRepository.save(exhibition);
     }

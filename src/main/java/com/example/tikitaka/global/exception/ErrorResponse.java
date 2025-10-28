@@ -1,10 +1,12 @@
 package com.example.tikitaka.global.exception;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Getter
 public class ErrorResponse {
     private final String timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
     private final boolean success = false;

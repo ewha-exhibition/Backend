@@ -23,6 +23,7 @@ public class ExhibitionValidator {
 //        );
     }
 
+
     public void validateAuthority(boolean role) {
         if (!role) {
             throw new BaseErrorException(ExhibitionErrorCode.EXHIBITION_ACCESS_FORBIDDEN);
