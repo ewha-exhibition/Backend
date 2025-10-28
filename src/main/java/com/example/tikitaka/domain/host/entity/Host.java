@@ -25,7 +25,7 @@ public class Host extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)ㅠ
     @JoinColumn(name = "exhibition_id", nullable = false)
     private Exhibition exhibition;
 

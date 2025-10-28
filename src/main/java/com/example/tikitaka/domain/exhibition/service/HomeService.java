@@ -6,6 +6,7 @@ import com.example.tikitaka.domain.exhibition.dto.response.PopularExhibitionResp
 import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
+import com.example.tikitaka.domain.scrap.validator.ScrapValidator;
 import com.example.tikitaka.global.dto.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeService {
     private final ExhibitionRepository exhibitionRepository;
+    private final ScrapValidator scrapValidator;
 
     public ExhibitionListResponse findRecentExhibition(String category, int pageNum, int limit) {
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -41,11 +43,12 @@ public class HomeService {
         return new ExhibitionListResponse(recentExhibitions, pageInfo);
     }
 
-    public ExhibitionListResponse findKeywordExhibition(String keyword, int pageNum, int limit) {
+    public ExhibitionListResponse findKeywordExhibition(String memberId, String keyword, int pageNum, int limit) {
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Exhibition> exhibitions = exhibitionRepository.findByKeyword(keyword, pageRequest);
         PageInfo pageInfo = PageInfo.of(pageNum, limit, exhibitions.getTotalPages(), exhibitions.getTotalElements());
-        List<RecentExhibition> recentExhibitions = exhibitions.getContent().stream().map(RecentExhibition::from).toList();
+        List<RecentExhibition> recentExhibitions = exhibitions.getContent().stream().map(
+                exhibition -> RecentExhibition.from(exhibition, scrapValidator.existsByMemberIdAndExhibition(memberId, exhibition))).toList();
 
         return new ExhibitionListResponse(recentExhibitions, pageInfo);
     }
