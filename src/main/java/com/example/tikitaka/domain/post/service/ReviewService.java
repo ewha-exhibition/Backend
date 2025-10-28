@@ -2,6 +2,8 @@ package com.example.tikitaka.domain.post.service;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
+import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionReview;
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
@@ -27,21 +29,32 @@ public class ReviewService {
     private final ExhibitionValidator exhibitionValidator;
     private final PostRepository postRepository;
     private final PostImageService postImageService;
+    private final MemberValidator memberValidator;
 
-    // TODO: 추후 유저 추가
+
     @Transactional
-    public void addReview(Long exhibitionId, ReviewPostRequest reviewPostRequest) {
-        // TODO: 유저 조회
+    public void addReview(String memberId, Long exhibitionId, ReviewPostRequest reviewPostRequest) {
+        Member member = memberValidator.validateMember(Long.parseLong(memberId));
 
         // 전시 조회
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
         // TODO: 작성 경험 존재한 유저인지 확인 (있으면 number 꺼내쓰고, 없으면 exhibition에 no + 1)
-        Long number = exhibition.getReviewNo() + 1;
+        Post post = postRepository.findByMemberAndExhibitionAndPostType(member, exhibition, PostType.REVIEW);
+
+        Long number = 0L;
+
+        if (post != null) {
+            number = post.getDisplayNo();
+        } else {
+            number = exhibition.getReviewNo() + 1;
+            exhibition.increaseReviewNo();
+        }
+
         exhibition.increaseReviewNo();
 
         // 리뷰 생성
-        Post review = Post.toReviewEntity(exhibition, reviewPostRequest, PostType.REVIEW, number);
+        Post review = Post.toReviewEntity(member, exhibition, reviewPostRequest, PostType.REVIEW, number);
         postRepository.save(review);
 
         exhibition.increaseReviewCount();

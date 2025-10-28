@@ -56,8 +56,9 @@ public class Post extends BaseEntity {
     }
 
 
-    public static Post toReviewEntity(Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType, Long displayNo) {
+    public static Post toReviewEntity(Member member, Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType, Long displayNo) {
         return Post.builder()
+                .member(member)
                 .postType(postType)
                 .content(reviewPostRequest.getContent())
                 .hasAnswer(false)

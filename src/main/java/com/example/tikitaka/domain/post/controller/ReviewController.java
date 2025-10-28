@@ -7,6 +7,7 @@ import com.example.tikitaka.domain.post.service.PostService;
 import com.example.tikitaka.domain.post.service.ReviewService;
 import com.example.tikitaka.infra.s3.S3Url;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,14 +23,15 @@ public class ReviewController {
         return postImageService.getImageUploadUrl("reviews/images");
     }
 
-    // TODO: 질문 생성, 추후 유저 내용 추가
     @PostMapping("/{exhibitionId}")
     public void exhibitionReviewAdd(
+            @AuthenticationPrincipal
+            String memberId,
             @RequestBody
             ReviewPostRequest reviewPostRequest,
             @PathVariable
             Long exhibitionId) {
-        reviewService.addReview(exhibitionId, reviewPostRequest);
+        reviewService.addReview(memberId, exhibitionId, reviewPostRequest);
     }
 
     // TODO: 추후 유저 내용 추가
