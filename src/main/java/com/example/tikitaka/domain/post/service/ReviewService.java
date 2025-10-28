@@ -40,7 +40,6 @@ public class ReviewService {
         // 전시 조회
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
-        // TODO: 작성 경험 존재한 유저인지 확인 (있으면 number 꺼내쓰고, 없으면 exhibition에 no + 1)
         Post post = postRepository.findByMemberAndExhibitionAndPostType(member, exhibition, PostType.REVIEW);
 
         Long number = 0L;
@@ -52,7 +51,7 @@ public class ReviewService {
             exhibition.increaseReviewNo();
         }
 
-        exhibition.increaseReviewNo();
+        exhibition.increaseReviewCount();
 
         // 리뷰 생성
         Post review = Post.toReviewEntity(member, exhibition, reviewPostRequest, PostType.REVIEW, number);
