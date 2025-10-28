@@ -27,7 +27,7 @@ public class RecentExhibition {
                 .posterUrl(exhibition.getPosterUrl())
                 .duration(new PeriodFormatting(exhibition.getStartDate(), exhibition.getEndDate()))
                 .place(exhibition.getPlace())
-                .isScrap()
+                .isScrap(isScrap)
                 .isOpen(!exhibition.isEnded())
                 .build();
     }

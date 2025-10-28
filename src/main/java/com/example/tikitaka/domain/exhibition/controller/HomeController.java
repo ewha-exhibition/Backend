@@ -20,6 +20,8 @@ public class HomeController {
 
     @GetMapping("/latest")
     public ExhibitionListResponse recentExhibitionList(
+            @AuthenticationPrincipal
+            String memberId,
             @RequestParam(required = false)
             String category,
             @RequestParam(required = true)
@@ -27,7 +29,7 @@ public class HomeController {
             @RequestParam(required = true)
             int limit
     ){
-        return homeService.findRecentExhibition(category, pageNum, limit);
+        return homeService.findRecentExhibition(memberId, category, pageNum, limit);
     }
 
     @GetMapping("/search")

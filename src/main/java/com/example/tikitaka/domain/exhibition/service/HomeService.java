@@ -24,7 +24,7 @@ public class HomeService {
     private final ExhibitionRepository exhibitionRepository;
     private final ScrapValidator scrapValidator;
 
-    public ExhibitionListResponse findRecentExhibition(String category, int pageNum, int limit) {
+    public ExhibitionListResponse findRecentExhibition(String memberId, String category, int pageNum, int limit) {
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Exhibition> exhibitions;
 
@@ -38,7 +38,9 @@ public class HomeService {
         }
 
         PageInfo pageInfo = PageInfo.of(pageNum, limit, exhibitions.getTotalPages(), exhibitions.getTotalElements());
-        List<RecentExhibition> recentExhibitions = exhibitions.getContent().stream().map(RecentExhibition::from).toList();
+        List<RecentExhibition> recentExhibitions = exhibitions.getContent().stream().map(
+                exhibition -> RecentExhibition.from(exhibition, scrapValidator.existsByMemberIdAndExhibition(memberId, exhibition))
+        ).toList();
 
         return new ExhibitionListResponse(recentExhibitions, pageInfo);
     }
