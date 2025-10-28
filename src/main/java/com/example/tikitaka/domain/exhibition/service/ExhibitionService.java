@@ -17,6 +17,7 @@ import com.example.tikitaka.domain.host.service.HostService;
 import com.example.tikitaka.domain.host.validator.HostValidator;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
+import com.example.tikitaka.domain.scrap.validator.ScrapValidator;
 import com.example.tikitaka.infra.s3.S3Url;
 import com.example.tikitaka.infra.s3.S3UrlHandler;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class ExhibitionService {
     // validator
     private final MemberValidator memberValidator;
     private final ExhibitionValidator exhibitionValidator;
+    private final ScrapValidator scrapValidator;
 
     // Mapper
     private final ExhibitionMapper exhibitionMapper;
@@ -80,13 +82,15 @@ public class ExhibitionService {
         List<String> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
 
         boolean isHost = false;
+        boolean isScrap = false;
 
         if (memberId != null) {
             Member member = memberValidator.validateMember(Long.parseLong(memberId));
             isHost = hostValidator.validateRole(member, exhibition);
+            isScrap = scrapValidator.existsByMemberAndExhibition(member, exhibition);
         }
 
-        return exhibitionMapper.toDetailResponse(isHost, exhibition, images);
+        return exhibitionMapper.toDetailResponse(isHost, isScrap, exhibition, images);
 
     }
 

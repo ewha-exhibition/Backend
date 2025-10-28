@@ -61,7 +61,7 @@ public class ExhibitionMapper {
         ).toList();
     }
 
-    public ExhibitionDetailResponse toDetailResponse(boolean isHost, Exhibition exhibition, List<String> images) {
+    public ExhibitionDetailResponse toDetailResponse(boolean isHost, boolean isScrap, Exhibition exhibition, List<String> images) {
         return ExhibitionDetailResponse.builder()
                 .exhibitionId(exhibition.getExhibitionId())
                 .exhibitionName(exhibition.getExhibitionName())
@@ -80,6 +80,7 @@ public class ExhibitionMapper {
                 .cheerCount(exhibition.getCheerCount())
                 .questionCount(exhibition.getQuestionCount())
                 .isHost(isHost)
+                .isScrap(isScrap)
                 .build();
     }
 

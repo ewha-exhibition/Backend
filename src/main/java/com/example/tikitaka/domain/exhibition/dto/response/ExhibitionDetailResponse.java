@@ -28,5 +28,6 @@ public class ExhibitionDetailResponse {
     private int cheerCount;
     private int questionCount;
     private boolean isHost;
+    private boolean isScrap;
 
 }
