@@ -33,7 +33,7 @@ public class ExhibitionController {
             @PathVariable
             Long exhibitionId
     ){
-        Long memberId = Long.parseLong(CurrentUserContext.getMemberId());
+        String memberId = CurrentUserContext.getMemberId();
         return exhibitionService.findExhibition(memberId, exhibitionId);
     }
 

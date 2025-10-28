@@ -75,13 +75,16 @@ public class ExhibitionService {
 
     }
 
-    public ExhibitionDetailResponse findExhibition(Long memberId, Long exhibitionId) {
-        Member member = memberValidator.validateMember(memberId);
+    public ExhibitionDetailResponse findExhibition(String memberId, Long exhibitionId) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
         List<String> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
 
-        boolean isHost = hostValidator.validateRole(member, exhibition);
+        boolean isHost = false;
 
+        if (memberId != null) {
+            Member member = memberValidator.validateMember(Long.parseLong(memberId));
+            isHost = hostValidator.validateRole(member, exhibition);
+        }
 
         return exhibitionMapper.toDetailResponse(isHost, exhibition, images);
 
