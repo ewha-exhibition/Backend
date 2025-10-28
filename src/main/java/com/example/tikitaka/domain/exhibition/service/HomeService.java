@@ -55,8 +55,9 @@ public class HomeService {
         return new ExhibitionListResponse(recentExhibitions, pageInfo);
     }
 
-    public List<PopularExhibitionResponse> findPopularExhibition() {
-        return exhibitionRepository.findPopularExhibitions().stream().map(PopularExhibitionResponse::from).toList();
+    public List<PopularExhibitionResponse> findPopularExhibition(String memberId) {
+        return exhibitionRepository.findPopularExhibitions().stream().map(
+                exhibition -> PopularExhibitionResponse.from(exhibition, scrapValidator.existsByMemberIdAndExhibition(memberId, exhibition))).toList();
     }
 
 

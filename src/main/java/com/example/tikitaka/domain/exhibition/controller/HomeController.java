@@ -48,9 +48,9 @@ public class HomeController {
 
     @GetMapping("/ranking")
     public List<PopularExhibitionResponse> popularExhibitionList(
-
+        @AuthenticationPrincipal String memberId
     ){
-        return homeService.findPopularExhibition();
+        return homeService.findPopularExhibition(memberId);
     }
 
 }
