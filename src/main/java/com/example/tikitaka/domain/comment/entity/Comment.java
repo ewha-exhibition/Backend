@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.comment.entity;
 
+import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -27,12 +28,13 @@ public class Comment extends BaseEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
-//    @ManyToOne
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    public static Comment toEntity(Post post, String content) {
+    public static Comment toEntity(Member member, Post post, String content) {
         return Comment.builder()
+                .member(member)
                 .post(post)
                 .content(content)
                 .build();
