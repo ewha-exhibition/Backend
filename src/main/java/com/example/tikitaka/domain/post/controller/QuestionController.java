@@ -31,6 +31,8 @@ public class QuestionController {
 
     @GetMapping("/{exhibitionId}")
     public ExhibitionPostListResponse exhibitionQuestionList(
+            @AuthenticationPrincipal
+            String memberId,
             @PathVariable
             Long exhibitionId,
             @RequestParam(required = true)
@@ -38,7 +40,7 @@ public class QuestionController {
             @RequestParam(required = true)
             int limit
     ) {
-        return previewService.getExhibitionPreviews(exhibitionId, PostType.QUESTION, pageNum, limit);
+        return previewService.getExhibitionPreviews(memberId, exhibitionId, PostType.QUESTION, pageNum, limit);
     }
 
     @DeleteMapping("/{postId}")

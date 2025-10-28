@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -62,6 +63,7 @@ public class PreviewService {
     }
 
     public ExhibitionPostListResponse getExhibitionPreviews(
+            String memberId,
             Long exhibitionId,
             PostType postType,
             int pageNum,
@@ -74,7 +76,13 @@ public class PreviewService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, previews.getTotalPages(), previews.getTotalElements());
 
         List<ExhibitionPost> exhibitionCheers = previews.getContent().stream().map(
-                preview -> (preview.isHasAnswer())?(ExhibitionPost) ExhibitionPreview.of(preview, commentValidator.validateCommentContent(preview)): (ExhibitionPost) ExhibitionPreview.of(preview, null)
+                preview -> (preview.isHasAnswer())?(ExhibitionPost) ExhibitionPreview.of(preview, commentValidator.validateCommentContent(preview), Objects.equals(
+                        memberId,
+                        String.valueOf(preview.getMember().getMemberId())
+                )): (ExhibitionPost) ExhibitionPreview.of(preview, null, Objects.equals(
+                        memberId,
+                        String.valueOf(preview.getMember().getMemberId())
+                ))
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionCheers, pageInfo);

@@ -28,6 +28,8 @@ public class CheerController {
 
     @GetMapping("/{exhibitionId}")
     public ExhibitionPostListResponse exhibitionCheerList(
+            @AuthenticationPrincipal
+            String memberId,
             @PathVariable
             Long exhibitionId,
             @RequestParam(required = true)
@@ -35,7 +37,7 @@ public class CheerController {
             @RequestParam(required = true)
             int limit
     ) {
-        return previewService.getExhibitionPreviews(exhibitionId, PostType.CHEER, pageNum, limit);
+        return previewService.getExhibitionPreviews(memberId, exhibitionId, PostType.CHEER, pageNum, limit);
     }
 
     @DeleteMapping("/{postId}")
