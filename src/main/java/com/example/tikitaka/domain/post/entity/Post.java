@@ -68,9 +68,9 @@ public class Post extends BaseEntity {
                 .build();
     }
 
-    public static Post toPreviewEntity(Member memeber, Exhibition exhibition, PreviewPostRequest previewPostRequest, PostType postType, Long displayNo) {
+    public static Post toPreviewEntity(Member member, Exhibition exhibition, PreviewPostRequest previewPostRequest, PostType postType, Long displayNo) {
         return Post.builder()
-                .member(memeber)
+                .member(member)
                 .postType(postType)
                 .content(previewPostRequest.getContent())
                 .hasAnswer(false)
