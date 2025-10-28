@@ -7,7 +7,6 @@ import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.global.exception.BaseErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 @Component
 @RequiredArgsConstructor
