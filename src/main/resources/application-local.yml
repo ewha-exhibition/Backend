@@ -8,5 +8,6 @@ spring:
 
 
 server:
-  url: ${SERVER_LOCAL_URL}
+  server-url: ${SERVER_LOCAL_URL}
+  front-urls: ${FRONT_PROD_URL}
 
