@@ -38,7 +38,7 @@ public class ExhibitionService {
     private final ExhibitionImageRepository exhibitionImageRepository;
 
     // validator
-    private final MemberValidator userValidator;
+    private final MemberValidator memberValidator;
     private final ExhibitionValidator exhibitionValidator;
 
     // Mapper
@@ -52,7 +52,7 @@ public class ExhibitionService {
     @Transactional
     public void addExhibition(ExhibitionPostRequest request) {
         // 멤버 찾기
-        Member member = userValidator.validateUser(request.getUserId());
+        Member member = memberValidator.validateMember(request.getUserId());
 
         // 클럽 찾기 (없으면 생성 있으면 참조)
         Club club = clubService.clubGetOrAdd(request.getClub());
@@ -75,12 +75,15 @@ public class ExhibitionService {
 
     }
 
-    public ExhibitionDetailResponse findExhibition(Long exhibitionId) {
+    public ExhibitionDetailResponse findExhibition(Long memberId, Long exhibitionId) {
+        Member member = memberValidator.validateMember(memberId);
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
         List<String> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
 
+        boolean isHost = hostValidator.validateRole(member, exhibition);
 
-        return exhibitionMapper.toDetailResponse(exhibition, images);
+
+        return exhibitionMapper.toDetailResponse(isHost, exhibition, images);
 
     }
 

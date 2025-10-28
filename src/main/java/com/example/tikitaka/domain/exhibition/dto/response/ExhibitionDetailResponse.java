@@ -27,6 +27,6 @@ public class ExhibitionDetailResponse {
     private int reviewCount;
     private int cheerCount;
     private int questionCount;
-    private String userRole;
+    private boolean isHost;
 
 }

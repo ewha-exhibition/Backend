@@ -61,7 +61,7 @@ public class ExhibitionMapper {
         ).toList();
     }
 
-    public ExhibitionDetailResponse toDetailResponse(Exhibition exhibition, List<String> images) {
+    public ExhibitionDetailResponse toDetailResponse(boolean isHost, Exhibition exhibition, List<String> images) {
         return ExhibitionDetailResponse.builder()
                 .exhibitionId(exhibition.getExhibitionId())
                 .exhibitionName(exhibition.getExhibitionName())
@@ -79,7 +79,7 @@ public class ExhibitionMapper {
                 .reviewCount(exhibition.getReviewCount())
                 .cheerCount(exhibition.getCheerCount())
                 .questionCount(exhibition.getQuestionCount())
-                .userRole("") // 추후 추가 예정
+                .isHost(isHost)
                 .build();
     }
 

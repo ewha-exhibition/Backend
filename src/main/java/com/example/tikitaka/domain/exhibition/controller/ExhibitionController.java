@@ -1,12 +1,16 @@
 package com.example.tikitaka.domain.exhibition.controller;
 
+import com.example.tikitaka.global.context.CurrentUserContext;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
 import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPostRequest;
 import com.example.tikitaka.domain.exhibition.dto.response.ExhibitionDetailResponse;
 import com.example.tikitaka.domain.exhibition.service.ExhibitionImageService;
 import com.example.tikitaka.domain.exhibition.service.ExhibitionService;
+import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.global.annotation.OptionalAuth;
 import com.example.tikitaka.infra.s3.S3Url;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,13 +27,14 @@ public class ExhibitionController {
         exhibitionService.addExhibition(request);
     }
 
+    @OptionalAuth
     @GetMapping("/{exhibitionId}")
     public ExhibitionDetailResponse exhibitionDetail(
-            // 로그인 기능 추가 후 유저 정보 받기
             @PathVariable
             Long exhibitionId
     ){
-        return exhibitionService.findExhibition(exhibitionId);
+        Long memberId = Long.parseLong(CurrentUserContext.getMemberId());
+        return exhibitionService.findExhibition(memberId, exhibitionId);
     }
 
     @DeleteMapping("/{exhibitionId}")
