@@ -1,7 +1,6 @@
 package com.example.tikitaka.domain.comment.controller;
 
 import com.example.tikitaka.domain.comment.dto.CommentPostRequest;
-import com.example.tikitaka.domain.comment.repository.CommentRepository;
 import com.example.tikitaka.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -43,7 +43,6 @@ public class ExhibitionService {
 
     // Mapper
     private final ExhibitionMapper exhibitionMapper;
-    private final HostValidator hostValidator;
 
     // S3
     private final S3UrlHandler s3UrlHandler;
