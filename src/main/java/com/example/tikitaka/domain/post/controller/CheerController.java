@@ -6,6 +6,7 @@ import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.service.PostService;
 import com.example.tikitaka.domain.post.service.PreviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,14 +15,13 @@ import org.springframework.web.bind.annotation.*;
 public class CheerController {
     private final PreviewService previewService;
     private final PostService postService;
-    // TODO: 추후 유저 추가
 
     @PostMapping("/{exhibitionId}")
     public void cheerAdd(
-            @PathVariable
-            Long exhibitionId,@RequestBody
-            PreviewPostRequest previewPostRequest) {
-        previewService.addPreview(exhibitionId, previewPostRequest, PostType.CHEER);
+            @AuthenticationPrincipal String memberId,
+            @PathVariable Long exhibitionId,
+            @RequestBody PreviewPostRequest previewPostRequest) {
+        previewService.addPreview(memberId, exhibitionId, previewPostRequest, PostType.CHEER);
     }
 
 

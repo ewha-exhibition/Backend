@@ -6,6 +6,7 @@ import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.service.PostService;
 import com.example.tikitaka.domain.post.service.PreviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,11 +19,12 @@ public class QuestionController {
     // TODO: 질문 생성
     @PostMapping("/{exhibitionId}")
     public void questionAdd(
+            @AuthenticationPrincipal String memberId,
             @PathVariable
             Long exhibitionId,
             @RequestBody
             PreviewPostRequest previewPostRequest) {
-        previewService.addPreview(exhibitionId, previewPostRequest, PostType.QUESTION);
+        previewService.addPreview(memberId, exhibitionId, previewPostRequest, PostType.QUESTION);
     }
 
 
