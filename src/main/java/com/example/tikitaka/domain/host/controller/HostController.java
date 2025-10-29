@@ -21,9 +21,9 @@ public class HostController {
     // 1. 공동호스트 합류 : 초대코드 입력
     @PostMapping("/join")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void joinByCode(@AuthenticationPrincipal Member member,
+    public void joinByCode(@AuthenticationPrincipal Long memberId,
                            @RequestParam String code) {
-        hostService.joinByInviteCode(member.getMemberId(), code.trim());
+        hostService.joinByInviteCode(memberId, code.trim());
     }
 
 
