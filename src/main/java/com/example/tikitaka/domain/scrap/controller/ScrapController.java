@@ -33,7 +33,7 @@ public class ScrapController {
     @GetMapping
     public ScrapListResponseDto getMemberScraps(
             @AuthenticationPrincipal Member member, // 로그인된 멤버
-            @RequestParam(defaultValue = "1") @Min(1) int pageNum,
+            @RequestParam(defaultValue = "1") @Min(0) int pageNum,
             @RequestParam(defaultValue = "10") @Min(1) @Max(20) int limit
     ) {
         // pageNum, limit을 받아 Service에서 PageRequest.of(pageNum-1, limit) 처리
