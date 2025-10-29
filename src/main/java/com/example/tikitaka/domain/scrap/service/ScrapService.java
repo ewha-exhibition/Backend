@@ -37,17 +37,8 @@ public class ScrapService {
         Page<Scrap> page = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(memberId, pageable);
 
         // Exhibition DTO 변환
-        List<ScrapListItemDto> exhibitions = page.getContent().stream()
-                .map(s -> ScrapListItemDto.builder()
-                        .exhibitionId(s.getExhibition().getExhibitionId())
-                        .exhibitionName(s.getExhibition().getExhibitionName())
-                        .posterUrl(s.getExhibition().getPosterUrl())
-                        .place(s.getExhibition().getPlace())
-                        .startDate(s.getExhibition().getStartDate())
-                        .endDate(s.getExhibition().getEndDate())
-                        .isViewed(s.getIsViewed())
-                        .build())
-                .toList();
+        List<ScrapListItemDto> exhibitions = page.map(ScrapListItemDto::from).getContent();
+
 
         // username은 Scrap → Member를 통해 접근
         String username = page.isEmpty() ? null : page.getContent().get(0).getMember().getUsername();
