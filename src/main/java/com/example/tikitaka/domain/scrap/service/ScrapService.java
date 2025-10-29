@@ -100,8 +100,10 @@ public class ScrapService {
     public void removeScrap(Long memberId, Long exhibitionId) {
         // 먼저 존재 여부 확인 없이 바로 삭제 호출 가능하지만,
         // DB에 따라 반환 값이 필요하면 exists 체크 or 커스텀 delete 쿼리 사용
-        scrapRepository.deleteByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId);
-
+        boolean exists = scrapRepository.existsByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId);
+        if (!exists) {
+            throw new BaseErrorException(ScrapErrorCode.SCRAP_NOT_FOUND);
+        }
         // (선택) 집계 필드 감소
          try {
              Exhibition exhibition = exhibitionRepository.getReferenceById(exhibitionId);

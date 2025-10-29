@@ -7,11 +7,13 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Getter
 @AllArgsConstructor
 public enum ScrapErrorCode implements BaseErrorCode {
-    SCRAP_ALREADY_EXIST(BAD_REQUEST, "SCRAP_400_1", "해당 스크랩이 이미 존재합니다");
+    SCRAP_ALREADY_EXIST(BAD_REQUEST, "SCRAP_400_1", "해당 스크랩이 이미 존재합니다"),
+    SCRAP_NOT_FOUND(NOT_FOUND, "SCRAP_404_1", "해당 스크랩을 찾을 수 없습니다.");
 
     private HttpStatus status;
     private String code;
