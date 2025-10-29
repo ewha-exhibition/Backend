@@ -67,6 +67,3 @@ logging:
     org.hibernate.orm.jdbc.bind: trace
     com.ceos19.everytime: debug
     com.zaxxer.hikari: DEBUG
-server:
-  server-url: ${SERVER_PROD_URL}
-  front-urls: ${FRONT_LOCAL_URL}
