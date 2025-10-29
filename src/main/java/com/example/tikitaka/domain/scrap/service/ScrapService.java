@@ -4,11 +4,13 @@ import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.repository.MemberRepository;
+import com.example.tikitaka.domain.scrap.ScrapErrorCode;
 import com.example.tikitaka.domain.scrap.dto.ScrapListItemDto;
 import com.example.tikitaka.domain.scrap.dto.response.ScrapListResponseDto;
 import com.example.tikitaka.domain.scrap.entity.Scrap;
 import com.example.tikitaka.domain.scrap.repository.ScrapRepository;
 import com.example.tikitaka.global.dto.PageInfo;
+import com.example.tikitaka.global.exception.BaseErrorException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -68,7 +70,7 @@ public class ScrapService {
     public void addScrap(Long memberId, Long exhibitionId) {
         // 이미 존재? → 조용히 종료 (컨트롤러는 204)
         if (scrapRepository.existsByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)) {
-            return;
+            throw new BaseErrorException(ScrapErrorCode.SCRAP_ALREADY_EXIST);
         }
 
         // 연관 엔티티(프록시) 참조
