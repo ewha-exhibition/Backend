@@ -9,6 +9,7 @@ import com.example.tikitaka.domain.scrap.dto.response.ScrapListResponseDto;
 import com.example.tikitaka.domain.scrap.entity.Scrap;
 import com.example.tikitaka.domain.scrap.repository.ScrapRepository;
 import com.example.tikitaka.global.dto.PageInfo;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -95,7 +96,7 @@ public class ScrapService {
         scrapRepository.save(scrap);
 
         // (선택) 집계 필드 업데이트가 필요하면 여기서 처리
-        // exhibition.setScrapCount(exhibition.getScrapCount() + 1);
+         exhibition.setScrapCount(exhibition.getScrapCount() + 1);
     }
 
     /**
@@ -109,10 +110,10 @@ public class ScrapService {
         scrapRepository.deleteByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId);
 
         // (선택) 집계 필드 감소
-        // try {
-        //     Exhibition exhibition = exhibitionRepository.getReferenceById(exhibitionId);
-        //     exhibition.setScrapCount(Math.max(0, exhibition.getScrapCount() - 1));
-        // } catch (EntityNotFoundException ignore) {}
+         try {
+             Exhibition exhibition = exhibitionRepository.getReferenceById(exhibitionId);
+             exhibition.setScrapCount(Math.max(0, exhibition.getScrapCount() - 1));
+         } catch (EntityNotFoundException ignore) {}
     }
 
     /**
