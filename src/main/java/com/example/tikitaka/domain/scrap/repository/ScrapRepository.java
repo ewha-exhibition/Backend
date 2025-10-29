@@ -42,5 +42,8 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     Optional<Scrap> findByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
 
     void deleteByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
+
+    Page<Scrap> findPageByMember_MemberIdAndIsViewed(Long memberId, boolean isViewed, Pageable pageable);
+
 }
 

@@ -18,6 +18,7 @@ public class ScrapListItemDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private boolean isViewed;
+    private boolean isReviewed;
 
     public static ScrapListItemDto from(Scrap s) {
         var e = s.getExhibition();

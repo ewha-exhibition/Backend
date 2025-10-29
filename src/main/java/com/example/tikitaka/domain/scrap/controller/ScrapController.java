@@ -32,12 +32,12 @@ public class ScrapController {
      */
     @GetMapping
     public ScrapListResponseDto getMemberScraps(
-            @AuthenticationPrincipal Member member, // 로그인된 멤버
+            @AuthenticationPrincipal Long memberId, // 로그인된 멤버
             @RequestParam(defaultValue = "1") @Min(0) int pageNum,
             @RequestParam(defaultValue = "10") @Min(1) @Max(20) int limit
     ) {
         // pageNum, limit을 받아 Service에서 PageRequest.of(pageNum-1, limit) 처리
-        return scrapService.findScrapList(member.getMemberId(), pageNum, limit);
+        return scrapService.findScrapList(memberId, pageNum, limit);
     }
 
     /**
@@ -46,12 +46,11 @@ public class ScrapController {
      * - 성공 시 204 No Content
      */
     @PostMapping("/{exhibitionId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addScrap(
-            @AuthenticationPrincipal Member member,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long exhibitionId
     ) {
-        scrapService.addScrap(member.getMemberId(), exhibitionId);
+        scrapService.addScrap(memberId, exhibitionId);
     }
 
     /**
@@ -60,12 +59,11 @@ public class ScrapController {
      * - 성공 시 204 No Content
      */
     @DeleteMapping("/{exhibitionId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeScrap(
-            @AuthenticationPrincipal Member member,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long exhibitionId
     ) {
-        scrapService.removeScrap(member.getMemberId(), exhibitionId);
+        scrapService.removeScrap(memberId, exhibitionId);
     }
 
     /**
@@ -75,20 +73,37 @@ public class ScrapController {
      * - 성공 시 204 No Content
      */
     @PatchMapping("/{exhibitionId}/viewed")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void markViewed(
-            @AuthenticationPrincipal Member member,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long exhibitionId,
             @RequestParam(defaultValue = "true") boolean viewed
     ) {
-        scrapService.markViewed(member.getMemberId(), exhibitionId, viewed);
+        scrapService.markViewed(memberId, exhibitionId, viewed);
     }
     /**
      * 4.2. 관람 표시/해제 (스크랩된 전시만 가능)
-     * - PATCH /api/v1/scraps/{exhibitionId}/viewed?viewed=true|false
+     * - PATCH /scraps/{exhibitionId}/viewed?viewed=true|false
      * - 스크랩하지 않은 전시를 관람표시하려 하면 400/404(서비스에서 예외) 발생
+     */
+
+    /**
+     * 5. 스크랩 전시 중 관람한 전시 조회
+     * - 존재하지 않아도 무시(idempotent)
      * - 성공 시 204 No Content
      */
+    @GetMapping("/viewed")
+    public ScrapListResponseDto getViewedScraps(
+            @AuthenticationPrincipal  Long memberId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        return scrapService.findScrapListByViewed(memberId, true, page, limit);
+    }
+
+
+
+
+
+
 
 
 }

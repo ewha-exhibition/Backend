@@ -13,4 +13,16 @@ public class ScrapListResponseDto {
     private String username;
     private List<ScrapListItemDto> exhibitions;
     private PageInfo pageInfo;
+
+    public static ScrapListResponseDto from(
+            String username,
+            List<ScrapListItemDto> exhibitions,
+            PageInfo pageInfo
+    ) {
+        return ScrapListResponseDto.builder()
+                .username(username)
+                .exhibitions(exhibitions)
+                .pageInfo(pageInfo)
+                .build();
+    }
 }

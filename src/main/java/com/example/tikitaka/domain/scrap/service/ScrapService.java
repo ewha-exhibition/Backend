@@ -32,6 +32,8 @@ public class ScrapService {
     // S3
 //    private final S3UrlHandler s3UrlHandler;
 
+
+
     // 1. 스크랩 목록 조회 (페이지네이션)
     public ScrapListResponseDto findScrapList(Long memberId, int pageNum, int limit) {
         Pageable pageable = PageRequest.of(Math.max(pageNum - 1, 0), limit);
@@ -43,7 +45,9 @@ public class ScrapService {
 
 
         // username은 Scrap → Member를 통해 접근
-        String username = page.isEmpty() ? null : page.getContent().get(0).getMember().getUsername();
+        String username = memberRepository.findById(memberId)
+                .map(Member::getUsername)
+                .orElse(null);
 
         PageInfo pageInfo = PageInfo.of(
                 pageNum,
@@ -53,11 +57,11 @@ public class ScrapService {
         );
 
         // username 추가
-        return ScrapListResponseDto.builder()
-                .username(username)
-                .exhibitions(exhibitions)
-                .pageInfo(pageInfo)
-                .build();
+        return ScrapListResponseDto.from(
+                username,
+                exhibitions,
+                pageInfo
+        );
     }
 
 
@@ -68,7 +72,7 @@ public class ScrapService {
      */
     @Transactional
     public void addScrap(Long memberId, Long exhibitionId) {
-        // 이미 존재? → 조용히 종료 (컨트롤러는 204)
+        // 이미 존재 -> 400에러
         if (scrapRepository.existsByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)) {
             throw new BaseErrorException(ScrapErrorCode.SCRAP_ALREADY_EXIST);
         }
@@ -84,6 +88,7 @@ public class ScrapService {
                 .member(member)
                 .exhibition(exhibition)
                 .isViewed(false) // 새 스크랩은 미관람 상태
+                .isReviewed(false)  // 스크랩 생성시 리뷰는 없음
                 .build();
 
         scrapRepository.save(scrap);
@@ -104,6 +109,11 @@ public class ScrapService {
         if (!exists) {
             throw new BaseErrorException(ScrapErrorCode.SCRAP_NOT_FOUND);
         }
+
+        // 실제 스크랩 삭제
+        scrapRepository.deleteByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId);
+
+
         // (선택) 집계 필드 감소
          try {
              Exhibition exhibition = exhibitionRepository.getReferenceById(exhibitionId);
@@ -118,9 +128,35 @@ public class ScrapService {
      */
     @Transactional
     public void markViewed(Long memberId, Long exhibitionId, boolean viewed) {
-        Scrap scrap = scrapRepository.findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)
-                .orElseThrow(() -> new IllegalArgumentException("스크랩하지 않은 전시는 관람표시할 수 없습니다."));
-        scrap.setViewed(viewed); // 엔티티에 setViewed(boolean) 메서드가 있어야 함
+        Scrap scrap = scrapRepository
+                .findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)
+                .orElseThrow(() -> new BaseErrorException(ScrapErrorCode.SCRAP_NOT_FOUND)); // ← 커스텀 예외
+        scrap.setViewed(viewed);
     }
+
+    /**
+     * 스크랩 전시 중 관람한 전시 조회
+     */
+    @Transactional(readOnly = true)
+    public ScrapListResponseDto findScrapListByViewed(Long memberId, boolean viewed, int pageNum, int limit) {
+        Pageable pageable = PageRequest.of(Math.max(pageNum - 1, 0), limit);
+
+        Page<Scrap> page = scrapRepository.findPageByMember_MemberIdAndIsViewed(memberId, viewed, pageable);
+
+        List<ScrapListItemDto> exhibitions = page.map(ScrapListItemDto::from).getContent();
+
+        String username = memberRepository.findById(memberId)
+                .map(Member::getUsername)
+                .orElse(null);
+        PageInfo pageInfo = PageInfo.of(pageNum, limit, page.getTotalPages(), page.getTotalElements());
+
+
+        return ScrapListResponseDto.from(
+                username,
+                exhibitions,
+                pageInfo
+        );
+    }
+
 
 }
