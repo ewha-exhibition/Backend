@@ -25,4 +25,4 @@ management:
 
 server:
   server-url: ${SERVER_PROD_URL}
-  front-urls: ${FRONT_LOCAL_URL}
+  front-urls: ${FRONT_PROD_URL}

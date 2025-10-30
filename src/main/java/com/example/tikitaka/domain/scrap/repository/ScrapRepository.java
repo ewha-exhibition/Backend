@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Repository
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
+    boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
 
     boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
 
