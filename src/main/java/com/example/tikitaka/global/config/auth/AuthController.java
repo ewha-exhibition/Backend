@@ -3,6 +3,7 @@ package com.example.tikitaka.global.config.auth;
 import com.example.tikitaka.global.config.auth.dto.AuthResponse;
 import com.example.tikitaka.global.config.auth.dto.KakaoCodeRequest;
 
+import com.example.tikitaka.global.config.auth.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
@@ -18,6 +19,8 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
+
     // 프론트: /oauth/callback 에서 받은 code와 redirectUri를 여기에 POST
     @PostMapping("/kakao")
     public ResponseEntity<?> loginWithKakao(@RequestBody KakaoCodeRequest req) {
@@ -39,4 +42,10 @@ public class AuthController {
                         "nickname", result.getNickname()
                 ));
     }
+    @GetMapping("/test-auth/token/{memberId}")
+    public Map<String, String> issue(@PathVariable Long memberId) {
+        String token = jwtTokenProvider.createAccessToken(memberId);
+        return Map.of("accessToken", token);
+    }
+
 }
