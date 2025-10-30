@@ -11,3 +11,4 @@ server:
   server-url: ${SERVER_LOCAL_URL}
   front-urls: ${FRONT_PROD_URL}
 
+

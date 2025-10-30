@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class OptionalAuthAspect {
-
     @Around("@annotation(com.example.tikitaka.global.annotation.OptionalAuth)")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         Long userId = null;
@@ -42,5 +41,4 @@ public class OptionalAuthAspect {
         }
     }
 }
-
 

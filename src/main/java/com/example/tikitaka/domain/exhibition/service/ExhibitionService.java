@@ -18,6 +18,7 @@ import com.example.tikitaka.domain.host.service.HostService;
 import com.example.tikitaka.domain.host.validator.HostValidator;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
+import com.example.tikitaka.domain.scrap.validator.ScrapValidator;
 import com.example.tikitaka.infra.s3.S3Url;
 import com.example.tikitaka.infra.s3.S3UrlHandler;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,9 @@ public class ExhibitionService {
     private final ExhibitionImageRepository exhibitionImageRepository;
 
     // validator
-    private final MemberValidator userValidator;
+    private final MemberValidator memberValidator;
     private final ExhibitionValidator exhibitionValidator;
+    private final ScrapValidator scrapValidator;
 
     // Mapper
     private final ExhibitionMapper exhibitionMapper;
@@ -52,9 +54,10 @@ public class ExhibitionService {
     private final HostCodeGenerator hostCodeGenerator;
 
     @Transactional
-    public void addExhibition(ExhibitionPostRequest request) {
-        // 멤버 찾기
-        Member member = userValidator.validateMember(request.getUserId());
+
+    public void addExhibition(Long memberId, ExhibitionPostRequest request) {
+        Member member = memberValidator.validateMember(memberId);
+
 
         // 클럽 찾기 (없으면 생성 있으면 참조)
         Club club = clubService.clubGetOrAdd(request.getClub());
@@ -85,20 +88,29 @@ public class ExhibitionService {
 
     }
 
-    public ExhibitionDetailResponse findExhibition(Long exhibitionId) {
+    public ExhibitionDetailResponse findExhibition(Long memberId, Long exhibitionId) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
         List<String> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
 
+        boolean isHost = false;
+        boolean isScrap = false;
 
-        return exhibitionMapper.toDetailResponse(exhibition, images);
+        if (memberId != null) {
+            Member member = memberValidator.validateMember(memberId);
+            isHost = hostValidator.validateRole(member, exhibition);
+            isScrap = scrapValidator.existsByMemberAndExhibition(member, exhibition);
+        }
+
+        return exhibitionMapper.toDetailResponse(isHost, isScrap, exhibition, images);
 
     }
 
     @Transactional
-    public void deleteExhibition(Long exhibitionId) {
+    public void deleteExhibition(Long memberId, Long exhibitionId) {
+        Member member = memberValidator.validateMember(memberId);
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
-        //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
+        hostValidator.validateHostOrThrow(member, exhibition);
         exhibition.markAsDeleted();
         exhibitionRepository.save(exhibition);
     }

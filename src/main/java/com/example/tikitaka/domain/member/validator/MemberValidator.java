@@ -15,6 +15,7 @@ public class MemberValidator {
     public Member validateMember(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseErrorException(MemberErrorCode.MEMBER_NOT_FOUND));
+
     }
 
 

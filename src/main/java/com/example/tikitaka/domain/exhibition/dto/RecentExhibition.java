@@ -14,20 +14,20 @@ public class RecentExhibition {
     private PeriodFormatting duration;
     private String place;
 
-    // 추후 스크랩 여부 함께 반환
-    // private boolean isScrap;
+    private boolean isScrap;
 
     private boolean isOpen; // 현재 진행 중인지 여부
 
 
 
-    public static RecentExhibition from(Exhibition exhibition) {
+    public static RecentExhibition from(Exhibition exhibition, boolean isScrap) {
         return RecentExhibition.builder()
                 .exhibitionId(exhibition.getExhibitionId())
                 .exhibitionName(exhibition.getExhibitionName())
                 .posterUrl(exhibition.getPosterUrl())
                 .duration(new PeriodFormatting(exhibition.getStartDate(), exhibition.getEndDate()))
                 .place(exhibition.getPlace())
+                .isScrap(isScrap)
                 .isOpen(!exhibition.isEnded())
                 .build();
     }

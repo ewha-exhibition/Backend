@@ -4,8 +4,6 @@ import com.example.tikitaka.domain.host.dto.HostCreate;
 import com.example.tikitaka.domain.host.entity.Host;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class HostMapper {
     public Host toHost(HostCreate req) {
