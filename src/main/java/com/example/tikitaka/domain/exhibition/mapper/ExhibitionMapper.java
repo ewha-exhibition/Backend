@@ -8,6 +8,7 @@ import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.entity.ExhibitionImage;
 import com.example.tikitaka.domain.exhibition.entity.Status;
+import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.global.util.formatting.PeriodFormatting;
 import com.example.tikitaka.global.util.formatting.PriceFormatting;
 import com.example.tikitaka.global.util.formatting.TimeFormatting;
@@ -61,7 +62,7 @@ public class ExhibitionMapper {
         ).toList();
     }
 
-    public ExhibitionDetailResponse toDetailResponse(Exhibition exhibition, List<String> images) {
+    public ExhibitionDetailResponse toDetailResponse(boolean isHost, boolean isScrap, Exhibition exhibition, List<String> images) {
         return ExhibitionDetailResponse.builder()
                 .exhibitionId(exhibition.getExhibitionId())
                 .exhibitionName(exhibition.getExhibitionName())
@@ -79,7 +80,8 @@ public class ExhibitionMapper {
                 .reviewCount(exhibition.getReviewCount())
                 .cheerCount(exhibition.getCheerCount())
                 .questionCount(exhibition.getQuestionCount())
-                .userRole("") // 추후 추가 예정
+                .isHost(isHost)
+                .isScrap(isScrap)
                 .build();
     }
 

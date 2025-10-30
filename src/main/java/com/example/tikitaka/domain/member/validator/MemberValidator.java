@@ -12,9 +12,10 @@ import org.springframework.stereotype.Component;
 public class MemberValidator {
     private final MemberRepository memberRepository;
 
-    public Member validateUser(Long userId) {
-        return memberRepository.findById(userId)
-                .orElseThrow(() -> new BaseErrorException(MemberErrorCode.USER_NOT_FOUND));
+    public Member validateMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseErrorException(MemberErrorCode.MEMBER_NOT_FOUND));
+
     }
 
 

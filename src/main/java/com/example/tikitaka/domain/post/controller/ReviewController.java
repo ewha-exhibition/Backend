@@ -7,6 +7,7 @@ import com.example.tikitaka.domain.post.service.PostService;
 import com.example.tikitaka.domain.post.service.ReviewService;
 import com.example.tikitaka.infra.s3.S3Url;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,24 +18,36 @@ public class ReviewController {
     private final PostImageService postImageService;
     private final PostService postService;
 
+    @GetMapping
+    public ExhibitionPostListResponse myReviews(
+            @AuthenticationPrincipal Long memberId,
+            @RequestParam(defaultValue = "0") int pageNum,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        return reviewService.getMyReviews(memberId, pageNum, limit);
+    }
+
     @GetMapping("/images")
     public S3Url getPosterUploadUrl() {
         return postImageService.getImageUploadUrl("reviews/images");
     }
 
-    // TODO: 질문 생성, 추후 유저 내용 추가
     @PostMapping("/{exhibitionId}")
     public void exhibitionReviewAdd(
+            @AuthenticationPrincipal
+            Long memberId,
             @RequestBody
             ReviewPostRequest reviewPostRequest,
             @PathVariable
             Long exhibitionId) {
-        reviewService.addReview(exhibitionId, reviewPostRequest);
+        reviewService.addReview(memberId, exhibitionId, reviewPostRequest);
     }
 
-    // TODO: 추후 유저 내용 추가
+
     @GetMapping("/{exhibitionId}")
     public ExhibitionPostListResponse exhibitionReviewList(
+            @AuthenticationPrincipal
+            Long memberId,
             @PathVariable
             Long exhibitionId,
             @RequestParam(required = true)
@@ -42,12 +55,14 @@ public class ReviewController {
             @RequestParam(required = true)
             int limit
     ) {
-        return reviewService.getExhibitionReviews(exhibitionId, pageNum, limit);
+        return reviewService.getExhibitionReviews(memberId, exhibitionId, pageNum, limit);
     }
 
     @DeleteMapping("/{postId}")
-    public void reviewDelete(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public void reviewDelete(
+            @AuthenticationPrincipal Long memberId,
+            @PathVariable Long postId) {
+        postService.deletePost(memberId, postId);
     }
 
 

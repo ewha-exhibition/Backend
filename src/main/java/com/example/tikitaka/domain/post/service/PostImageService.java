@@ -23,7 +23,7 @@ public class PostImageService {
     }
 
     public List<String> getReviewImageUrls(Post post) {
-        return postImageRepository.findPostImageUrlsByPost(post);
+        return postImageRepository.findByPost(post).stream().map(PostImage::getPostImageUrl).toList();
     }
 
     public void createReviewImages(Post post, String url) {

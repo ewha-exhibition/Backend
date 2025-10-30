@@ -7,8 +7,6 @@ import com.example.tikitaka.global.exception.BaseErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
 public class ExhibitionValidator {
@@ -22,6 +20,7 @@ public class ExhibitionValidator {
 //                () -> new BaseErrorException(ExhibitionErrorCode.EXHIBITION_NOT_FOUND)
 //        );
     }
+
 
     public void validateAuthority(boolean role) {
         if (!role) {
