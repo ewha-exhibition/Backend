@@ -22,6 +22,9 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
 //    """)
 //    Optional<Exhibition> findDetailById(Long exhibitionIdx);
 
+    // 초대코드로 전시 찾기
+    Optional<Exhibition> findByCode(String code);
+
     Optional<Exhibition> findByExhibitionId(Long exhibitionId);
 
     Page<Exhibition> findByCategory(Category category, Pageable pageable);
