@@ -19,8 +19,8 @@ public class CommentValidator {
         );
     }
 
-    public Comment validateCommentByMemberIdAndCommentId(String memberId, Long commentId) {
-        return commentRepository.findByMemberIdAndCommentId(Long.parseLong(memberId), commentId).orElseThrow(
+    public Comment validateCommentByMemberIdAndCommentId(Long memberId, Long commentId) {
+        return commentRepository.findByMemberIdAndCommentId(memberId, commentId).orElseThrow(
                 () -> new BaseErrorException(CommentErrorCode.COMMENT_FORBIDDEN)
         );
     }

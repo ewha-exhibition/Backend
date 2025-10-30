@@ -18,7 +18,7 @@ public class CheerController {
 
     @PostMapping("/{exhibitionId}")
     public void cheerAdd(
-            @AuthenticationPrincipal String memberId,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long exhibitionId,
             @RequestBody PreviewPostRequest previewPostRequest) {
         previewService.addPreview(memberId, exhibitionId, previewPostRequest, PostType.CHEER);
@@ -29,7 +29,7 @@ public class CheerController {
     @GetMapping("/{exhibitionId}")
     public ExhibitionPostListResponse exhibitionCheerList(
             @AuthenticationPrincipal
-            String memberId,
+            Long memberId,
             @PathVariable
             Long exhibitionId,
             @RequestParam(required = true)
@@ -42,7 +42,7 @@ public class CheerController {
 
     @DeleteMapping("/{postId}")
     public void cheerDelete(
-            @AuthenticationPrincipal String memberId,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long postId) {
         postService.deletePost(memberId, postId);
     }

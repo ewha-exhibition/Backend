@@ -33,8 +33,8 @@ public class PreviewService {
     private final MemberValidator memberValidator;
 
     @Transactional
-    public void addPreview(String memberId, Long exhibitionId, PreviewPostRequest previewPostRequest, PostType postType) {
-        Member member = memberValidator.validateMember(Long.parseLong(memberId));
+    public void addPreview(Long memberId, Long exhibitionId, PreviewPostRequest previewPostRequest, PostType postType) {
+        Member member = memberValidator.validateMember(memberId);
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
         // 추후 유저가 이미 post를 생성한 경우를 고려하기 위한 변수
@@ -63,7 +63,7 @@ public class PreviewService {
     }
 
     public ExhibitionPostListResponse getExhibitionPreviews(
-            String memberId,
+            Long memberId,
             Long exhibitionId,
             PostType postType,
             int pageNum,

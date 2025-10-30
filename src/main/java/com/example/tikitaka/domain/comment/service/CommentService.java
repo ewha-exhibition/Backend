@@ -25,8 +25,8 @@ public class CommentService {
     private final HostValidator hostValidator;
 
     @Transactional
-    public void addComment(String memberId, Long postId, CommentPostRequest commentPostRequest) {
-        Member member = memberValidator.validateMember(Long.parseLong(memberId));
+    public void addComment(Long memberId, Long postId, CommentPostRequest commentPostRequest) {
+        Member member = memberValidator.validateMember(memberId);
         Post post = postValidator.validatePostByPostId(postId);
         commentRepository.save(Comment.toEntity(member, post, commentPostRequest.getContent()));
         post.switchAsAnswered();
@@ -34,7 +34,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(String memberId, Long commentId) {
+    public void deleteComment(Long memberId, Long commentId) {
         Comment comment = commentValidator.validateCommentByMemberIdAndCommentId(memberId, commentId);
         commentRepository.delete(comment);
         comment.getPost().switchAsAnswered();

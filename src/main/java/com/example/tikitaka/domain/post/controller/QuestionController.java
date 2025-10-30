@@ -19,7 +19,7 @@ public class QuestionController {
     // TODO: 질문 생성
     @PostMapping("/{exhibitionId}")
     public void questionAdd(
-            @AuthenticationPrincipal String memberId,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable
             Long exhibitionId,
             @RequestBody
@@ -32,7 +32,7 @@ public class QuestionController {
     @GetMapping("/{exhibitionId}")
     public ExhibitionPostListResponse exhibitionQuestionList(
             @AuthenticationPrincipal
-            String memberId,
+            Long memberId,
             @PathVariable
             Long exhibitionId,
             @RequestParam(required = true)
@@ -45,7 +45,7 @@ public class QuestionController {
 
     @DeleteMapping("/{postId}")
     public void questionDelete(
-            @AuthenticationPrincipal String memberId,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long postId) {
         postService.deletePost(memberId, postId);
     }

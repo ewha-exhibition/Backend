@@ -26,7 +26,7 @@ public class ReviewController {
     @PostMapping("/{exhibitionId}")
     public void exhibitionReviewAdd(
             @AuthenticationPrincipal
-            String memberId,
+            Long memberId,
             @RequestBody
             ReviewPostRequest reviewPostRequest,
             @PathVariable
@@ -38,7 +38,7 @@ public class ReviewController {
     @GetMapping("/{exhibitionId}")
     public ExhibitionPostListResponse exhibitionReviewList(
             @AuthenticationPrincipal
-            String memberId,
+            Long memberId,
             @PathVariable
             Long exhibitionId,
             @RequestParam(required = true)
@@ -51,7 +51,7 @@ public class ReviewController {
 
     @DeleteMapping("/{postId}")
     public void reviewDelete(
-            @AuthenticationPrincipal String memberId,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long postId) {
         postService.deletePost(memberId, postId);
     }

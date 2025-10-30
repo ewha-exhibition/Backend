@@ -34,8 +34,8 @@ public class ReviewService {
 
 
     @Transactional
-    public void addReview(String memberId, Long exhibitionId, ReviewPostRequest reviewPostRequest) {
-        Member member = memberValidator.validateMember(Long.parseLong(memberId));
+    public void addReview(Long memberId, Long exhibitionId, ReviewPostRequest reviewPostRequest) {
+        Member member = memberValidator.validateMember(memberId);
 
         // 전시 조회
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
@@ -69,7 +69,7 @@ public class ReviewService {
     }
 
     public ExhibitionPostListResponse getExhibitionReviews(
-            String memberId,
+            Long memberId,
             Long exhibitionId,
             int pageNum,
             int limit

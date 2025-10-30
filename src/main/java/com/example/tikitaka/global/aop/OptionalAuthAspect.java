@@ -6,6 +6,7 @@ import com.example.tikitaka.global.context.CurrentUserContext;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -15,20 +16,29 @@ public class OptionalAuthAspect {
 
     @Around("@annotation(com.example.tikitaka.global.annotation.OptionalAuth)")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
-        String userId = null;
+        Long userId = null;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null
+                && auth.isAuthenticated()
+                && !(auth instanceof AnonymousAuthenticationToken)
+                && auth.getPrincipal() != null) {
 
-        if (auth != null && auth.isAuthenticated()
-                && auth.getPrincipal() != null
-                && !"anonymousUser".equals(auth.getPrincipal())) {
-            userId = auth.getName(); // 위 필터에서 넣은 principal(userId)
+            Object principal = auth.getPrincipal();
+
+            if (principal instanceof Long id) {          // ← 지금 구조(주입이 Long)와 일치
+                userId = id;
+            } else if (principal instanceof String s) {  // 혹시 String인 경우 대비
+                if (!"anonymousUser".equals(s)) {
+                    try { userId = Long.valueOf(s); } catch (NumberFormatException ignore) {}
+                }
+            }
         }
 
         try {
-            CurrentUserContext.setUserId(userId); // null일 수도 있음(비로그인)
+            CurrentUserContext.setUserId(userId); // null이면 비로그인
             return pjp.proceed();
         } finally {
-            CurrentUserContext.clear(); // ★ 반드시 정리!
+            CurrentUserContext.clear();
         }
     }
 }

@@ -14,7 +14,7 @@ public class CommentController {
     @PostMapping("/{postId}")
     public void commentAdd(
             @AuthenticationPrincipal
-            String memberId,
+            Long memberId,
             @PathVariable
             Long postId,
             @RequestBody
@@ -24,7 +24,7 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     public void commentDelete(
-            @AuthenticationPrincipal String memberId,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long commentId
     ) {
         commentService.deleteComment(memberId, commentId);

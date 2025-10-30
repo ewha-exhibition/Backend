@@ -16,8 +16,8 @@ public class PostService {
     private final PostImageService postImageService;
 
     @Transactional
-    public void deletePost(String memberId, Long postId) {
-        Post post = postRepository.findByMemberIdAndPostId(Long.parseLong(memberId), postId)
+    public void deletePost(Long memberId, Long postId) {
+        Post post = postRepository.findByMemberIdAndPostId(memberId, postId)
                 .orElseThrow(() -> new BaseErrorException(PostErrorCode.POST_FORBIDDEN));
 
         postImageService.deletePostImages(post);
