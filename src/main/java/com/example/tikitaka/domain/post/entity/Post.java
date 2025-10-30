@@ -1,6 +1,7 @@
 package com.example.tikitaka.domain.post.entity;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
+import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.post.dto.request.PreviewPostRequest;
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.global.entity.BaseEntity;
@@ -38,10 +39,9 @@ public class Post extends BaseEntity {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
-//    추후 User 수정 후 주석 해제 예정
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibition_id", nullable = false)
@@ -56,8 +56,9 @@ public class Post extends BaseEntity {
     }
 
 
-    public static Post toReviewEntity(Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType, Long displayNo) {
+    public static Post toReviewEntity(Member member, Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType, Long displayNo) {
         return Post.builder()
+                .member(member)
                 .postType(postType)
                 .content(reviewPostRequest.getContent())
                 .hasAnswer(false)
@@ -67,8 +68,9 @@ public class Post extends BaseEntity {
                 .build();
     }
 
-    public static Post toPreviewEntity(Exhibition exhibition, PreviewPostRequest previewPostRequest, PostType postType, Long displayNo) {
+    public static Post toPreviewEntity(Member member, Exhibition exhibition, PreviewPostRequest previewPostRequest, PostType postType, Long displayNo) {
         return Post.builder()
+                .member(member)
                 .postType(postType)
                 .content(previewPostRequest.getContent())
                 .hasAnswer(false)

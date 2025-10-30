@@ -6,12 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Getter
 @AllArgsConstructor
 public enum PostErrorCode implements BaseErrorCode {
-    POST_NOT_FOUND(NOT_FOUND, "POST_404_1", "해당하는 글을 조회할 수 없습니다."),
+    POST_FORBIDDEN(FORBIDDEN, "POST_403_1", "해당하는 글을 삭제할 권한이 없습니다."),
     ;
 
     private HttpStatus status;

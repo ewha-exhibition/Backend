@@ -13,7 +13,7 @@ public class PostValidator {
     private final PostRepository postRepository;
     public Post validatePostByPostId(Long postId) {
         return postRepository.findById(postId).orElseThrow(
-                () -> new BaseErrorException(PostErrorCode.POST_NOT_FOUND)
+                () -> new BaseErrorException(PostErrorCode.POST_FORBIDDEN)
         );
     }
 }

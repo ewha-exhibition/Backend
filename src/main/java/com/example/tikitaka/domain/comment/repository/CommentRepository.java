@@ -16,4 +16,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     WHERE c.post = :post
     """)
     Optional<String> findContentByPost(Post post);
+
+    @Query("""
+    SELECT c
+    FROM Comment c
+    WHERE c.member.memberId = :memberId AND c.commentId = :commentId
+    """)
+    Optional<Comment> findByMemberIdAndCommentId(Long memberId, Long commentId);
 }

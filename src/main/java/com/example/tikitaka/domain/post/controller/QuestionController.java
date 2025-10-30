@@ -6,6 +6,7 @@ import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.service.PostService;
 import com.example.tikitaka.domain.post.service.PreviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,17 +19,20 @@ public class QuestionController {
     // TODO: 질문 생성
     @PostMapping("/{exhibitionId}")
     public void questionAdd(
+            @AuthenticationPrincipal Long memberId,
             @PathVariable
             Long exhibitionId,
             @RequestBody
             PreviewPostRequest previewPostRequest) {
-        previewService.addPreview(exhibitionId, previewPostRequest, PostType.QUESTION);
+        previewService.addPreview(memberId, exhibitionId, previewPostRequest, PostType.QUESTION);
     }
 
 
 
     @GetMapping("/{exhibitionId}")
     public ExhibitionPostListResponse exhibitionQuestionList(
+            @AuthenticationPrincipal
+            Long memberId,
             @PathVariable
             Long exhibitionId,
             @RequestParam(required = true)
@@ -36,11 +40,13 @@ public class QuestionController {
             @RequestParam(required = true)
             int limit
     ) {
-        return previewService.getExhibitionPreviews(exhibitionId, PostType.QUESTION, pageNum, limit);
+        return previewService.getExhibitionPreviews(memberId, exhibitionId, PostType.QUESTION, pageNum, limit);
     }
 
     @DeleteMapping("/{postId}")
-    public void questionDelete(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public void questionDelete(
+            @AuthenticationPrincipal Long memberId,
+            @PathVariable Long postId) {
+        postService.deletePost(memberId, postId);
     }
 }

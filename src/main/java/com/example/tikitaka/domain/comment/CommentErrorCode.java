@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @AllArgsConstructor
 public enum CommentErrorCode implements BaseErrorCode {
     COMMENT_NOT_FOUND(NOT_FOUND, "COMMENT_404_1", "해당하는 답변을 조회할 수 없습니다."),
-    ;
+    COMMENT_FORBIDDEN(FORBIDDEN, "COMMENT_403_1", "해당 답변을 삭제할 권한이 없습니다."),;
 
     private HttpStatus status;
     private String code;

@@ -7,7 +7,6 @@ import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.global.exception.BaseErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 @Component
 @RequiredArgsConstructor
@@ -20,9 +19,9 @@ public class CommentValidator {
         );
     }
 
-    public Comment validateCommentByCommentId(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(
-                () -> new BaseErrorException(CommentErrorCode.COMMENT_NOT_FOUND)
+    public Comment validateCommentByMemberIdAndCommentId(Long memberId, Long commentId) {
+        return commentRepository.findByMemberIdAndCommentId(memberId, commentId).orElseThrow(
+                () -> new BaseErrorException(CommentErrorCode.COMMENT_FORBIDDEN)
         );
     }
 }

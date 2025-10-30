@@ -2,6 +2,8 @@ package com.example.tikitaka.domain.post.service;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
+import com.example.tikitaka.domain.member.entity.Member;
+import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionReview;
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,21 +30,54 @@ public class ReviewService {
     private final ExhibitionValidator exhibitionValidator;
     private final PostRepository postRepository;
     private final PostImageService postImageService;
+    private final MemberValidator memberValidator;
 
-    // TODO: 추후 유저 추가
+
+    public ExhibitionPostListResponse getMyReviews(Long memberId, int pageNum, int limit) {
+        memberValidator.validateMember(memberId);
+
+        PageRequest pageReq =
+                PageRequest.of(Math.max(pageNum, 0), limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<Post> page = postRepository
+                .findByMember_MemberIdAndPostType(memberId, PostType.REVIEW, pageReq);
+
+        PageInfo pageInfo = PageInfo.of(pageNum, limit, page.getTotalPages(), page.getTotalElements());
+
+        // 내 글이므로 isMine = true 고정
+        List<ExhibitionPost> items = page.getContent().stream()
+                .map(p -> (ExhibitionPost) ExhibitionReview.of(
+                        p,
+                        postImageService.getReviewImageUrls(p),
+                        true
+                ))
+                .toList();
+
+        return ExhibitionPostListResponse.of(items, pageInfo);
+    }
+
     @Transactional
-    public void addReview(Long exhibitionId, ReviewPostRequest reviewPostRequest) {
-        // TODO: 유저 조회
+    public void addReview(Long memberId, Long exhibitionId, ReviewPostRequest reviewPostRequest) {
+        Member member = memberValidator.validateMember(memberId);
 
         // 전시 조회
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
-        // TODO: 작성 경험 존재한 유저인지 확인 (있으면 number 꺼내쓰고, 없으면 exhibition에 no + 1)
-        Long number = exhibition.getReviewNo() + 1;
-        exhibition.increaseReviewNo();
+        Post post = postRepository.findByMemberAndExhibitionAndPostType(member, exhibition, PostType.REVIEW);
+
+        Long number = 0L;
+
+        if (post != null) {
+            number = post.getDisplayNo();
+        } else {
+            number = exhibition.getReviewNo() + 1;
+            exhibition.increaseReviewNo();
+        }
+
+        exhibition.increaseReviewCount();
 
         // 리뷰 생성
-        Post review = Post.toReviewEntity(exhibition, reviewPostRequest, PostType.REVIEW, number);
+        Post review = Post.toReviewEntity(member, exhibition, reviewPostRequest, PostType.REVIEW, number);
         postRepository.save(review);
 
         exhibition.increaseReviewCount();
@@ -56,6 +92,7 @@ public class ReviewService {
     }
 
     public ExhibitionPostListResponse getExhibitionReviews(
+            Long memberId,
             Long exhibitionId,
             int pageNum,
             int limit
@@ -67,7 +104,7 @@ public class ReviewService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
 
         List<ExhibitionPost> exhibitionReviews = reviews.getContent().stream().map(
-                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review))
+                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review),Objects.equals(memberId, String.valueOf(review.getMember().getMemberId())))
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);

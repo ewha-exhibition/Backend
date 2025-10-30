@@ -65,7 +65,7 @@ public class JwtTokenProvider {
 
         Long memberId = Long.valueOf(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(
-                memberId,                   // principal: memberId 문자열
+                memberId,
                 null,
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );

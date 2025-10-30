@@ -17,7 +17,6 @@ public class OptionalAuthAspect {
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         Long userId = null;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         if (auth != null
                 && auth.isAuthenticated()
                 && !(auth instanceof AnonymousAuthenticationToken)

@@ -46,7 +46,6 @@ public class ExhibitionService {
 
     // Mapper
     private final ExhibitionMapper exhibitionMapper;
-    private final HostValidator hostValidator;
 
     // S3
     private final S3UrlHandler s3UrlHandler;
@@ -55,8 +54,10 @@ public class ExhibitionService {
     private final HostCodeGenerator hostCodeGenerator;
 
     @Transactional
+
     public void addExhibition(Long memberId, ExhibitionPostRequest request) {
         Member member = memberValidator.validateMember(memberId);
+
 
         // 클럽 찾기 (없으면 생성 있으면 참조)
         Club club = clubService.clubGetOrAdd(request.getClub());

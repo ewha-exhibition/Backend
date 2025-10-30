@@ -16,9 +16,9 @@ public class PostService {
     private final PostImageService postImageService;
 
     @Transactional
-    public void deletePost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new BaseErrorException(PostErrorCode.POST_NOT_FOUND));
+    public void deletePost(Long memberId, Long postId) {
+        Post post = postRepository.findByMemberIdAndPostId(memberId, postId)
+                .orElseThrow(() -> new BaseErrorException(PostErrorCode.POST_FORBIDDEN));
 
         postImageService.deletePostImages(post);
         post.markAsDeleted();
