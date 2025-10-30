@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.scrap.repository;
 
+
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.scrap.dto.ScrapListItemDto;
@@ -16,6 +17,8 @@ import java.util.Optional;
 
 @Repository
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
+    boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
+
     boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
 
     // /scraps?pageNum=1&limit=3
