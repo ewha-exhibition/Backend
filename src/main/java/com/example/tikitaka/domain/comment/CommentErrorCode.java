@@ -19,6 +19,8 @@ public enum CommentErrorCode implements BaseErrorCode {
     private String code;
     private String reason;
 
+
+
     @Override
     public ErrorReason getErrorReason() {
         return ErrorReason.of(status.value(), code, reason);

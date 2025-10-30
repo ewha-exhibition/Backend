@@ -22,6 +22,5 @@ public interface HostRepository extends JpaRepository<Host, Long> {
     boolean existsByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
     long countByExhibition_ExhibitionId(Long exhibitionId);
     List<Host> findByExhibition_ExhibitionId(Long exhibitionId);
-    Optional<Host> findByMemberAndExhibition(Member member, Exhibition exhibition);
 
 }
