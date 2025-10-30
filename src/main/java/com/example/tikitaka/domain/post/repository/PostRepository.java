@@ -14,6 +14,9 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+
+    Page<Post> findByMember_MemberIdAndPostType(Long memberId, PostType postType, Pageable pageable);
+
     @Query("""
     SELECT p
     FROM Post p

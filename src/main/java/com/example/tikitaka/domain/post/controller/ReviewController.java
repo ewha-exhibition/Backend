@@ -18,6 +18,15 @@ public class ReviewController {
     private final PostImageService postImageService;
     private final PostService postService;
 
+    @GetMapping
+    public ExhibitionPostListResponse myReviews(
+            @AuthenticationPrincipal Long memberId,
+            @RequestParam(defaultValue = "0") int pageNum,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        return reviewService.getMyReviews(memberId, pageNum, limit);
+    }
+
     @GetMapping("/images")
     public S3Url getPosterUploadUrl() {
         return postImageService.getImageUploadUrl("reviews/images");

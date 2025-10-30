@@ -33,6 +33,29 @@ public class ReviewService {
     private final MemberValidator memberValidator;
 
 
+    public ExhibitionPostListResponse getMyReviews(Long memberId, int pageNum, int limit) {
+        memberValidator.validateMember(memberId);
+
+        PageRequest pageReq =
+                PageRequest.of(Math.max(pageNum, 0), limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<Post> page = postRepository
+                .findByMember_MemberIdAndPostType(memberId, PostType.REVIEW, pageReq);
+
+        PageInfo pageInfo = PageInfo.of(pageNum, limit, page.getTotalPages(), page.getTotalElements());
+
+        // 내 글이므로 isMine = true 고정
+        List<ExhibitionPost> items = page.getContent().stream()
+                .map(p -> (ExhibitionPost) ExhibitionReview.of(
+                        p,
+                        postImageService.getReviewImageUrls(p),
+                        true
+                ))
+                .toList();
+
+        return ExhibitionPostListResponse.of(items, pageInfo);
+    }
+
     @Transactional
     public void addReview(Long memberId, Long exhibitionId, ReviewPostRequest reviewPostRequest) {
         Member member = memberValidator.validateMember(memberId);
