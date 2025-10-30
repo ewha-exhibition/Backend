@@ -55,8 +55,8 @@ public class ExhibitionService {
     private final HostCodeGenerator hostCodeGenerator;
 
     @Transactional
-    public void addExhibition(String memberId, ExhibitionPostRequest request) {
-        Member member = memberValidator.validateMember(Long.parseLong(memberId));
+    public void addExhibition(Long memberId, ExhibitionPostRequest request) {
+        Member member = memberValidator.validateMember(memberId);
 
         // 클럽 찾기 (없으면 생성 있으면 참조)
         Club club = clubService.clubGetOrAdd(request.getClub());
@@ -87,7 +87,7 @@ public class ExhibitionService {
 
     }
 
-    public ExhibitionDetailResponse findExhibition(String memberId, Long exhibitionId) {
+    public ExhibitionDetailResponse findExhibition(Long memberId, Long exhibitionId) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
         List<String> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
 
@@ -95,7 +95,7 @@ public class ExhibitionService {
         boolean isScrap = false;
 
         if (memberId != null) {
-            Member member = memberValidator.validateMember(Long.parseLong(memberId));
+            Member member = memberValidator.validateMember(memberId);
             isHost = hostValidator.validateRole(member, exhibition);
             isScrap = scrapValidator.existsByMemberAndExhibition(member, exhibition);
         }
@@ -105,8 +105,8 @@ public class ExhibitionService {
     }
 
     @Transactional
-    public void deleteExhibition(String memberId, Long exhibitionId) {
-        Member member = memberValidator.validateMember(Long.parseLong(memberId));
+    public void deleteExhibition(Long memberId, Long exhibitionId) {
+        Member member = memberValidator.validateMember(memberId);
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
         hostValidator.validateHostOrThrow(member, exhibition);

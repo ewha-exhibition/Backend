@@ -24,7 +24,7 @@ public class ExhibitionController {
 
     @PostMapping
     public void exhibitionAdd(
-            @AuthenticationPrincipal String memberId,
+            @AuthenticationPrincipal Long memberId,
             @RequestBody ExhibitionPostRequest request
     ) {
         exhibitionService.addExhibition(memberId, request);
@@ -36,13 +36,13 @@ public class ExhibitionController {
             @PathVariable
             Long exhibitionId
     ){
-        String memberId = CurrentUserContext.getMemberId();
+        Long memberId = CurrentUserContext.getMemberId();
         return exhibitionService.findExhibition(memberId, exhibitionId);
     }
 
     @DeleteMapping("/{exhibitionId}")
     public void exhibitionDelete(
-            @AuthenticationPrincipal String memberId,
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long exhibitionId
     ) {
         exhibitionService.deleteExhibition(memberId, exhibitionId);
