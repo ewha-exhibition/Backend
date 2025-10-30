@@ -6,12 +6,16 @@ import com.example.tikitaka.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.List;
 
 @Repository
 public interface HostRepository extends JpaRepository<Host, Long> {
-
+    // TODO : 객체로 찾을지, 아이디로 찾을지 통일
+    boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
     boolean existsByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
     long countByExhibition_ExhibitionId(Long exhibitionId);
     List<Host> findByExhibition_ExhibitionId(Long exhibitionId);
+    Optional<Host> findByMemberAndExhibition(Member member, Exhibition exhibition);
+
 }

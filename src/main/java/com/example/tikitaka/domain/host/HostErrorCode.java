@@ -11,7 +11,8 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @Getter
 @AllArgsConstructor
 public enum HostErrorCode implements BaseErrorCode {
-
+    HOST_NOT_FOUND(HttpStatus.NOT_FOUND, "HOST_404_1", "호스트를 찾을 수 없습니다."),
+    HOST_FORBIDDEN(HttpStatus.FORBIDDEN, "HOST_403_1", "권한이 존재하지 않습니다."),
     // 404: 초대 코드 없음
     CODE_NOT_FOUND(NOT_FOUND, "HOST_404_1", "해당하는 초대코드를 조회할 수 없습니다."),
     // 409: 이미 호스트임
