@@ -22,7 +22,7 @@ public class View extends BaseEntity {
     private Long viewId;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
     private Member member;
 
     @ManyToOne

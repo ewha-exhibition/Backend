@@ -36,5 +36,12 @@ public class Member extends BaseEntity {
     @Column(name = "status",  nullable = false)
     private Status status;
 
+    public Member updateSocialProfile(String newName, String newProfileUrl) {
+        if (newName != null && !newName.isBlank()) this.username = newName;
+        if (newProfileUrl != null && !newProfileUrl.isBlank()) this.profileUrl = newProfileUrl;
+        return this;
+    }
 
 }
+
+
