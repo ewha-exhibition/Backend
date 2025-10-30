@@ -17,11 +17,11 @@ public class ScrapValidator {
         return scrapRepository.existsByMemberAndExhibition(member, exhibition);
     }
 
-    public boolean existsByMemberIdAndExhibition(String memberId, Exhibition exhibition) {
+    public boolean existsByMemberIdAndExhibition(Long memberId, Exhibition exhibition) {
         if (memberId == null) {
             return false;
         } else {
-            Member member = memberValidator.validateMember(Long.parseLong(memberId));
+            Member member = memberValidator.validateMember(memberId);
             return scrapRepository.existsByMemberAndExhibition(member, exhibition);
         }
     }

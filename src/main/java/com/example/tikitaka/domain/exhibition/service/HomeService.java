@@ -24,7 +24,7 @@ public class HomeService {
     private final ExhibitionRepository exhibitionRepository;
     private final ScrapValidator scrapValidator;
 
-    public ExhibitionListResponse findRecentExhibition(String memberId, String category, int pageNum, int limit) {
+    public ExhibitionListResponse findRecentExhibition(Long memberId, String category, int pageNum, int limit) {
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Exhibition> exhibitions;
 
@@ -45,7 +45,7 @@ public class HomeService {
         return new ExhibitionListResponse(recentExhibitions, pageInfo);
     }
 
-    public ExhibitionListResponse findKeywordExhibition(String memberId, String keyword, int pageNum, int limit) {
+    public ExhibitionListResponse findKeywordExhibition(Long memberId, String keyword, int pageNum, int limit) {
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Exhibition> exhibitions = exhibitionRepository.findByKeyword(keyword, pageRequest);
         PageInfo pageInfo = PageInfo.of(pageNum, limit, exhibitions.getTotalPages(), exhibitions.getTotalElements());
@@ -55,7 +55,7 @@ public class HomeService {
         return new ExhibitionListResponse(recentExhibitions, pageInfo);
     }
 
-    public List<PopularExhibitionResponse> findPopularExhibition(String memberId) {
+    public List<PopularExhibitionResponse> findPopularExhibition(Long memberId) {
         return exhibitionRepository.findPopularExhibitions().stream().map(
                 exhibition -> PopularExhibitionResponse.from(exhibition, scrapValidator.existsByMemberIdAndExhibition(memberId, exhibition))).toList();
     }

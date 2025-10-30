@@ -21,7 +21,7 @@ public class HomeController {
     @GetMapping("/latest")
     public ExhibitionListResponse recentExhibitionList(
             @AuthenticationPrincipal
-            String memberId,
+            Long memberId,
             @RequestParam(required = false)
             String category,
             @RequestParam(required = true)
@@ -35,7 +35,7 @@ public class HomeController {
     @GetMapping("/search")
     public ExhibitionListResponse searchExhibitionList(
             @AuthenticationPrincipal
-            String memberId,
+            Long memberId,
             @RequestParam(required = true)
             String keyword,
             @RequestParam(required = true)
@@ -48,7 +48,7 @@ public class HomeController {
 
     @GetMapping("/ranking")
     public List<PopularExhibitionResponse> popularExhibitionList(
-        @AuthenticationPrincipal String memberId
+        @AuthenticationPrincipal Long memberId
     ){
         return homeService.findPopularExhibition(memberId);
     }
