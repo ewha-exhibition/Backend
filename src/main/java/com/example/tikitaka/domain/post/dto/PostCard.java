@@ -24,7 +24,7 @@ public class PostCard {
                 post.getExhibition().getPosterUrl(),
                 post.getExhibition().getExhibitionName(),
                 post.getContent(),
-                imageUrls.size(),
+                imageUrls == null?0:imageUrls.size(),
                 imageUrls
         );
     }

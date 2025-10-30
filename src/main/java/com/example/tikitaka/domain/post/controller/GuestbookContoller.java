@@ -23,4 +23,12 @@ public class GuestbookContoller {
         return reviewService.getGuestbooks(pageNum, limit);
     }
 
+    @GetMapping("/cheers")
+    public GuestBookResponse cheersList(
+            @RequestParam int pageNum,
+            @RequestParam int limit
+    ) {
+        return previewService.getGuestbooks(pageNum, limit);
+    }
+
 }
