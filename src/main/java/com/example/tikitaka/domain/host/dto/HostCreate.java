@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class HostCreate {
-    private Member user;
+    private Member member;
     private Exhibition exhibition;
     private Boolean isRoot;
 
