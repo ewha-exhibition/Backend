@@ -26,4 +26,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     """
     )
     Page<Post> findByExhibitionAndPostType(Exhibition exhibition, PostType postType, Pageable pageable);
+
+    Page<Post> findReviewByPostType(PostType postType, Pageable pageable);
 }
