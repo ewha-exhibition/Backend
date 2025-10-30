@@ -7,8 +7,10 @@ import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionPreview;
+import com.example.tikitaka.domain.post.dto.PostCard;
 import com.example.tikitaka.domain.post.dto.request.PreviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
+import com.example.tikitaka.domain.post.dto.response.GuestBookResponse;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
@@ -86,6 +88,21 @@ public class PreviewService {
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionCheers, pageInfo);
+    }
+
+    public GuestBookResponse getGuestbooks (
+            int pageNum,
+            int limit
+    ) {
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Post> reviews = postRepository.findReviewByPostType(PostType.CHEER, pageRequest);
+        PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
+
+        List<PostCard> postCards = reviews.getContent().stream().map(
+                review -> PostCard.of(review, null)
+        ).toList();
+
+        return GuestBookResponse.of(postCards, pageInfo);
     }
 }
 

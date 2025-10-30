@@ -9,6 +9,15 @@ import java.util.List;
 
 @Repository
 public interface PostImageRepository extends JpaRepository<PostImage, Long> {
+    @Query(
+            """
+    SELECT pi.postImageUrl
+        FROM PostImage pi
+            WHERE pi.post = :post
+    """
+    )
+    List<String> findPostImageUrlsByPost(Post post);
+
     List<PostImage> findByPost(Post post);
     List<PostImage> findAllByPost(Post post);
 }

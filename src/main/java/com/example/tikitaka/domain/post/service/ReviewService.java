@@ -6,8 +6,10 @@ import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionReview;
+import com.example.tikitaka.domain.post.dto.PostCard;
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
+import com.example.tikitaka.domain.post.dto.response.GuestBookResponse;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
@@ -82,6 +84,8 @@ public class ReviewService {
 
         exhibition.increaseReviewCount();
 
+        // TODO: 스크랩 목록에 존재하면 해당 스크랩의 hasReivew를 true로 수정
+
         // 리뷰 이미지 저장
         for (String url : reviewPostRequest.getImages()) {
             postImageService.createReviewImages(review, url);
@@ -108,6 +112,22 @@ public class ReviewService {
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);
+    }
+
+    public GuestBookResponse getGuestbooks(
+            int pageNum,
+            int limit
+    ) {
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Post> reviews = postRepository.findReviewByPostType(PostType.REVIEW, pageRequest);
+        PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
+
+        List<PostCard> postCards = reviews.getContent().stream().map(
+                review -> PostCard.of(review, postImageService.getReviewImageUrls(review))
+        ).toList();
+
+        return GuestBookResponse.of(postCards, pageInfo);
+
     }
 
 
