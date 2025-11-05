@@ -30,6 +30,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+	implementation("org.openapitools:jackson-databind-nullable:0.2.4")
 
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
