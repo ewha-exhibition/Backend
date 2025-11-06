@@ -43,6 +43,7 @@ public class ExhibitionService {
     private final MemberValidator memberValidator;
     private final ExhibitionValidator exhibitionValidator;
     private final ScrapValidator scrapValidator;
+    private final HostValidator hostValidator;
 
     // Mapper
     private final ExhibitionMapper exhibitionMapper;
@@ -57,7 +58,6 @@ public class ExhibitionService {
 
     public void addExhibition(Long memberId, ExhibitionPostRequest request) {
         Member member = memberValidator.validateMember(memberId);
-
 
         // 클럽 찾기 (없으면 생성 있으면 참조)
         Club club = clubService.clubGetOrAdd(request.getClub());
