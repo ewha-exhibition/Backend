@@ -43,6 +43,7 @@ public class ExhibitionService {
     private final MemberValidator memberValidator;
     private final ExhibitionValidator exhibitionValidator;
     private final ScrapValidator scrapValidator;
+    private final HostValidator hostValidator;
 
     // Mapper
     private final ExhibitionMapper exhibitionMapper;
