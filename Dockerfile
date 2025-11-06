@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM eclipse-temurin:17-jdk
 # (중요) cgroup 리소스 감지 비활성화
 ENV JAVA_TOOL_OPTIONS="-XX:-UseContainerSupport"
 
