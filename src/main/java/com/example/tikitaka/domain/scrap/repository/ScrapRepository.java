@@ -19,7 +19,6 @@ import java.util.Optional;
 public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
 
-    boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
 
     // /scraps?pageNum=1&limit=3
     //→ “1페이지(첫 3개)만 주세요”
