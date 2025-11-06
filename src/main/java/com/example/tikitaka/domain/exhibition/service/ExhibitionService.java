@@ -67,7 +67,7 @@ public class ExhibitionService {
         exhibitionRepository.save(exhibition);
 
         // 전시 이미지 등록
-        if (request.getImages().isEmpty()) {
+        if (!request.getImages().isEmpty()) {
             List<ExhibitionImage> images = exhibitionMapper.toExhibitionImages(exhibition, request.getImages());
             exhibitionImageRepository.saveAll(images);
         }
