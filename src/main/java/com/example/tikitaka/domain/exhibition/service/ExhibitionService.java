@@ -3,6 +3,7 @@ package com.example.tikitaka.domain.exhibition.service;
 import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.domain.club.service.ClubService;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
+import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPatchRequest;
 import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPostRequest;
 import com.example.tikitaka.domain.exhibition.dto.response.ExhibitionDetailResponse;
 import com.example.tikitaka.domain.exhibition.entity.Category;
@@ -22,10 +23,12 @@ import com.example.tikitaka.domain.scrap.validator.ScrapValidator;
 import com.example.tikitaka.infra.s3.S3Url;
 import com.example.tikitaka.infra.s3.S3UrlHandler;
 import lombok.RequiredArgsConstructor;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @Service
 @Transactional(readOnly = true)
@@ -53,6 +56,7 @@ public class ExhibitionService {
 
     // generaor
     private final HostCodeGenerator hostCodeGenerator;
+    private final ExhibitionImageService exhibitionImageService;
 
     @Transactional
 
@@ -60,7 +64,7 @@ public class ExhibitionService {
         Member member = memberValidator.validateMember(memberId);
 
         // 클럽 찾기 (없으면 생성 있으면 참조)
-        Club club = clubService.clubGetOrAdd(request.getClub());
+        Club club = clubService.clubGetOrAdd(request.getClub().getName());
 
         // 전시 생성
         Exhibition exhibition = exhibitionMapper.toExhibition(request.getExhibition(), club);
@@ -116,27 +120,49 @@ public class ExhibitionService {
     }
 
     @Transactional
-    public void updateExhibition(Long exhibitionId, ExhibitionCreate request) {
+    public void updateExhibition(Long memberId, Long exhibitionId, ExhibitionPatchRequest request) {
+        Member member = memberValidator.validateMember(memberId);
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
-        //exhibitionValidator.validateExhibition(hostValidator.validateRole(member, exhibition));
 
+        hostValidator.validateRole(member, exhibition);
 
-        // TODO: 추후 리팩토링 - null 바인딩 여부 확인 후 값 수정
-        exhibition.setExhibitionName(request.getExhibitionName());
-        exhibition.setPosterUrl(request.getPosterUrl());
-        exhibition.setPlace(request.getPlace());
-        exhibition.setStartDate(request.getStartDate());
-        exhibition.setEndDate(request.getEndDate());
-        exhibition.setDateException(request.getDateException());
-        exhibition.setPrice(request.getPrice());
-        exhibition.setLink(request.getLink());
-        exhibition.setContent(request.getContent());
-        exhibition.setCategory(Category.valueOf(request.getCategory()));
+        updateIfPresent(request.getExhibitionName(), exhibition::setExhibitionName);
+        updateIfPresent(request.getPosterUrl(), exhibition::setPosterUrl);
+        updateIfPresent(request.getPlace(), exhibition::setPlace);
+        updateIfPresent(request.getStartDate(), exhibition::setStartDate);
+        updateIfPresent(request.getEndDate(), exhibition::setEndDate);
+        updateIfPresent(request.getStartTime(), exhibition::setStartTime);
+        updateIfPresent(request.getEndTime(), exhibition::setEndTime);
+        updateIfPresent(request.getDateException(), exhibition::setDateException);
+        updateIfPresent(request.getPrice(), exhibition::setPrice);
+        updateIfPresent(request.getLink(), exhibition::setLink);
+        updateIfPresent(request.getContent(), exhibition::setContent);
+
+        if (request.getCategory().isPresent()) {
+            Category category = Category.valueOf(request.getCategory().get());
+            exhibition.setCategory(category);
+        }
+
+        if (request.getClubName().isPresent()) {
+            Club club = clubService.clubGetOrAdd(request.getClubName().get());
+            exhibition.setClub(club);
+        }
+
+        if (request.getImages().isPresent()) {
+            exhibitionImageService.updateExhibitionImage(request.getImages().get());
+        }
+
 
     }
 
     public S3Url getImageUploadUrl() {
         return s3UrlHandler.handle("exhibition/posters");
+    }
+
+    private <T> void updateIfPresent(JsonNullable<T> nullable, Consumer<T> setter) {
+        if (nullable != null && nullable.isPresent()) {
+            setter.accept(nullable.get());
+        }
     }
 }

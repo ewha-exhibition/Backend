@@ -1,12 +1,13 @@
 package com.example.tikitaka.domain.exhibition.dto.request;
 
-import lombok.Builder;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionImageCreate;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionImagePatch;
 import lombok.Getter;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
+import java.util.List;
 
 @Getter
 public class ExhibitionPatchRequest {
@@ -23,6 +24,8 @@ public class ExhibitionPatchRequest {
     private JsonNullable<String> content = JsonNullable.undefined();
     private JsonNullable<String> category = JsonNullable.undefined();
     private JsonNullable<String> name = JsonNullable.undefined();
+
     private JsonNullable<String> clubName = JsonNullable.undefined();
-    private JsonNullable<HashMap<Long, String>> exhibitionImages = JsonNullable.undefined();
+
+    private JsonNullable<List<ExhibitionImagePatch>> images = JsonNullable.undefined();
 }
