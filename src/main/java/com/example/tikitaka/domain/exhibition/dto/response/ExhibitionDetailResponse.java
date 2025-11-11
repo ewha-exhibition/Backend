@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.exhibition.dto.response;
 
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionImageGet;
 import com.example.tikitaka.global.util.formatting.PeriodFormatting;
 import com.example.tikitaka.global.util.formatting.PriceFormatting;
 import com.example.tikitaka.global.util.formatting.TimeFormatting;
@@ -21,7 +22,7 @@ public class ExhibitionDetailResponse {
     private TimeFormatting duration;
     private String dateException;
     private String content;
-    private List<String> images; // TODO: image id도 같이 반환하도록 수정
+    private List<ExhibitionImageGet> images;
     private String link;
     private int scrapCount;
     private int reviewCount;

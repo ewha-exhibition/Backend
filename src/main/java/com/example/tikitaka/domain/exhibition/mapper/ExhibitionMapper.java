@@ -3,6 +3,7 @@ package com.example.tikitaka.domain.exhibition.mapper;
 import com.example.tikitaka.domain.club.entity.Club;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionImageCreate;
+import com.example.tikitaka.domain.exhibition.dto.ExhibitionImageGet;
 import com.example.tikitaka.domain.exhibition.dto.response.ExhibitionDetailResponse;
 import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
@@ -62,7 +63,7 @@ public class ExhibitionMapper {
         ).toList();
     }
 
-    public ExhibitionDetailResponse toDetailResponse(boolean isHost, boolean isScrap, Exhibition exhibition, List<String> images) {
+    public ExhibitionDetailResponse toDetailResponse(boolean isHost, boolean isScrap, Exhibition exhibition, List<ExhibitionImage> images) {
         return ExhibitionDetailResponse.builder()
                 .exhibitionId(exhibition.getExhibitionId())
                 .exhibitionName(exhibition.getExhibitionName())
@@ -74,7 +75,9 @@ public class ExhibitionMapper {
                 .duration(new TimeFormatting(exhibition.getStartTime(), exhibition.getEndTime()))
                 .dateException(exhibition.getDateException())
                 .content(exhibition.getContent())
-                .images(images)
+                .images(images.stream().map(
+                        ExhibitionImageGet::from
+                ).toList())
                 .link(exhibition.getLink())
                 .scrapCount(exhibition.getScrapCount())
                 .reviewCount(exhibition.getReviewCount())

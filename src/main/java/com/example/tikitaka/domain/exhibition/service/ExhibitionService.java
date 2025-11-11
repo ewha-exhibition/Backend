@@ -94,7 +94,7 @@ public class ExhibitionService {
 
     public ExhibitionDetailResponse findExhibition(Long memberId, Long exhibitionId) {
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
-        List<String> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
+        List<ExhibitionImage> images = exhibitionImageRepository.findByExhibitionIdOrderBySequenceAsc(exhibitionId);
 
         boolean isHost = false;
         boolean isScrap = false;
