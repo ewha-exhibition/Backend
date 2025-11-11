@@ -38,4 +38,6 @@ public class Scrap extends BaseEntity {
     // JPA의 변경 감지(dirty checking) 덕분에 가능한 구조 (그냥 여기서 처리하는 게 더 단순)
     public void setViewed(boolean viewed) { this.isViewed = viewed; }
 
+    public void updateReview() { this.isReviewed = !this.isReviewed; }
+
 }
