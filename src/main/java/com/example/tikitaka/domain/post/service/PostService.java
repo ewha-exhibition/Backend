@@ -31,4 +31,9 @@ public class PostService {
         }
     }
 
+    @Transactional
+    public void switchHasAnswer(Post post) {
+        post.switchAsAnswered();
+    }
+
 }

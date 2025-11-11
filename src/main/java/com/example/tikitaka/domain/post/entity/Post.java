@@ -55,7 +55,6 @@ public class Post extends BaseEntity {
         this.hasAnswer = !this.hasAnswer;
     }
 
-
     public static Post toReviewEntity(Member member, Exhibition exhibition, ReviewPostRequest reviewPostRequest, PostType postType, Long displayNo) {
         return Post.builder()
                 .member(member)
