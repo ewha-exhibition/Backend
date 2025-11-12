@@ -44,6 +44,8 @@ public class ExhibitionImageService {
                                 .imageUrl(imagePatch.getUrl().get())
                                 .sequence(imagePatch.getSequence().orElse(0))
                                 .build();
+
+                        exhibitionImageRepository.save(newImage);
                     }
                 });
 
