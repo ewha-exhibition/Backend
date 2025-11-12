@@ -5,7 +5,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 @Getter
 public class ExhibitionImagePatch {
-    private Long id;
+    private JsonNullable<Long> id;
     private JsonNullable<String> url;
     private JsonNullable<Integer> sequence;
 }

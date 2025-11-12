@@ -3,6 +3,7 @@ package com.example.tikitaka.domain.exhibition.service;
 import com.example.tikitaka.domain.exhibition.ExhibitionErrorCode;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionImagePatch;
 import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPatchRequest;
+import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.entity.ExhibitionImage;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionImageRepository;
 import com.example.tikitaka.global.exception.BaseErrorException;
@@ -22,17 +23,27 @@ public class ExhibitionImageService {
     private final S3UrlHandler s3UrlHandler;
     private final ExhibitionImageRepository exhibitionImageRepository;
 
-    public void updateExhibitionImage(List<ExhibitionImagePatch> exhibitionImagePatchs) {
+    @Transactional
+    public void updateExhibitionImage(Exhibition exhibition, List<ExhibitionImagePatch> exhibitionImagePatchs) {
         exhibitionImagePatchs
                 .forEach(imagePatch -> {
-                    ExhibitionImage exhibitionImage = exhibitionImageRepository.findById(imagePatch.getId())
-                            .orElseThrow(() -> new BaseErrorException(ExhibitionErrorCode.EXHIBITION_IMAGE_NOT_FOUND));
-                    if(imagePatch.getUrl().isPresent()) {
-                        exhibitionImage.updateImageUrl(imagePatch.getUrl().get());
-                    }
+                    if (imagePatch.getId().isPresent()) {
+                        ExhibitionImage exhibitionImage = exhibitionImageRepository.findById(imagePatch.getId().get())
+                                .orElseThrow(() -> new BaseErrorException(ExhibitionErrorCode.EXHIBITION_IMAGE_NOT_FOUND));
+                        if (imagePatch.getUrl().isPresent()) {
+                            exhibitionImage.updateImageUrl(imagePatch.getUrl().get());
+                        }
 
-                    if (imagePatch.getSequence().isPresent()) {
-                        exhibitionImage.updateSequence(imagePatch.getSequence().get());
+                        if (imagePatch.getSequence().isPresent()) {
+                            exhibitionImage.updateSequence(imagePatch.getSequence().get());
+                        }
+                    }
+                    else {
+                        ExhibitionImage newImage = ExhibitionImage.builder()
+                                .exhibition(exhibition)
+                                .imageUrl(imagePatch.getUrl().get())
+                                .sequence(imagePatch.getSequence().orElse(0))
+                                .build();
                     }
                 });
 

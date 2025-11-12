@@ -26,10 +26,12 @@ public class PostImageService {
         return postImageRepository.findByPost(post).stream().map(PostImage::getPostImageUrl).toList();
     }
 
+    @Transactional
     public void createReviewImages(Post post, String url) {
         postImageRepository.save(PostImage.toEntity(post, url));
     }
 
+    @Transactional
     public void deletePostImages(Post post) {
         List<PostImage> postImages = postImageRepository.findAllByPost(post);
         // TODO: 추후 S3 url 삭제 로직 구현

@@ -59,7 +59,6 @@ public class ExhibitionService {
     private final ExhibitionImageService exhibitionImageService;
 
     @Transactional
-
     public void addExhibition(Long memberId, ExhibitionPostRequest request) {
         Member member = memberValidator.validateMember(memberId);
 
@@ -150,7 +149,7 @@ public class ExhibitionService {
         }
 
         if (request.getImages().isPresent()) {
-            exhibitionImageService.updateExhibitionImage(request.getImages().get());
+            exhibitionImageService.updateExhibitionImage(exhibition, request.getImages().get());
         }
 
 
