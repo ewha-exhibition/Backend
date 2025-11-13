@@ -22,11 +22,34 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
 //    """)
 //    Optional<Exhibition> findDetailById(Long exhibitionIdx);
 
+    @Override
+    @Query("""
+    SELECT e
+    FROM Exhibition e
+    WHERE e.isDeleted = false
+    """)
+    Page<Exhibition> findAll(Pageable pageable);
+
     // 초대코드로 전시 찾기
+    @Query("""
+    SELECT e
+    FROM Exhibition e
+    WHERE e.code = :code AND e.isDeleted = false
+    """)
     Optional<Exhibition> findByCode(String code);
 
+    @Query("""
+    SELECT e
+    FROM Exhibition e
+    WHERE e.exhibitionId = :exhibitionId AND e.isDeleted = false
+    """)
     Optional<Exhibition> findByExhibitionId(Long exhibitionId);
 
+    @Query("""
+    SELECT e
+    FROM Exhibition e
+    WHERE e.category = :category AND e.isDeleted = false
+    """)
     Page<Exhibition> findByCategory(Category category, Pageable pageable);
 
     @Query("""
@@ -39,29 +62,20 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     Page<Exhibition> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     @Query(value = """
-    SELECT e.*, COUNT(s.scrap_id) AS scrap_count
+    SELECT
+        e.*,
+        COUNT(s.scrap_id) AS today_scrap_count
     FROM exhibition e
-    LEFT JOIN scrap s ON s.exhibition_id = e.exhibition_id
+    LEFT JOIN scrap s
+        ON s.exhibition_id = e.exhibition_id
+        AND DATE(s.created_at) = CURRENT_DATE
     WHERE
-        (e.start_time < e.end_time
-          AND (COALESCE(e.start_date, CURRENT_DATE) <= CURRENT_DATE)
-          AND (CURRENT_DATE <= e.end_date)
-          AND (CURRENT_TIME >= e.start_time AND CURRENT_TIME < e.end_time)
-        )
-        OR
-        (e.end_time <= e.start_time
-          AND (COALESCE(e.start_date, CURRENT_DATE) <= CURRENT_DATE)
-          AND (CURRENT_DATE <= e.end_date)
-          AND (CURRENT_TIME >= e.start_time)
-        )
-        OR
-        (e.end_time <= e.start_time
-          AND (COALESCE(e.start_date, CURRENT_DATE) <= CURRENT_DATE - INTERVAL 1 DAY)
-          AND (CURRENT_DATE - INTERVAL 1 DAY <= e.end_date)
-          AND (CURRENT_TIME < e.end_time)
-        )
-    GROUP BY e.exhibition_id
-    ORDER BY scrap_count DESC
+        e.end_date >= CURRENT_DATE AND e.is_deleted = false
+    GROUP BY
+        e.exhibition_id
+    ORDER BY
+        today_scrap_count DESC,
+        e.end_date ASC
     LIMIT 10
     """, nativeQuery = true)
     List<Exhibition> findPopularExhibitions();
