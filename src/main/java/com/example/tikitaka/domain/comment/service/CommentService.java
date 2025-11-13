@@ -8,6 +8,7 @@ import com.example.tikitaka.domain.host.validator.HostValidator;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.post.entity.Post;
+import com.example.tikitaka.domain.post.service.PostService;
 import com.example.tikitaka.domain.post.validator.PostValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,14 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final HostValidator hostValidator;
+    private final PostService postService;
 
     @Transactional
     public void addComment(Long memberId, Long postId, CommentPostRequest commentPostRequest) {
         Member member = memberValidator.validateMember(memberId);
         Post post = postValidator.validatePostByPostId(postId);
         commentRepository.save(Comment.toEntity(member, post, commentPostRequest.getContent()));
-        post.switchAsAnswered();
+        postService.switchHasAnswer(post);
 
     }
 
@@ -37,7 +39,7 @@ public class CommentService {
     public void deleteComment(Long memberId, Long commentId) {
         Comment comment = commentValidator.validateCommentByMemberIdAndCommentId(memberId, commentId);
         commentRepository.delete(comment);
-        comment.getPost().switchAsAnswered();
+        postService.switchHasAnswer(comment.getPost()); // TODO: N+1 문제 해결
     }
 
 }

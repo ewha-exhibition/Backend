@@ -13,6 +13,7 @@ import com.example.tikitaka.domain.post.dto.response.GuestBookResponse;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
+import com.example.tikitaka.domain.scrap.service.ScrapService;
 import com.example.tikitaka.global.dto.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,7 @@ public class ReviewService {
     private final ExhibitionValidator exhibitionValidator;
     private final PostRepository postRepository;
     private final PostImageService postImageService;
+    private final ScrapService scrapService;
     private final MemberValidator memberValidator;
 
 
@@ -84,7 +86,7 @@ public class ReviewService {
 
         exhibition.increaseReviewCount();
 
-        // TODO: 스크랩 목록에 존재하면 해당 스크랩의 hasReivew를 true로 수정
+        scrapService.markReviewed(memberId, exhibitionId);
 
         // 리뷰 이미지 저장
         for (String url : reviewPostRequest.getImages()) {
@@ -108,7 +110,7 @@ public class ReviewService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
 
         List<ExhibitionPost> exhibitionReviews = reviews.getContent().stream().map(
-                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review),Objects.equals(memberId, String.valueOf(review.getMember().getMemberId())))
+                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);
