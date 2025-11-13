@@ -32,4 +32,12 @@ public class ExhibitionImage extends BaseEntity {
 //    void setExhibition(Exhibition exhibition) {
 //        this.exhibition = exhibition;
 //    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateSequence(int sequence) {
+        this.sequence = sequence;
+    }
 }

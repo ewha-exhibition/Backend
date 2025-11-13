@@ -158,5 +158,15 @@ public class ScrapService {
         );
     }
 
+    /*
+    리뷰 표시
+     */
+    @Transactional
+    public void markReviewed(Long memberId, Long exhibitionId) {
+        scrapRepository
+                .findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)
+                .ifPresent(Scrap::updateReview);
+    }
+
 
 }

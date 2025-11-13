@@ -15,6 +15,12 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    @Query("""
+    SELECT p
+    FROM Post p
+    WHERE p.member.memberId = :memberId AND p.postType = :postType AND NOT p.isDeleted
+    """
+    )
     Page<Post> findByMember_MemberIdAndPostType(Long memberId, PostType postType, Pageable pageable);
 
     @Query("""
@@ -33,14 +39,26 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     )
     Page<Post> findByExhibitionAndPostType(Exhibition exhibition, PostType postType, Pageable pageable);
 
+    @Query("""
+    SELECT p
+    FROM Post p
+    WHERE p.postType = :postType AND NOT p.isDeleted
+    """
+    )
     Page<Post> findReviewByPostType(PostType postType, Pageable pageable);
 
+    @Query("""
+    SELECT p
+    FROM Post p
+    WHERE p.member = :member AND p.exhibition = :exhibition AND p.postType = :postType AND NOT p.isDeleted
+    """
+    )
     Post findByMemberAndExhibitionAndPostType(Member member, Exhibition exhibition, PostType postType);
 
     @Query("""
     SELECT p
     FROM Post p
-    WHERE p.member.memberId = :memberId AND p.postId = :postId
+    WHERE p.member.memberId = :memberId AND p.postId = :postId AND NOT p.isDeleted
     """)
     Optional<Post> findByMemberIdAndPostId(Long memberId, Long postId);
 }

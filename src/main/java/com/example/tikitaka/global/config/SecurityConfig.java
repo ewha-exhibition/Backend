@@ -94,6 +94,7 @@ public class SecurityConfig {
         var cfg = new CorsConfiguration();
         cfg.setAllowedOrigins(java.util.List.of(
                 "http://localhost:3000",
+                "http://localhost:5173",
                 "http://localhost:8080",
                 SERVER_URL
 

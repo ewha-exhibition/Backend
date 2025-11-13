@@ -80,10 +80,10 @@ public class PreviewService {
         List<ExhibitionPost> exhibitionCheers = previews.getContent().stream().map(
                 preview -> (preview.isHasAnswer())?(ExhibitionPost) ExhibitionPreview.of(preview, commentValidator.validateCommentContent(preview), Objects.equals(
                         memberId,
-                        String.valueOf(preview.getMember().getMemberId())
+                        preview.getMember().getMemberId()
                 )): (ExhibitionPost) ExhibitionPreview.of(preview, null, Objects.equals(
                         memberId,
-                        String.valueOf(preview.getMember().getMemberId())
+                        preview.getMember().getMemberId()
                 ))
         ).toList();
 

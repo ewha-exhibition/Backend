@@ -36,13 +36,11 @@ public class ClubService {
 
     }
 
-    public Club clubGetOrAdd(ClubCreate clubCreate) {
+    public Club clubGetOrAdd(String clubName) {
         // clubAdd 메서드와 동일 로직 작동 -> 코드 중복 줄이는 리팩토링 필요
-        String name = clubCreate.getName().replace(" ", "");
-
-        return clubRepository.findByName(name).orElseGet(() -> {
+        return clubRepository.findByName(clubName).orElseGet(() -> {
             Club newClub = Club.builder()
-                    .name(name)
+                    .name(clubName)
                     .build();
             return clubRepository.save(newClub);
         });

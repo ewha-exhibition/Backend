@@ -12,6 +12,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 @AllArgsConstructor
 public enum PostErrorCode implements BaseErrorCode {
     POST_FORBIDDEN(FORBIDDEN, "POST_403_1", "해당하는 글을 삭제할 권한이 없습니다."),
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST_404_1", "해당하는 글을 찾을 수 없습니다.")
     ;
 
     private HttpStatus status;
