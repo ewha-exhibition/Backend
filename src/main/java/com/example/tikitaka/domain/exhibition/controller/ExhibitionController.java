@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.exhibition.controller;
 
+import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPatchRequest;
 import com.example.tikitaka.global.context.CurrentUserContext;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
 import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPostRequest;
@@ -50,11 +51,11 @@ public class ExhibitionController {
 
     @PatchMapping("/{exhibitionId}")
     public void exhibitionUpdate(
-            // 로그인 기능 추가 후 유저 정보 받기
+            @AuthenticationPrincipal Long memberId,
             @PathVariable Long exhibitionId,
-            @RequestBody ExhibitionCreate request
+            @RequestBody ExhibitionPatchRequest request
     ) {
-        exhibitionService.updateExhibition(exhibitionId, request);
+        exhibitionService.updateExhibition(memberId, exhibitionId, request);
     }
 
     @GetMapping("/posters")

@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface ExhibitionImageRepository extends JpaRepository<ExhibitionImage, Long> {
     @Query("""
-            SELECT ei.imageUrl
+            SELECT ei
             FROM ExhibitionImage ei
             WHERE ei.exhibition.exhibitionId = :exhibitionId
             ORDER BY ei.sequence ASC
             """)
-    List<String> findByExhibitionIdOrderBySequenceAsc(Long exhibitionId);
+    List<ExhibitionImage> findByExhibitionIdOrderBySequenceAsc(Long exhibitionId);
 }
