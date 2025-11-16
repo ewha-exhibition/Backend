@@ -3,6 +3,7 @@ package com.example.tikitaka.domain.host.controller;
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionCreate;
 import com.example.tikitaka.domain.exhibition.dto.request.ExhibitionPostRequest;
 import com.example.tikitaka.domain.exhibition.dto.response.ExhibitionDetailResponse;
+import com.example.tikitaka.domain.host.dto.HostExhibitionListResponse;
 import com.example.tikitaka.domain.host.service.HostService;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.infra.s3.S3Url;
@@ -24,6 +25,16 @@ public class HostController {
     public void joinByCode(@AuthenticationPrincipal Long memberId,
                            @RequestParam String code) {
         hostService.joinByInviteCode(memberId, code.trim());
+    }
+
+    // 2. 내 전시 가져오기 (페이징)
+    @GetMapping
+    public HostExhibitionListResponse getHostExhibition(
+            @AuthenticationPrincipal Long memberId,
+            @RequestParam(defaultValue = "0") int pageNum,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        return hostService.getMyExhibitions(memberId, pageNum, limit);
     }
 
 
