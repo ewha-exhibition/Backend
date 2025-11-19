@@ -33,7 +33,7 @@ public class ScrapController {
     @GetMapping
     public ScrapListResponseDto getMemberScraps(
             @AuthenticationPrincipal Long memberId, // 로그인된 멤버
-            @RequestParam(defaultValue = "1") @Min(0) int pageNum,
+            @RequestParam(defaultValue = "0") @Min(0) int pageNum,
             @RequestParam(defaultValue = "10") @Min(1) @Max(20) int limit
     ) {
         // pageNum, limit을 받아 Service에서 PageRequest.of(pageNum-1, limit) 처리
@@ -94,7 +94,7 @@ public class ScrapController {
     @GetMapping("/viewed")
     public ScrapListResponseDto getViewedScraps(
             @AuthenticationPrincipal  Long memberId,
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit) {
         return scrapService.findScrapListByViewed(memberId, true, page, limit);
     }
