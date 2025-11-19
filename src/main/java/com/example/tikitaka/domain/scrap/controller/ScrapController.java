@@ -34,7 +34,7 @@ public class ScrapController {
     public ScrapListResponseDto getMemberScraps(
             @AuthenticationPrincipal Long memberId, // 로그인된 멤버
             @RequestParam(defaultValue = "0") @Min(0) int pageNum,
-            @RequestParam(defaultValue = "10") @Min(0) @Max(20) int limit
+            @RequestParam(defaultValue = "10") @Min(1) @Max(20) int limit
     ) {
         // pageNum, limit을 받아 Service에서 PageRequest.of(pageNum-1, limit) 처리
         return scrapService.findScrapList(memberId, pageNum, limit);
