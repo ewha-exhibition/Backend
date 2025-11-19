@@ -33,7 +33,7 @@ public class HostService {
     private final ExhibitionRepository exhibitionRepository;
 
     public HostExhibitionListResponse getMyExhibitions(Long memberId, int pageNum, int limit) {
-        Pageable pageable = PageRequest.of(Math.max(pageNum - 1, 0), limit);
+        Pageable pageable = PageRequest.of(pageNum, limit);
 
         // 1. 내가 호스트인 Host 목록 페이징 조회
         Page<Host> page = hostRepository.findPageByMember_MemberId(memberId, pageable);
