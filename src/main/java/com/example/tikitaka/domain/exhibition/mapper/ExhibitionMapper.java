@@ -13,6 +13,7 @@ import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.global.util.formatting.PeriodFormatting;
 import com.example.tikitaka.global.util.formatting.PriceFormatting;
 import com.example.tikitaka.global.util.formatting.TimeFormatting;
+import com.example.tikitaka.infra.s3.S3UrlHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,12 +23,12 @@ import java.util.UUID;
 public class ExhibitionMapper {
 
     //
-    public Exhibition toExhibition(ExhibitionCreate req, Club club) {
+    public Exhibition toExhibition(ExhibitionCreate req, Club club, String posterUrl) {
         String code = UUID.randomUUID().toString().substring(0, 8);
 
         return Exhibition.builder()
                 .exhibitionName(req.getExhibitionName())
-                .posterUrl(req.getPosterUrl())
+                .posterUrl(posterUrl)
                 .place(req.getPlace())
                 .startDate(req.getStartDate())
                 .endDate(req.getEndDate())

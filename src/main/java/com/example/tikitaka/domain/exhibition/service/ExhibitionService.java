@@ -66,7 +66,7 @@ public class ExhibitionService {
         Club club = clubService.clubGetOrAdd(request.getClub().getName());
 
         // 전시 생성
-        Exhibition exhibition = exhibitionMapper.toExhibition(request.getExhibition(), club);
+        Exhibition exhibition = exhibitionMapper.toExhibition(request.getExhibition(), club, s3UrlHandler.extractKeyFromUrl(request.getExhibition().getPosterUrl()));
         exhibitionRepository.save(exhibition);
 
         // 전시 이미지 등록
@@ -127,7 +127,7 @@ public class ExhibitionService {
         hostValidator.validateRole(member, exhibition);
 
         updateIfPresent(request.getExhibitionName(), exhibition::setExhibitionName);
-        updateIfPresent(request.getPosterUrl(), exhibition::setPosterUrl);
+        updateIfPresent(request.getPosterUrl(), url -> exhibition.setPosterUrl(s3UrlHandler.extractKeyFromUrl(url)));
         updateIfPresent(request.getPlace(), exhibition::setPlace);
         updateIfPresent(request.getStartDate(), exhibition::setStartDate);
         updateIfPresent(request.getEndDate(), exhibition::setEndDate);
