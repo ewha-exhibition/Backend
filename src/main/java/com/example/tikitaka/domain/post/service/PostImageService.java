@@ -28,7 +28,7 @@ public class PostImageService {
 
     @Transactional
     public void createReviewImages(Post post, String url) {
-        postImageRepository.save(PostImage.toEntity(post, url));
+        postImageRepository.save(PostImage.toEntity(post, s3UrlHandler.extractKeyFromUrl(url)));
     }
 
     @Transactional
