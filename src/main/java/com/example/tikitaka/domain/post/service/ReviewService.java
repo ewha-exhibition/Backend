@@ -67,12 +67,12 @@ public class ReviewService {
         // 전시 조회
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
 
-        Post post = postRepository.findByMemberAndExhibitionAndPostType(member, exhibition, PostType.REVIEW);
+        List<Post> posts = postRepository.findByMemberAndExhibitionAndPostType(member, exhibition, PostType.REVIEW);
 
         Long number = 0L;
 
-        if (post != null) {
-            number = post.getDisplayNo();
+        if (posts.isEmpty()) {
+            number = posts.get(0).getDisplayNo();
         } else {
             number = exhibition.getReviewNo() + 1;
             exhibition.increaseReviewNo();
