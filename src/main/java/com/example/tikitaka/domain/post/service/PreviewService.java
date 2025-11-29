@@ -7,10 +7,12 @@ import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionPreview;
+import com.example.tikitaka.domain.post.dto.MyPreview;
 import com.example.tikitaka.domain.post.dto.PostCard;
 import com.example.tikitaka.domain.post.dto.request.PreviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
 import com.example.tikitaka.domain.post.dto.response.GuestBookResponse;
+import com.example.tikitaka.domain.post.dto.response.MyPreviewGetResponse;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
@@ -24,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
@@ -63,6 +67,26 @@ public class PreviewService {
         postRepository.save(cheer);
 
     }
+
+    public MyPreviewGetResponse getMyPreviews(
+            Long memberId,
+            PostType postType,
+            int pageNum,
+            int limit
+    ) {
+        memberValidator.validateMember(memberId);
+
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Post> previews = postRepository.findByMember_MemberIdAndPostType(memberId, postType, pageRequest);
+        PageInfo pageInfo = PageInfo.of(pageNum, limit, previews.getTotalPages(), previews.getTotalElements());
+
+        List<MyPreview> previesDto =  previews.getContent().stream().map(
+                MyPreview::of
+        ).toList();
+
+        return MyPreviewGetResponse.of(previesDto, pageInfo);
+    }
+
 
     public ExhibitionPostListResponse getExhibitionPreviews(
             Long memberId,
