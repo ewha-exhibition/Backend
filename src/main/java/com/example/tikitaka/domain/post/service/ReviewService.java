@@ -71,7 +71,7 @@ public class ReviewService {
 
         Long number = 0L;
 
-        if (posts.isEmpty()) {
+        if (!posts.isEmpty()) {
             number = posts.get(0).getDisplayNo();
         } else {
             number = exhibition.getReviewNo() + 1;
