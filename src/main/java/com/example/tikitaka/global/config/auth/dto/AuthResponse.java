@@ -9,5 +9,6 @@ public class AuthResponse {
     private Long memberId;
     private String nickname;
     private String accessToken;
+    private String refreshToken;
 }
 

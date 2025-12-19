@@ -92,12 +92,21 @@ public class JwtTokenProvider {
     }
 
     // === 유효성 검사 ===
-    public boolean validateToken(String token) {
+    public boolean validateAccessToken(String token) {
+        return validateToken(token, "access");
+    }
+
+    public boolean validateRefreshToken(String token) {
+        return validateToken(token, "refresh");
+    }
+
+    private boolean validateToken(String token, String expectedType) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false; // 만료/서명불일치/형식오류 등 모두 false
+            Claims claims = parseClaims(token);
+            String type = claims.get("type", String.class);
+            return expectedType.equals(type) && !claims.getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
         }
     }
 
