@@ -8,6 +8,7 @@ import com.example.tikitaka.global.config.auth.dto.RefreshResponse;
 import com.example.tikitaka.global.config.auth.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,13 @@ public class AuthController {
     private final AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Value("${app.cookie.secure:false}")
+    private boolean cookieSecure;
+
+    @Value("${app.cookie.same-site:Lax}")
+    private String cookieSameSite;
+
+
     // 프론트: /oauth/callback 에서 받은 code와 redirectUri를 여기에 POST
     @PostMapping("/kakao")
     public ResponseEntity<LoginResponse> loginWithKakao(@RequestBody KakaoCodeRequest req) {
@@ -30,8 +38,8 @@ public class AuthController {
         // 5) httpOnly 쿠키로 내려주기 (프론트는 로컬스토리지에 저장할 필요 없음)
         ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", result.getAccessToken())
                 .httpOnly(true)
-                .secure(false)      // 운영 HTTPS면 true 권장
-                .sameSite("Lax")    // SPA 크로스도메인이면 'None' + secure=true 설정 필요
+                .secure(cookieSecure)      // 운영 HTTPS면 true 권장
+                .sameSite(cookieSameSite)    // SPA 크로스도메인이면 'None' + secure=true 설정 필요
                 .path("/")
                 .maxAge(60 * 60)    // 1시간 예시
                 .build();
@@ -39,8 +47,8 @@ public class AuthController {
         // Refresh Token 쿠키 (예: 14일)
         ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", result.getRefreshToken())
                 .httpOnly(true)
-                .secure(false)
-                .sameSite("Lax")
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
                 .path("/")
                 .maxAge(14L * 24 * 60 * 60)
                 .build();
@@ -87,16 +95,16 @@ public class AuthController {
 
         ResponseCookie newAccessCookie = ResponseCookie.from("ACCESS_TOKEN", result.getAccessToken())
                 .httpOnly(true)
-                .secure(false)
-                .sameSite("Lax")
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
                 .path("/")
                 .maxAge(60 * 60)
                 .build();
 
         ResponseCookie newRefreshCookie = ResponseCookie.from("REFRESH_TOKEN", result.getRefreshToken())
                 .httpOnly(true)
-                .secure(false)
-                .sameSite("Lax")
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
                 .path("/")
                 .maxAge(14L * 24 * 60 * 60)
                 .build();
