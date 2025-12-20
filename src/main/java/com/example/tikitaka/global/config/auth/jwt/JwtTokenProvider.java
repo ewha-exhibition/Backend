@@ -33,6 +33,11 @@ public class JwtTokenProvider {
 
     private SecretKey key;
 
+    // 1시간
+    private final long ACCESS_TOKEN_VALIDITY_MS = 60 * 60 * 1000L;
+    // 14일
+    private final long REFRESH_TOKEN_VALIDITY_MS = 14L * 24 * 60 * 60 * 1000L;
+
     @PostConstruct
     protected void init() {
         // secret이 Base64라면:
@@ -47,17 +52,27 @@ public class JwtTokenProvider {
 
     // === 토큰 생성 ===
     public String createAccessToken(Long memberId) {
+        return createToken(memberId, "access", ACCESS_TOKEN_VALIDITY_MS);
+    }
+
+    public String createRefreshToken(Long memberId) {
+        return createToken(memberId, "refresh", REFRESH_TOKEN_VALIDITY_MS);
+    }
+
+    private String createToken(Long memberId, String type, long validityMs) {
         Date now = new Date();
-        Date exp = new Date(now.getTime() + expMillis);
+        Date expiry = new Date(now.getTime() + validityMs);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(memberId)) // sub = 우리 서비스의 사용자 PK
-                .claim("typ", "access")
+                .setSubject(String.valueOf(memberId))  // sub = 우리 서비스의 사용자 PK
+                .claim("type", type)
                 .setIssuedAt(now)
-                .setExpiration(exp)
+                .setExpiration(expiry)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+
     }
+
 
     // === 인증 객체 생성 (DB 조회 없이 클레임으로) ===
     public Authentication getAuthentication(String token) {
@@ -77,12 +92,21 @@ public class JwtTokenProvider {
     }
 
     // === 유효성 검사 ===
-    public boolean validateToken(String token) {
+    public boolean validateAccessToken(String token) {
+        return validateToken(token, "access");
+    }
+
+    public boolean validateRefreshToken(String token) {
+        return validateToken(token, "refresh");
+    }
+
+    private boolean validateToken(String token, String expectedType) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false; // 만료/서명불일치/형식오류 등 모두 false
+            Claims claims = parseClaims(token);
+            String type = claims.get("type", String.class);
+            return expectedType.equals(type) && !claims.getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
         }
     }
 
