@@ -6,10 +6,12 @@ import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionReview;
+import com.example.tikitaka.domain.post.dto.MyReviewItem;
 import com.example.tikitaka.domain.post.dto.PostCard;
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
 import com.example.tikitaka.domain.post.dto.response.GuestBookResponse;
+import com.example.tikitaka.domain.post.dto.response.MyReviewListResponse;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
@@ -37,28 +39,31 @@ public class ReviewService {
     private final MemberValidator memberValidator;
 
 
-    public ExhibitionPostListResponse getMyReviews(Long memberId, int pageNum, int limit) {
+    public MyReviewListResponse getMyReviews(Long memberId, int pageNum, int limit) {
         memberValidator.validateMember(memberId);
 
-        PageRequest pageReq =
-                PageRequest.of(Math.max(pageNum, 0), limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageReq = PageRequest.of(Math.max(pageNum, 0), limit,
+                Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        Page<Post> page = postRepository
-                .findByMember_MemberIdAndPostType(memberId, PostType.REVIEW, pageReq);
+        Page<Post> page = postRepository.findMyReviewsWithExhibition(memberId, PostType.REVIEW, pageReq);
 
         PageInfo pageInfo = PageInfo.of(pageNum, limit, page.getTotalPages(), page.getTotalElements());
 
-        // 내 글이므로 isMine = true 고정
-        List<ExhibitionPost> items = page.getContent().stream()
-                .map(p -> (ExhibitionPost) ExhibitionReview.of(
-                        p,
-                        postImageService.getReviewImageUrls(p),
-                        true
-                ))
+        List<MyReviewItem> items = page.getContent().stream()
+                .map(p -> MyReviewItem.builder()
+                        .postId(p.getPostId())
+                        .content(p.getContent())
+                        .isMine(true)
+                        .exhibitionId(p.getExhibition().getExhibitionId())
+                        .exhibitionName(p.getExhibition().getExhibitionName())
+                        .posterUrl(p.getExhibition().getPosterUrl())
+                        .imageUrls(postImageService.getReviewImageUrls(p)) // (가능하면 배치 조회 추천)
+                        .build())
                 .toList();
 
-        return ExhibitionPostListResponse.of(items, pageInfo);
+        return MyReviewListResponse.of(items, pageInfo);
     }
+
 
     @Transactional
     public void addReview(Long memberId, Long exhibitionId, ReviewPostRequest reviewPostRequest) {
