@@ -2,6 +2,7 @@ package com.example.tikitaka.domain.post.controller;
 
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
+import com.example.tikitaka.domain.post.dto.response.MyReviewListResponse;
 import com.example.tikitaka.domain.post.service.PostImageService;
 import com.example.tikitaka.domain.post.service.PostService;
 import com.example.tikitaka.domain.post.service.ReviewService;
@@ -19,7 +20,7 @@ public class ReviewController {
     private final PostService postService;
 
     @GetMapping
-    public ExhibitionPostListResponse myReviews(
+    public MyReviewListResponse myReviews(
             @AuthenticationPrincipal Long memberId,
             @RequestParam(defaultValue = "0") int pageNum,
             @RequestParam(defaultValue = "10") int limit
