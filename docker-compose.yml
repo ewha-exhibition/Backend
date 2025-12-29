@@ -1,19 +1,17 @@
-version: "3"
-
+version: '3.8'
 services:
-  backend:
-    image: nokmaster/backend
-    container_name: backend
-    hostname: backend
-    env_file:
-      - .env
-    expose:
-      - "8080"
-
   nginx:
     image: nokmaster/nginx
-    depends_on:
-      - backend
+    container_name: nginx
     restart: always
     ports:
       - "80:80"
+    networks:
+      - nok-network
+
+volumes:
+  redis-data:
+
+networks:
+  nok-network:
+    name: nok-network

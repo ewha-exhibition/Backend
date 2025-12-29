@@ -10,5 +10,8 @@ ENV MANAGEMENT_METRICS_BINDERS_PROCESSOR_ENABLED="false"
 
 EXPOSE 80
 ARG JAR_FILE=/build/libs/*.jar
+ARG PROFILES
+ARG ENV
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","-Duser.timezone=Asia/Seoul","-Dspring.profiles.active=prod","/app.jar"]
+
+ENTRYPOINT ["java","-jar","-Duser.timezone=Asia/Seoul","-Dspring.profiles.active=${PROFILES}", "-Dsever.env=${ENV}","/app.jar"]
