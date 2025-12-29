@@ -113,7 +113,7 @@ jobs:
             sudo curl -o docker-compose-green.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/feature/SCRUM-66-bluegreenDeploy/docker-compose-green.yml
             
             sudo chmod 666 /var/run/docker.sock
-            sudo docker rm -f $(docker ps -qa)
+
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/backend
             docker compose -f docker-compose-${{env.TARGET_UPSTREAM}}.yml --env-file .env up -d
             docker image prune -f
