@@ -6,11 +6,10 @@ services:
     restart: always
     ports:
       - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
     networks:
       - nok-network
-
-volumes:
-  redis-data:
 
 networks:
   nok-network:
