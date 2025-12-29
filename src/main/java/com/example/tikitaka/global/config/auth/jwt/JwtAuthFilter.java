@@ -40,7 +40,8 @@ public class JwtAuthFilter extends GenericFilterBean {
             }
         }
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
+        // 유효한 access토큰인지 확인
+        if (token != null && jwtTokenProvider.validateAccessToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

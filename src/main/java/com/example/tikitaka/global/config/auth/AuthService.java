@@ -118,10 +118,32 @@ public class AuthService {
                 ));
 
 
-        // 4) JWT 발급
+        // 4) JWT 발급 (access + refresh)
         String accessToken = jwtTokenProvider.createAccessToken(member.getMemberId());
-        // 5) 컨트롤러로 돌려줄 간단한 DTO
-        return new AuthResponse(member.getMemberId(), member.getUsername(), accessToken);
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId());
 
+        // 5) 컨트롤러로 돌려줄 간단한 DTO
+        return new AuthResponse(member.getMemberId(), member.getUsername(), accessToken, refreshToken);
+
+    }
+
+    /**
+     * refresh 토큰으로 새 Access/Refresh 발급
+     */
+    @Transactional
+    public AuthResponse reissueTokens(String refreshToken) {
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
+            throw new RuntimeException("invalid_refresh_token");
+        }
+
+        Long memberId = jwtTokenProvider.getMemberId(refreshToken);
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("member_not_found"));
+
+        String newAccessToken = jwtTokenProvider.createAccessToken(member.getMemberId());
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId());
+
+        return new AuthResponse(member.getMemberId(), member.getUsername(), newAccessToken, newRefreshToken);
     }
 }

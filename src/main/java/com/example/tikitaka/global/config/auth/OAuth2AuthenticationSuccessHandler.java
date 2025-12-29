@@ -4,6 +4,8 @@ import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.entity.RegisterPath;
 import com.example.tikitaka.domain.member.repository.MemberRepository;
 import com.example.tikitaka.global.config.auth.jwt.JwtTokenProvider;
+import com.example.tikitaka.global.response.ApiResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ObjectMapper objectMapper = new ObjectMapper(); // JSON 변환기
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -46,6 +50,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         // 2) 우리 토큰 발급
         String accessToken = jwtTokenProvider.createAccessToken(member.getMemberId());
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getMemberId());
 
         // 3) httpOnly 쿠키로 내려주기 (URL에 토큰 노출 X)
         // 로컬 개발은 Secure=false 가능하지만, 가능하면 true + https 환경 권장
@@ -57,24 +62,41 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                 .maxAge(60 * 60)
                 .build();
 
+        ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", refreshToken)
+                .httpOnly(true)
+                .secure(false)
+                .sameSite("Lax")
+                .path("/")
+                .maxAge(14L * 24 * 60 * 60) // 14일
+                .build();
+
         response.addHeader("Set-Cookie", accessCookie.toString());
+        response.addHeader("Set-Cookie", refreshCookie.toString());
 
         // todo : refreshToken도 추가하기
 
-        // 4) 프론트로 안전하게 리다이렉트 (토큰 쿼리스트링 x)
-        String target = UriComponentsBuilder
-                .fromUriString("http://localhost:3000/post-login")  // 화면 전환만 담당
-                .build()
-                .toUriString();
+        // 4) ApiResponse 사용해서 200 응답
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=UTF-8");
+
+        var resultData = Map.of(
+                "successhandler", "ok",
+                "memberId", member.getMemberId(),
+                "nickname", member.getUsername()
+        );
+
+        ApiResponse<Object> apiResponse = ApiResponse.onSuccess(200, resultData);
+
+        // JSON 변환해서 응답
+        String jsonBody = objectMapper.writeValueAsString(apiResponse);
+        response.getWriter().write(jsonBody);
+
+
 
 
 
 //        String jwt = jwtTokenProvider.createToken(
 //                user.getId(), user.getRole(), user.getEmail()
 //        );
-
-
-
-        response.sendRedirect(target);
     }
 }

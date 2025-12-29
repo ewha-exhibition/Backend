@@ -31,7 +31,8 @@ public class ExhibitionImageService {
                         ExhibitionImage exhibitionImage = exhibitionImageRepository.findById(imagePatch.getId().get())
                                 .orElseThrow(() -> new BaseErrorException(ExhibitionErrorCode.EXHIBITION_IMAGE_NOT_FOUND));
                         if (imagePatch.getUrl().isPresent()) {
-                            exhibitionImage.updateImageUrl(imagePatch.getUrl().get());
+                            String keyUrl = s3UrlHandler.extractKeyFromUrl(imagePatch.getUrl().get());
+                            exhibitionImage.updateImageUrl(keyUrl);
                         }
 
                         if (imagePatch.getSequence().isPresent()) {
@@ -39,9 +40,10 @@ public class ExhibitionImageService {
                         }
                     }
                     else {
+                        String keyUrl = s3UrlHandler.extractKeyFromUrl(imagePatch.getUrl().get());
                         ExhibitionImage newImage = ExhibitionImage.builder()
                                 .exhibition(exhibition)
-                                .imageUrl(imagePatch.getUrl().get())
+                                .imageUrl(keyUrl)
                                 .sequence(imagePatch.getSequence().orElse(0))
                                 .build();
 
