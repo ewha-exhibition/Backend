@@ -14,4 +14,8 @@ ARG PROFILES
 ARG ENV
 COPY ${JAR_FILE} app.jar
 
-ENTRYPOINT ["java","-jar","-Duser.timezone=Asia/Seoul","-Dspring.profiles.active=${PROFILES}", "-Dsever.env=${ENV}","/app.jar"]
+ENTRYPOINT ["sh", "-c", "java \
+  -Duser.timezone=Asia/Seoul \
+  -Dspring.profiles.active=${PROFILES:-prod} \
+  -Dserver.env=${ENV:-prod} \
+  -jar /app/app.jar"]
