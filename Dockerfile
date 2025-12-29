@@ -8,8 +8,10 @@ ENV SPRING_AUTOCONFIGURE_EXCLUDE="org.springframework.boot.actuate.autoconfigure
 # (중요) ProcessorMetrics 바인더 비활성화
 ENV MANAGEMENT_METRICS_BINDERS_PROCESSOR_ENABLED="false"
 
+WORKDIR /app
+
 EXPOSE 80
-ARG JAR_FILE=/build/libs/*.jar
+ARG JAR_FILE=build/libs/*.jar
 ARG PROFILES
 ARG ENV
 COPY ${JAR_FILE} app.jar
@@ -18,4 +20,4 @@ ENTRYPOINT ["sh", "-c", "java \
   -Duser.timezone=Asia/Seoul \
   -Dspring.profiles.active=${PROFILES:-prod} \
   -Dserver.env=${ENV:-prod} \
-  -jar /app/app.jar"]
+  -jar app.jar"]
