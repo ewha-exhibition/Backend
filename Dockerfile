@@ -1,4 +1,5 @@
 FROM eclipse-temurin:17-jdk
+WORKDIR /app
 # (중요) cgroup 리소스 감지 비활성화
 ENV JAVA_TOOL_OPTIONS="-XX:-UseContainerSupport"
 
@@ -16,4 +17,4 @@ ARG PROFILES
 ARG ENV
 COPY ${JAR_FILE} app.jar
 
-ENTRYPOINT ["java","-jar","-Duser.timezone=Asia/Seoul","-Dspring.profiles.active=prod","/app.jar"]
+ENTRYPOINT ["java","-jar","-Duser.timezone=Asia/Seoul","-Dspring.profiles.active=prod","/app/app.jar"]
