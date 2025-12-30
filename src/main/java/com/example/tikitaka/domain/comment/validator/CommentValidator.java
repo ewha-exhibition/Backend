@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class CommentValidator {
     private final CommentRepository commentRepository;
 
-    public String validateCommentContent(Post post) {
+    public Comment validateCommentContent(Post post) {
         return commentRepository.findContentByPost(post).orElseThrow(
                 () -> new BaseErrorException(CommentErrorCode.COMMENT_NOT_FOUND)
         );
