@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/SCRUM-66-bluegreenDeploy
   workflow_dispatch:
     inputs:
       name:
@@ -73,7 +74,7 @@ jobs:
 
       - name: set target IP
         run: |
-          STATUS=$(curl -o /dev/null -w "%{http_code}" "http://${{ secrets.EC2_HOST }}/env")
+          STATUS=$(curl -o /dev/null -w "%{http_code}" "http://${{ secrets.EC2_HOST }}/actuator/health")
           echo $STATUS
           if [ $STATUS = 200 ]; then
             CURRENT_UPSTREAM=$(curl -s "http://${{ secrets.EC2_HOST }}/env")
@@ -107,9 +108,9 @@ jobs:
             sudo touch .env
             echo "${{ secrets.ENV }}" | sudo tee .env > /dev/null
             
-            sudo curl -o docker-compose.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/main/docker-compose.yml
-            sudo curl -o docker-compose-blue.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/main/docker-compose-blue.yml
-            sudo curl -o docker-compose-green.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/main/docker-compose-green.yml
+            sudo curl -o docker-compose.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/feature/SCRUM-66-bluegreenDeploy/docker-compose.yml
+            sudo curl -o docker-compose-blue.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/feature/SCRUM-66-bluegreenDeploy/docker-compose-blue.yml
+            sudo curl -o docker-compose-green.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/feature/SCRUM-66-bluegreenDeploy/docker-compose-green.yml
             
             sudo chmod 666 /var/run/docker.sock
 
