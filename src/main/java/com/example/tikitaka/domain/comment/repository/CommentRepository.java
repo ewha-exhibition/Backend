@@ -11,11 +11,11 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("""
-    SELECT c.content
+    SELECT c
     FROM Comment c
     WHERE c.post = :post
     """)
-    Optional<String> findContentByPost(Post post);
+    Optional<Comment> findContentByPost(Post post);
 
     @Query("""
     SELECT c

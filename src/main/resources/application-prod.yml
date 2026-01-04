@@ -26,3 +26,8 @@ management:
 server:
   server-url: ${SERVER_PROD_URL}
   front-urls: ${FRONT_PROD_URL}
+
+app:
+  cookie:
+    secure: ${COOKIE_SECURE:true}
+    same-site: ${COOKIE_SAMESITE:None}
