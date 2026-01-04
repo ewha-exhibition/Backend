@@ -71,3 +71,9 @@ app:
   cookie:
     secure: false
     same-site: Lax
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, beans, httptrace, info, metrics, prometheus

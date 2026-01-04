@@ -5,9 +5,10 @@ scrape_configs:
   - job_name: 'spring-boot-server'
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['domain:port']
+      - targets: ['13.125.38.143:8080', '13.125.38.143:8081']
+
 
   - job_name: 'ec2-server'
     metrics_path: /metrics
     static_configs:
-      - targets: ['domain:port']
+      - targets: ['13.125.38.143:9100']
