@@ -34,6 +34,8 @@ import java.util.function.Consumer;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ExhibitionService {
+    public static final String EXHIBITION_POSTER = "https://greenknockbucket.s3.ap-northeast-2.amazonaws.com/exhibition/posters/default_image.png";
+
     // 서비스
     private final ClubService clubService;
     private final HostService hostService;
@@ -66,7 +68,12 @@ public class ExhibitionService {
         Club club = clubService.clubGetOrAdd(request.getClub().getName());
 
         // 전시 생성
-        Exhibition exhibition = exhibitionMapper.toExhibition(request.getExhibition(), club, s3UrlHandler.extractKeyFromUrl(request.getExhibition().getPosterUrl()));
+        String posterUrl = request.getExhibition().getPosterUrl();
+        if (posterUrl == null) {
+            posterUrl = EXHIBITION_POSTER;
+        }
+
+        Exhibition exhibition = exhibitionMapper.toExhibition(request.getExhibition(), club, s3UrlHandler.extractKeyFromUrl(posterUrl));
         exhibitionRepository.save(exhibition);
 
         // 전시 이미지 등록
