@@ -12,11 +12,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import com.example.tikitaka.global.util.EnvironmentUtil;
 
 import java.util.Arrays;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -31,13 +36,28 @@ public class SecurityConfig {
     @Value("${server.front-urls}")
     private String[] FRONT_URLS;
 
+    @Value("${swagger.user}")
+    private String SWAGGER_USER;
+
+    @Value("${swagger.password}")
+    private String SWAGGER_PASSWORD;
+
+    private final EnvironmentUtil environmentUtil;
 
     private final CustomOAuth2MemberService customOAuth2MemberService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final JwtAuthFilter jwtAuthFilter;
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint; // ✅ 추가
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint; 
 
-
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        UserDetails user =
+                User.withUsername(SWAGGER_USER)
+                        .password(passwordEncoder().encode(SWAGGER_PASSWORD))
+                        .roles("SWAGGER")
+                        .build();
+        return new InMemoryUserDetailsManager(user);
+    }
 
 
     @Bean
@@ -64,12 +84,31 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable);
+
+        http.sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
+
+        if (environmentUtil.isProdProfile()) {
+            http
+                    .authorizeHttpRequests(auth -> auth
+                            .requestMatchers(SwaggerPatterns).authenticated()
+                    )
+                    .httpBasic(basic -> {});
+        }
+        else {
+            http
+                    .authorizeHttpRequests(auth -> auth
+                            .requestMatchers(SwaggerPatterns).permitAll()
+                    );
+        }
+
+        http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(SwaggerPatterns)
-                        .permitAll()
                         .requestMatchers(SecurityPatterns)
                         .permitAll()
                         .requestMatchers(ActuatorPatterns)
