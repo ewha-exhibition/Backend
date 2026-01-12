@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PostCard {
     private Long postId;
+    private Long exhibitionId;
     private String posterUrl;
     private String title;
     private String body;
@@ -21,6 +22,7 @@ public class PostCard {
     public static PostCard of(Post post, List<String> imageUrls) {
         return new PostCard(
                 post.getPostId(),
+                post.getExhibition().getExhibitionId(),
                 post.getExhibition().getPosterUrl(),
                 post.getExhibition().getExhibitionName(),
                 post.getContent(),
