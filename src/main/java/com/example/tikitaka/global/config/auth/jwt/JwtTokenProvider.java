@@ -36,7 +36,7 @@ public class JwtTokenProvider {
     // 1시간
     private final long ACCESS_TOKEN_VALIDITY_MS = 60 * 60 * 1000L;
     // 14일
-    private final long REFRESH_TOKEN_VALIDITY_MS = 14L * 24 * 60 * 60 * 1000L;
+    private final long REFRESH_TOKEN_VALIDITY_MS = 2 * 60 * 60 * 1000L;
 
     @PostConstruct
     protected void init() {
