@@ -50,7 +50,7 @@ public class AuthController {
                 .secure(cookieSecure)
                 .sameSite(cookieSameSite)
                 .path("/")
-                .maxAge(14L * 24 * 60 * 60)
+                .maxAge(2 * 60 * 60)
                 .build();
 
         return ResponseEntity.ok()
