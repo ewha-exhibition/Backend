@@ -21,6 +21,9 @@ public class ExhibitionReview implements ExhibitionPost {
     private boolean isWriter;
     private List<String> images;
     private int imageCount;
+    @JsonProperty("isDeleted")
+    private boolean isDeleted;
+
 
     public static ExhibitionReview of(Post post, List<String> images, boolean isWriter) {
         return ExhibitionReview.builder()
