@@ -16,6 +16,7 @@ public class PostCard {
     private String title;
     private String body;
     private int imageCount;
+    private Long exhibitionId;
     private List<String> imageUrls;
 
     public static PostCard of(Post post, List<String> imageUrls) {
@@ -25,6 +26,7 @@ public class PostCard {
                 post.getExhibition().getExhibitionName(),
                 post.getContent(),
                 imageUrls == null?0:imageUrls.size(),
+                post.getExhibition().getExhibitionId(),
                 imageUrls
         );
     }
