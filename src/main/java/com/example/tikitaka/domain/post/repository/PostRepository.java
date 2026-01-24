@@ -55,7 +55,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
     SELECT p
     FROM Post p
-    WHERE p.exhibition = :exhibition AND p.postType = :postType AND NOT p.isDeleted
+    WHERE p.exhibition = :exhibition AND p.postType = :postType
     """
     )
     Page<Post> findByExhibitionAndPostType(Exhibition exhibition, PostType postType, Pageable pageable);
