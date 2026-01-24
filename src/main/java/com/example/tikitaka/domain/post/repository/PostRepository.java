@@ -16,6 +16,26 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    @Query(
+            value = """
+      SELECT p
+      FROM Post p
+      JOIN FETCH p.exhibition e
+      WHERE p.member.memberId = :memberId
+        AND p.postType = :postType
+        AND p.isDeleted = false
+      """,
+            countQuery = """
+      SELECT COUNT(p)
+      FROM Post p
+      WHERE p.member.memberId = :memberId
+        AND p.postType = :postType
+        AND p.isDeleted = false
+      """
+    )
+    Page<Post> findMyReviewsWithExhibition(Long memberId, PostType postType, Pageable pageable);
+
+
     @Query("""
     SELECT p
     FROM Post p

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  blue:
+    image: nokmaster/backend
+    container_name: blue
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - PROFILES=blue
+      - ENV=blue
+    networks:
+      - nok-network
+
+networks:
+  nok-network:
+    external: true
