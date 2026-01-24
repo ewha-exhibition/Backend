@@ -89,8 +89,6 @@ public class ReviewService {
         Post review = Post.toReviewEntity(member, exhibition, reviewPostRequest, PostType.REVIEW, number);
         postRepository.save(review);
 
-        exhibition.increaseReviewCount();
-
         scrapService.markReviewed(memberId, exhibitionId);
 
         // 리뷰 이미지 저장

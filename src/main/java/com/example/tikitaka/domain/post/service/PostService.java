@@ -28,6 +28,13 @@ public class PostService {
 
         if (post.getPostType() == PostType.REVIEW) {
             scrapService.markReviewed(memberId, post.getExhibition().getExhibitionId()); // TODO: N+1 문제 해결
+            post.getExhibition().decreaseReviewCount();
+        }
+        if (post.getPostType() == PostType.CHEER) {
+            post.getExhibition().decreaseCheerCount();
+        }
+        if (post.getPostType() == PostType.QUESTION) {
+            post.getExhibition().decreaseQuestionCount();
         }
     }
 
