@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Setter
 @Getter
 @Builder
 @NoArgsConstructor
@@ -122,6 +121,13 @@ public class Exhibition extends BaseEntity {
 //        this.images.remove(image);
 //        image.setExhibition(null);
 //    }
+
+    public void increaseScrapCount() {
+        this.scrapCount++;
+    }
+    public void decreaseScrapCount() {
+        this.scrapCount--;
+    }
 
     public void markAsDeleted() {
         this.isDeleted = true;

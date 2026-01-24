@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.scrap.service;
 
+import com.example.tikitaka.domain.exhibition.ExhibitionErrorCode;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
 import com.example.tikitaka.domain.member.entity.Member;
@@ -79,7 +80,11 @@ public class ScrapService {
 
         // 연관 엔티티(프록시) 참조
         Member member = memberRepository.getReferenceById(memberId);
-        Exhibition exhibition = exhibitionRepository.getReferenceById(exhibitionId);
+        Exhibition exhibition = exhibitionRepository.findByExhibitionId(exhibitionId).orElseThrow(
+                () -> new BaseErrorException(ExhibitionErrorCode.EXHIBITION_NOT_FOUND)
+        );
+
+
 
         // (선택) 전시 삭제/만료 정책 체크가 필요하면 여기서 검사
         // if (Boolean.TRUE.equals(exhibition.getIsDeleted())) { throw new IllegalStateException("삭제된 전시입니다."); }
@@ -94,7 +99,7 @@ public class ScrapService {
         scrapRepository.save(scrap);
 
         // (선택) 집계 필드 업데이트가 필요하면 여기서 처리
-         exhibition.setScrapCount(exhibition.getScrapCount() + 1);
+        exhibition.increaseScrapCount();
     }
 
     /**
@@ -116,8 +121,11 @@ public class ScrapService {
 
         // (선택) 집계 필드 감소
          try {
-             Exhibition exhibition = exhibitionRepository.getReferenceById(exhibitionId);
-             exhibition.setScrapCount(Math.max(0, exhibition.getScrapCount() - 1));
+             Exhibition exhibition = exhibitionRepository.findByExhibitionId(exhibitionId).orElseThrow(
+                     () -> new BaseErrorException(ExhibitionErrorCode.EXHIBITION_NOT_FOUND)
+             );
+
+             exhibition.decreaseScrapCount();
          } catch (EntityNotFoundException ignore) {}
     }
 

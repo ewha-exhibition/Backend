@@ -39,7 +39,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
     SELECT p
     FROM Post p
-    WHERE p.member.memberId = :memberId AND p.postType = :postType AND NOT p.isDeleted
+    WHERE p.member.memberId = :memberId AND p.postType = :postType
     """
     )
     Page<Post> findByMember_MemberIdAndPostType(Long memberId, PostType postType, Pageable pageable);

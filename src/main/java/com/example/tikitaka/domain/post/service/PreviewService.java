@@ -57,9 +57,13 @@ public class PreviewService {
             exhibition.increaseCheerNo();
             exhibition.increaseCheerCount();
         }
-        else {
+        else if (postType == PostType.CHEER) {
             number = posts.get(0).getDisplayNo();
             exhibition.increaseCheerCount();
+        }
+        else if (postType == PostType.QUESTION) {
+            number = posts.get(0).getDisplayNo();
+            exhibition.increaseQuestionCount();
         }
 
 
