@@ -2,8 +2,11 @@ package com.example.tikitaka.domain.post.controller;
 
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
+import com.example.tikitaka.domain.post.dto.response.MyReviewListResponse;
+import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.service.PostImageService;
 import com.example.tikitaka.domain.post.service.PostService;
+import com.example.tikitaka.domain.post.service.PreviewService;
 import com.example.tikitaka.domain.post.service.ReviewService;
 import com.example.tikitaka.infra.s3.S3Url;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +20,10 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final PostImageService postImageService;
     private final PostService postService;
+    private final PreviewService previewService;
 
     @GetMapping
-    public ExhibitionPostListResponse myReviews(
+    public MyReviewListResponse myReviews(
             @AuthenticationPrincipal Long memberId,
             @RequestParam(defaultValue = "0") int pageNum,
             @RequestParam(defaultValue = "10") int limit
@@ -55,7 +59,7 @@ public class ReviewController {
             @RequestParam(required = true)
             int limit
     ) {
-        return reviewService.getExhibitionReviews(memberId, exhibitionId, pageNum, limit);
+        return previewService.getExhibitionPreviews(memberId, exhibitionId, PostType.REVIEW, pageNum, limit);
     }
 
     @DeleteMapping("/{postId}")

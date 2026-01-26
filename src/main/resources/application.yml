@@ -4,7 +4,12 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   profiles:
-    active: prod
+    active: blue
+    group:
+      local: local
+      blue: blue, prod
+      green: green, prod
+
   security:
     oauth2:
       client:
@@ -77,3 +82,26 @@ management:
     web:
       exposure:
         include: health, beans, httptrace, info, metrics, prometheus
+---
+spring:
+  config:
+    activate:
+      on-profile: blue
+
+server:
+  port: 8080
+  serverAddress: \${SERVER_PROD_URL}
+
+serverName: blue_server
+---
+spring:
+  config:
+    activate:
+      on-profile: green
+
+server:
+  port: 8080
+  serverAddress: \${SERVER_PROD_URL}
+
+serverName: green_server
+---

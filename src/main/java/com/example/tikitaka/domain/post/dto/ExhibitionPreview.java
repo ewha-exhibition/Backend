@@ -22,6 +22,9 @@ public class ExhibitionPreview implements ExhibitionPost{
     private boolean hasAnswer;
     private String answer;
     private DateFormatting answerCreatedAt;
+    private Long answerId;
+    @JsonProperty("isDeleted")
+    private boolean isDeleted;
 
     public static ExhibitionPreview of(Post post, Comment comment, boolean isWriter) {
         if (comment == null) {
@@ -34,6 +37,8 @@ public class ExhibitionPreview implements ExhibitionPost{
                     .hasAnswer(post.isHasAnswer())
                     .answer(null)
                     .answerCreatedAt(null)
+                    .answerId(null)
+                    .isDeleted(post.isDeleted())
                     .build();
         }
         return ExhibitionPreview.builder()
@@ -44,7 +49,9 @@ public class ExhibitionPreview implements ExhibitionPost{
                 .isWriter(isWriter)
                 .hasAnswer(post.isHasAnswer())
                 .answer(comment.getContent())
+                .answerId(comment.getCommentId())
                 .answerCreatedAt(new DateFormatting(comment.getCreatedAt()))
+                .isDeleted(post.isDeleted())
                 .build();
 
     }

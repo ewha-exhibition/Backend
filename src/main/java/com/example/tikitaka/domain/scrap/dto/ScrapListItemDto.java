@@ -30,6 +30,7 @@ public class ScrapListItemDto {
                 .startDate(e.getStartDate())
                 .endDate(e.getEndDate())
                 .isViewed(s.getIsViewed())
+                .isReviewed(s.getIsReviewed())
                 .build();
     }
 }

@@ -2,6 +2,8 @@ package com.example.tikitaka.domain.post.dto;
 
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.global.util.formatting.DateFormatting;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,6 +16,8 @@ public class MyPreview {
     private Long postId;
     private DateFormatting createdAt;
     private String content;
+    @JsonProperty("isDeleted")
+    private boolean isDeleted;
 
     public static MyPreview of(Post post) {
         return MyPreview.builder()
@@ -23,6 +27,7 @@ public class MyPreview {
                 .postId(post.getPostId())
                 .createdAt(new DateFormatting(post.getCreatedAt()))
                 .content(post.getContent())
+                .isDeleted(post.isDeleted())
                 .build();
     }
 }
