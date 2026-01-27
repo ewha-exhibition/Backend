@@ -72,6 +72,16 @@ logging:
     org.hibernate.orm.jdbc.bind: trace
     com.zaxxer.hikari: DEBUG
 
+app:
+  cookie:
+    secure: false
+    same-site: Lax
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, beans, httptrace, info, metrics, prometheus
 ---
 spring:
   config:
