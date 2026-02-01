@@ -33,6 +33,7 @@ public class ExhibitionReview implements ExhibitionPost {
                 .content(post.getContent())
                 .isWriter(isWriter)
                 .images(images)
+                .isDeleted(post.isDeleted())
                 .imageCount(images.size())
                 .build();
     }
