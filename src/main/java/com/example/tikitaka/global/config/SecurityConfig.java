@@ -74,7 +74,7 @@ public class SecurityConfig {
     };
 
     private final String[] ActuatorPatterns = {
-            "/actuator/health", "/env"
+            "/actuator/**", "/env"
     };
 
     private final String[] GetPermittedPatterns = {
