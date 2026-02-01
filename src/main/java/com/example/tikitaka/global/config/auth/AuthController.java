@@ -1,14 +1,14 @@
 package com.example.tikitaka.global.config.auth;
 
-import com.example.tikitaka.global.config.auth.dto.AuthResponse;
-import com.example.tikitaka.global.config.auth.dto.KakaoCodeRequest;
+import com.example.tikitaka.global.config.auth.dto.*;
 
-import com.example.tikitaka.global.config.auth.dto.LoginResponse;
-import com.example.tikitaka.global.config.auth.dto.RefreshResponse;
 import com.example.tikitaka.global.config.auth.jwt.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,27 +72,37 @@ public class AuthController {
      */
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(
-            @CookieValue(value = "REFRESH_TOKEN", required = false) String refreshToken
+            @RequestBody(required = false) RefreshRequest body,
+            @CookieValue(value = "REFRESH_TOKEN", required = false) String refreshTokenFromCookie,
+            HttpServletRequest request
     ) {
+        // 디버깅 로그
+        log.info("[REFRESH] Cookie header = {}", request.getHeader("Cookie"));
+        log.info("[REFRESH] cookie refresh present = {}", refreshTokenFromCookie != null);
+        log.info("[REFRESH] body refresh present = {}", body != null && body.getRefreshToken() != null && !body.getRefreshToken().isBlank());
+
+        // 1) Body 우선, 없으면 Cookie 사용
+        String refreshToken = null;
+        if (body != null && body.getRefreshToken() != null && !body.getRefreshToken().isBlank()) {
+            refreshToken = body.getRefreshToken().trim();
+        } else if (refreshTokenFromCookie != null && !refreshTokenFromCookie.isBlank()) {
+            refreshToken = refreshTokenFromCookie.trim();
+        }
+
         if (refreshToken == null) {
-            return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED)
-                    .body(Map.of(
-                            "ok", false,
-                            "error", "refresh_token_missing"
-                    ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("ok", false, "error", "refresh_token_missing"));
         }
 
         AuthResponse result;
         try {
             result = authService.reissueTokens(refreshToken);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED)
-                    .body(Map.of(
-                            "ok", false,
-                            "error", e.getMessage()
-                    ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("ok", false, "error", e.getMessage()));
         }
 
+        // ✅ (선택) 쿠키 재발급: 나중에 쿠키로 돌아갈 거면 유지
         ResponseCookie newAccessCookie = ResponseCookie.from("ACCESS_TOKEN", result.getAccessToken())
                 .httpOnly(true)
                 .secure(cookieSecure)
@@ -110,21 +120,9 @@ public class AuthController {
                 .build();
 
         return ResponseEntity.ok()
-                .header(org.springframework.http.HttpHeaders.SET_COOKIE, newAccessCookie.toString())
-                .header(org.springframework.http.HttpHeaders.SET_COOKIE, newRefreshCookie.toString())
-                .body(new RefreshResponse(
-                        true,
-                        result.getAccessToken(),
-                        result.getRefreshToken()
-                ));
-
+                // 쿠키가 지금 문제라면 일시적으로 아래 2줄 주석 처리해도 됨
+                .header(HttpHeaders.SET_COOKIE, newAccessCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, newRefreshCookie.toString())
+                .body(new RefreshResponse(true, result.getAccessToken(), result.getRefreshToken()));
     }
-    @GetMapping("/test-auth/token/{memberId}")
-    public Map<String, String> issue(@PathVariable Long memberId) {
-        String token = jwtTokenProvider.createAccessToken(memberId);
-        return Map.of("accessToken", token);
-    }
-
-    // todo : 로그아웃 시, 쿠키 제거 로직(2차)
-
 }
