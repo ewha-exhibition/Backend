@@ -3,10 +3,7 @@ package com.example.tikitaka.domain.scrap.controller;
 import com.example.tikitaka.domain.scrap.service.ViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +17,14 @@ public class ViewController {
             @PathVariable Long exhibitionId
     ) {
         viewService.addView(memberId, exhibitionId);
+    }
+
+    @DeleteMapping("/{exhibitionId}")
+    public void viewDelete(
+            @AuthenticationPrincipal Long memberId,
+            @PathVariable Long exhibitionId
+    ) {
+        viewService.removeView(memberId, exhibitionId);
     }
 
 

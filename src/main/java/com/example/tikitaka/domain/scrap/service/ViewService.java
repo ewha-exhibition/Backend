@@ -23,6 +23,7 @@ public class ViewService {
     private final MemberValidator memberValidator;
     private final ExhibitionValidator exhibitionValidator;
 
+    @Transactional
     public void addView(Long memberId, Long exhibitionId) {
         Member member = memberValidator.validateMember(memberId);
         Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
@@ -37,5 +38,17 @@ public class ViewService {
                     .build();
 
         viewRepository.save(view);
+    }
+
+    @Transactional
+    public void removeView(Long memberId, Long exhibitionId) {
+        Member member = memberValidator.validateMember(memberId);
+        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
+
+        View view = viewRepository.findByMemberAndExhibition(member, exhibition)
+                .orElseThrow(() -> new BaseErrorException(ViewErrorCode.NOT_FOUND_VIEW));
+
+        viewRepository.delete(view);
+
     }
 }
