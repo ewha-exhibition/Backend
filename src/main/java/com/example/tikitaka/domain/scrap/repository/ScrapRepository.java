@@ -20,39 +20,38 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
 
 
-        // /scraps?pageNum=1&limit=3
-        //→ “1페이지(첫 3개)만 주세요”
-        @Query(
-                value = """
-        select new com.example.tikitaka.domain.scrap.dto.ScrapListItemDto(
-            e.exhibitionId,
-            e.exhibitionName,
-            e.posterUrl,
-            e.place,
-            e.startDate,
-            e.endDate,
-            case when v.viewId is null then false else true end,
-            false
-        )
-        from Scrap s
-        join s.exhibition e
-        left join View v
-               on v.member = s.member
-              and v.exhibition = e
-        where s.member.memberId = :memberId
-          and (e.isDeleted = false or e.isDeleted is null)
-        order by e.endDate asc,
-                 case when v.viewId is null then 0 else 1 end asc
-        """,
-                countQuery = """
-        select count(s)
-        from Scrap s
-        join s.exhibition e
-        where s.member.memberId = :memberId
-          and (e.isDeleted = false or e.isDeleted is null)
-        """
-        )
-        Page<ScrapListItemDto> findPageByMemberIdOrderByEndDateAndViewed(@Param("memberId") Long memberId, Pageable pageable);
+    // /scraps?pageNum=1&limit=3
+    //→ “1페이지(첫 3개)만 주세요”
+    @Query(
+            value = """
+    select new com.example.tikitaka.domain.scrap.dto.ScrapListItemDto(
+        e.exhibitionId,
+        e.exhibitionName,
+        e.posterUrl,
+        e.place,
+        e.startDate,
+        e.endDate,
+        case when v.viewId is null then false else true end
+    )
+    from Scrap s
+    join s.exhibition e
+    left join View v
+           on v.member = s.member
+          and v.exhibition = e
+    where s.member.memberId = :memberId
+      and (e.isDeleted = false or e.isDeleted is null)
+    order by e.endDate asc,
+             case when v.viewId is null then 0 else 1 end asc
+    """,
+            countQuery = """
+    select count(s)
+    from Scrap s
+    join s.exhibition e
+    where s.member.memberId = :memberId
+      and (e.isDeleted = false or e.isDeleted is null)
+    """
+    )
+    Page<ScrapListItemDto> findPageByMemberIdOrderByEndDateAndViewed(@Param("memberId") Long memberId, Pageable pageable);
 
     boolean existsByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
 
