@@ -5,6 +5,7 @@ import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
 import com.example.tikitaka.domain.scrap.service.ScrapService;
+import com.example.tikitaka.domain.scrap.service.ViewService;
 import com.example.tikitaka.global.exception.BaseErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostImageService postImageService;
     private final ScrapService scrapService;
+    private final ViewService viewService;
 
     @Transactional
     public void deletePost(Long memberId, Long postId) {
@@ -27,8 +29,8 @@ public class PostService {
         post.markAsDeleted();
 
         if (post.getPostType() == PostType.REVIEW) {
-            scrapService.markReviewed(memberId, post.getExhibition().getExhibitionId()); // TODO: N+1 문제 해결
             post.getExhibition().decreaseReviewCount();
+            viewService.removeView(memberId, post.getExhibition().getExhibitionId());
         }
         if (post.getPostType() == PostType.CHEER) {
             post.getExhibition().decreaseCheerCount();
@@ -36,6 +38,8 @@ public class PostService {
         if (post.getPostType() == PostType.QUESTION) {
             post.getExhibition().decreaseQuestionCount();
         }
+
+
     }
 
     @Transactional
