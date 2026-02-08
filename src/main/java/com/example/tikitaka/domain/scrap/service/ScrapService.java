@@ -92,8 +92,6 @@ public class ScrapService {
         Scrap scrap = Scrap.builder()
                 .member(member)
                 .exhibition(exhibition)
-                .isViewed(false) // 새 스크랩은 미관람 상태
-                .isReviewed(false)  // 스크랩 생성시 리뷰는 없음
                 .build();
 
         scrapRepository.save(scrap);
@@ -130,19 +128,6 @@ public class ScrapService {
     }
 
     /**
-     * 관람 표시/해제 (스크랩된 전시만 가능)
-     * - 스크랩이 없으면 예외
-     *  트랜잭션 커밋 시점에 자동으로 update scrap set is_viewed=? where scrap_id=?가 실행된다.
-     */
-    @Transactional
-    public void markViewed(Long memberId, Long exhibitionId, boolean viewed) {
-        Scrap scrap = scrapRepository
-                .findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)
-                .orElseThrow(() -> new BaseErrorException(ScrapErrorCode.SCRAP_NOT_FOUND)); // ← 커스텀 예외
-        scrap.setViewed(viewed);
-    }
-
-    /**
      * 스크랩 전시 중 관람한 전시 조회
      */
     @Transactional(readOnly = true)
@@ -166,15 +151,7 @@ public class ScrapService {
         );
     }
 
-    /*
-    리뷰 표시
-     */
-    @Transactional
-    public void markReviewed(Long memberId, Long exhibitionId) {
-        scrapRepository
-                .findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)
-                .ifPresent(Scrap::updateReview);
-    }
+
 
 
 }
