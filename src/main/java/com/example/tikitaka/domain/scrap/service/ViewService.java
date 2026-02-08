@@ -1,22 +1,18 @@
 package com.example.tikitaka.domain.scrap.service;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
-import com.example.tikitaka.domain.exhibition.service.ExhibitionService;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.scrap.ViewErrorCode;
-import com.example.tikitaka.domain.scrap.dto.ScrapListItemDto;
 import com.example.tikitaka.domain.scrap.dto.ViewsDto;
-import com.example.tikitaka.domain.scrap.dto.response.ScrapListResponseDto;
 import com.example.tikitaka.domain.scrap.dto.response.ViewsResponseDto;
 import com.example.tikitaka.domain.scrap.entity.View;
 import com.example.tikitaka.domain.scrap.repository.ViewRepository;
 import com.example.tikitaka.global.dto.PageInfo;
 import com.example.tikitaka.global.exception.BaseErrorException;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -76,11 +72,11 @@ public class ViewService {
         viewRepository.delete(view);
     }
 
-    public ViewsResponseDto findScrapList(Long memberId, int pageNum, int limit) {
+    public ViewsResponseDto findViewList(Long memberId, int pageNum, int limit) {
         Member member = memberValidator.validateMember(memberId);
         Pageable pageable = PageRequest.of(Math.max(pageNum - 1, 0), limit);
 
-        Page<ViewsDto> page = viewRepository.findPageByMemberIdOrderByEndDateAndViewed(memberId, PostType.REVIEW, pageable);
+        Page<ViewsDto> page = viewRepository.findPageByMemberId(memberId, PostType.REVIEW, pageable);
 
         List<ViewsDto> exhibitions = page.getContent();
 

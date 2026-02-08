@@ -15,6 +15,7 @@ import com.example.tikitaka.domain.post.dto.response.MyReviewListResponse;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
+import com.example.tikitaka.domain.scrap.repository.ViewRepository;
 import com.example.tikitaka.domain.scrap.service.ScrapService;
 import com.example.tikitaka.domain.scrap.service.ViewService;
 import com.example.tikitaka.global.dto.PageInfo;
@@ -39,6 +40,7 @@ public class ReviewService {
     private final ScrapService scrapService;
     private final MemberValidator memberValidator;
     private final ViewService viewService;
+    private final ViewRepository viewRepository;
 
 
     public MyReviewListResponse getMyReviews(Long memberId, int pageNum, int limit) {
@@ -91,7 +93,9 @@ public class ReviewService {
         Post review = Post.toReviewEntity(member, exhibition, reviewPostRequest, PostType.REVIEW, number);
         postRepository.save(review);
 
-        viewService.addViewByReview(member, exhibition);
+        if (!viewRepository.existsByMemberAndExhibition(member, exhibition)) {
+            viewService.addViewByReview(member, exhibition);
+        }
 
         // 리뷰 이미지 저장
         for (String url : reviewPostRequest.getImages()) {

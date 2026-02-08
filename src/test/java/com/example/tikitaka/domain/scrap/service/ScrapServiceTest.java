@@ -16,7 +16,6 @@ import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -45,7 +44,7 @@ class ScrapServiceTest {
         ScrapListItemDto dto2 = ScrapListItemDto.from(s2, true);
 
         Page<ScrapListItemDto> page = new PageImpl<>(List.of(dto1, dto2), PageRequest.of(0, 10), 2);
-        when(scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(eq(memberId), any(Pageable.class)))
+        when(scrapRepository.findPageByMemberId(eq(memberId), any(Pageable.class)))
                 .thenReturn(page);
 
         // when

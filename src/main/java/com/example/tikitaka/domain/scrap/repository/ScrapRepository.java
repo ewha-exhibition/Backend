@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -51,14 +50,12 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
       and (e.isDeleted = false or e.isDeleted is null)
     """
     )
-    Page<ScrapListItemDto> findPageByMemberIdOrderByEndDateAndViewed(@Param("memberId") Long memberId, Pageable pageable);
+    Page<ScrapListItemDto> findPageByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 
     boolean existsByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
 
     Optional<Scrap> findByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
 
     void deleteByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
-
-    Page<Scrap> findPageByMember_MemberIdAndIsViewed(Long memberId, boolean isViewed, Pageable pageable);
 
 }

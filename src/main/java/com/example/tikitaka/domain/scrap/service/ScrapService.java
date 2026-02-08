@@ -46,7 +46,7 @@ public class ScrapService {
         Member member = memberValidator.validateMember(memberId);
         Pageable pageable = PageRequest.of(Math.max(pageNum - 1, 0), limit);
 
-        Page<ScrapListItemDto> page = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(memberId, pageable);
+        Page<ScrapListItemDto> page = scrapRepository.findPageByMemberId(memberId, pageable);
 
         List<ScrapListItemDto> exhibitions = page.getContent();
 

@@ -94,7 +94,7 @@ class ScrapRepositoryTest {
 
         // when: pageSize=2, page0
         Pageable pageable = PageRequest.of(0, 2); // 기본 정렬은 레포 JPQL order by
-        Page<ScrapListItemDto> page = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(m1.getMemberId(), pageable);
+        Page<ScrapListItemDto> page = scrapRepository.findPageByMemberId(m1.getMemberId(), pageable);
 
         // then
         // totalElements: 삭제된 전시 제외 → 3개
@@ -109,7 +109,7 @@ class ScrapRepositoryTest {
         assertThat(page.getContent().get(1).getExhibitionName()).isEqualTo("모네");
 
         // when: page1
-        Page<ScrapListItemDto> page1 = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(m1.getMemberId(), PageRequest.of(1,2));
+        Page<ScrapListItemDto> page1 = scrapRepository.findPageByMemberId(m1.getMemberId(), PageRequest.of(1,2));
         assertThat(page1.getContent()).hasSize(1);
         assertThat(page1.getContent().get(0).getExhibitionName()).isEqualTo("피카소");
     }
