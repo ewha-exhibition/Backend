@@ -6,6 +6,7 @@ import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.entity.RegisterPath;
 import com.example.tikitaka.domain.member.repository.MemberRepository;
+import com.example.tikitaka.domain.scrap.dto.ScrapListItemDto;
 import com.example.tikitaka.domain.scrap.entity.Scrap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ class ScrapRepositoryTest {
                 .status(com.example.tikitaka.domain.exhibition.entity.Status.ACTIVE)
                 .scrapCount(0)
                 .reviewCount(0)
-                .cheeringCount(0)
+                .cheerCount(0)
                 .questionCount(0)
                 .viewCount(0)
                 .isDeleted(deleted)
@@ -72,8 +73,6 @@ class ScrapRepositoryTest {
         Scrap s = Scrap.builder()
                 .member(m)
                 .exhibition(e)
-                .isViewed(viewed)
-                .isReviewed(reviewed)
                 .build();
         return scrapRepository.save(s);
     }
@@ -95,7 +94,7 @@ class ScrapRepositoryTest {
 
         // when: pageSize=2, page0
         Pageable pageable = PageRequest.of(0, 2); // 기본 정렬은 레포 JPQL order by
-        Page<Scrap> page = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(m1.getMemberId(), pageable);
+        Page<ScrapListItemDto> page = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(m1.getMemberId(), pageable);
 
         // then
         // totalElements: 삭제된 전시 제외 → 3개
@@ -106,12 +105,12 @@ class ScrapRepositoryTest {
         // endDate: 10/05(반고흐, viewed=true), 10/10(모네, false), 10/20(피카소, false)
         // 같은 endDate일 때 isViewed=false 먼저지만 여기선 날짜가 모두 다름
         assertThat(page.getContent()).hasSize(2);
-        assertThat(page.getContent().get(0).getExhibition().getExhibitionName()).isEqualTo("반고흐");
-        assertThat(page.getContent().get(1).getExhibition().getExhibitionName()).isEqualTo("모네");
+        assertThat(page.getContent().get(0).getExhibitionName()).isEqualTo("반고흐");
+        assertThat(page.getContent().get(1).getExhibitionName()).isEqualTo("모네");
 
         // when: page1
-        Page<Scrap> page1 = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(m1.getMemberId(), PageRequest.of(1,2));
+        Page<ScrapListItemDto> page1 = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(m1.getMemberId(), PageRequest.of(1,2));
         assertThat(page1.getContent()).hasSize(1);
-        assertThat(page1.getContent().get(0).getExhibition().getExhibitionName()).isEqualTo("피카소");
+        assertThat(page1.getContent().get(0).getExhibitionName()).isEqualTo("피카소");
     }
 }

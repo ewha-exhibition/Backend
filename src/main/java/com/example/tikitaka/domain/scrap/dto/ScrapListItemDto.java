@@ -20,7 +20,7 @@ public class ScrapListItemDto {
     private boolean isViewed;
     private boolean isReviewed;
 
-    public static ScrapListItemDto from(Scrap s) {
+    public static ScrapListItemDto from(Scrap s, boolean isViewed) {
         var e = s.getExhibition();
         return ScrapListItemDto.builder()
                 .exhibitionId(e.getExhibitionId())
@@ -29,8 +29,7 @@ public class ScrapListItemDto {
                 .place(e.getPlace())
                 .startDate(e.getStartDate())
                 .endDate(e.getEndDate())
-                .isViewed(s.getIsViewed())
-                .isReviewed(s.getIsReviewed())
+                .isViewed(isViewed)
                 .build();
     }
 }
