@@ -3,13 +3,16 @@ package com.example.tikitaka.domain.scrap.service;
 import com.example.tikitaka.domain.exhibition.ExhibitionErrorCode;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.repository.ExhibitionRepository;
+import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.repository.MemberRepository;
+import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.scrap.ScrapErrorCode;
 import com.example.tikitaka.domain.scrap.dto.ScrapListItemDto;
 import com.example.tikitaka.domain.scrap.dto.response.ScrapListResponseDto;
 import com.example.tikitaka.domain.scrap.entity.Scrap;
 import com.example.tikitaka.domain.scrap.repository.ScrapRepository;
+import com.example.tikitaka.domain.scrap.repository.ViewRepository;
 import com.example.tikitaka.global.dto.PageInfo;
 import com.example.tikitaka.global.exception.BaseErrorException;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +32,9 @@ public class ScrapService {
     private final ScrapRepository scrapRepository;
     private final MemberRepository memberRepository;
     private final ExhibitionRepository exhibitionRepository;
+    private final ViewRepository viewRepository;
+    private final MemberValidator memberValidator;
+    private final ExhibitionValidator exhibitionValidator;
 
     // S3
 //    private final S3UrlHandler s3UrlHandler;
@@ -37,18 +43,15 @@ public class ScrapService {
 
     // 1. 스크랩 목록 조회 (페이지네이션)
     public ScrapListResponseDto findScrapList(Long memberId, int pageNum, int limit) {
+        Member member = memberValidator.validateMember(memberId);
         Pageable pageable = PageRequest.of(Math.max(pageNum - 1, 0), limit);
 
-        Page<Scrap> page = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(memberId, pageable);
+        Page<ScrapListItemDto> page = scrapRepository.findPageByMemberId(memberId, pageable);
 
-        // Exhibition DTO 변환
-        List<ScrapListItemDto> exhibitions = page.map(ScrapListItemDto::from).getContent();
-
+        List<ScrapListItemDto> exhibitions = page.getContent();
 
         // username은 Scrap → Member를 통해 접근
-        String username = memberRepository.findById(memberId)
-                .map(Member::getUsername)
-                .orElse(null);
+        String username = member.getUsername();
 
         PageInfo pageInfo = PageInfo.of(
                 pageNum,
@@ -92,8 +95,6 @@ public class ScrapService {
         Scrap scrap = Scrap.builder()
                 .member(member)
                 .exhibition(exhibition)
-                .isViewed(false) // 새 스크랩은 미관람 상태
-                .isReviewed(false)  // 스크랩 생성시 리뷰는 없음
                 .build();
 
         scrapRepository.save(scrap);
@@ -128,53 +129,4 @@ public class ScrapService {
              exhibition.decreaseScrapCount();
          } catch (EntityNotFoundException ignore) {}
     }
-
-    /**
-     * 관람 표시/해제 (스크랩된 전시만 가능)
-     * - 스크랩이 없으면 예외
-     *  트랜잭션 커밋 시점에 자동으로 update scrap set is_viewed=? where scrap_id=?가 실행된다.
-     */
-    @Transactional
-    public void markViewed(Long memberId, Long exhibitionId, boolean viewed) {
-        Scrap scrap = scrapRepository
-                .findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)
-                .orElseThrow(() -> new BaseErrorException(ScrapErrorCode.SCRAP_NOT_FOUND)); // ← 커스텀 예외
-        scrap.setViewed(viewed);
-    }
-
-    /**
-     * 스크랩 전시 중 관람한 전시 조회
-     */
-    @Transactional(readOnly = true)
-    public ScrapListResponseDto findScrapListByViewed(Long memberId, boolean viewed, int pageNum, int limit) {
-        Pageable pageable = PageRequest.of(Math.max(pageNum - 1, 0), limit);
-
-        Page<Scrap> page = scrapRepository.findPageByMember_MemberIdAndIsViewed(memberId, viewed, pageable);
-
-        List<ScrapListItemDto> exhibitions = page.map(ScrapListItemDto::from).getContent();
-
-        String username = memberRepository.findById(memberId)
-                .map(Member::getUsername)
-                .orElse(null);
-        PageInfo pageInfo = PageInfo.of(pageNum, limit, page.getTotalPages(), page.getTotalElements());
-
-
-        return ScrapListResponseDto.from(
-                username,
-                exhibitions,
-                pageInfo
-        );
-    }
-
-    /*
-    리뷰 표시
-     */
-    @Transactional
-    public void markReviewed(Long memberId, Long exhibitionId) {
-        scrapRepository
-                .findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exhibitionId)
-                .ifPresent(Scrap::updateReview);
-    }
-
-
 }
