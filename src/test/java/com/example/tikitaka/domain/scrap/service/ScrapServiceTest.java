@@ -16,7 +16,6 @@ import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -38,11 +37,14 @@ class ScrapServiceTest {
         Exhibition e1 = Exhibition.builder().exhibitionId(10L).exhibitionName("전시A").posterUrl("u").place("p").startDate(LocalDate.now()).endDate(LocalDate.now().plusDays(1)).build();
         Exhibition e2 = Exhibition.builder().exhibitionId(20L).exhibitionName("전시B").posterUrl("u").place("p").startDate(LocalDate.now()).endDate(LocalDate.now().plusDays(2)).build();
 
-        Scrap s1 = Scrap.builder().scrapId(100L).member(m).exhibition(e1).isViewed(false).build();
-        Scrap s2 = Scrap.builder().scrapId(101L).member(m).exhibition(e2).isViewed(true).build();
+        Scrap s1 = Scrap.builder().scrapId(100L).member(m).exhibition(e1).build();
+        Scrap s2 = Scrap.builder().scrapId(101L).member(m).exhibition(e2).build();
 
-        Page<Scrap> page = new PageImpl<>(List.of(s1, s2), PageRequest.of(0, 10), 2);
-        when(scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(eq(memberId), any(Pageable.class)))
+        ScrapListItemDto dto1 = ScrapListItemDto.from(s1, true);
+        ScrapListItemDto dto2 = ScrapListItemDto.from(s2, true);
+
+        Page<ScrapListItemDto> page = new PageImpl<>(List.of(dto1, dto2), PageRequest.of(0, 10), 2);
+        when(scrapRepository.findPageByMemberId(eq(memberId), any(Pageable.class)))
                 .thenReturn(page);
 
         // when
@@ -88,7 +90,6 @@ class ScrapServiceTest {
         verify(scrapRepository).save(argThat(s ->
                 s.getMember().getMemberId().equals(memberId)
                         && s.getExhibition().getExhibitionId().equals(exId)
-                        && Boolean.FALSE.equals(s.getIsViewed())
         ));
     }
 
@@ -99,28 +100,4 @@ class ScrapServiceTest {
         verify(scrapRepository).deleteByMember_MemberIdAndExhibition_ExhibitionId(memberId, exId);
     }
 
-    @Test
-    void markViewed_스크랩있을때만_허용() {
-        Long memberId = 1L, exId = 10L;
-        Scrap s = Scrap.builder().scrapId(1L).member(Member.builder().memberId(memberId).build())
-                .exhibition(Exhibition.builder().exhibitionId(exId).build()).isViewed(false).build();
-
-        when(scrapRepository.findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exId))
-                .thenReturn(Optional.of(s));
-
-        scrapService.markViewed(memberId, exId, true);
-
-        assertThat(s.getIsViewed()).isTrue();
-    }
-
-    @Test
-    void markViewed_스크랩없으면_예외() {
-        Long memberId = 1L, exId = 10L;
-        when(scrapRepository.findByMember_MemberIdAndExhibition_ExhibitionId(memberId, exId))
-                .thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> scrapService.markViewed(memberId, exId, true))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("스크랩하지 않은 전시는 관람표시할 수 없습니다.");
-    }
 }
