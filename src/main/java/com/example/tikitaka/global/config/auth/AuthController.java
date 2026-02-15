@@ -44,13 +44,13 @@ public class AuthController {
                 .maxAge(60 * 60)    // 1시간 예시
                 .build();
 
-        // Refresh Token 쿠키 (예: 14일)
+        // Refresh Token 쿠키 (14일 -> 30일)
         ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", result.getRefreshToken())
                 .httpOnly(true)
                 .secure(cookieSecure)
                 .sameSite(cookieSameSite)
                 .path("/")
-                .maxAge(14L * 24 * 60 * 60)
+                .maxAge(30L * 24 * 60 * 60)
                 .build();
 
         return ResponseEntity.ok()
@@ -116,7 +116,7 @@ public class AuthController {
                 .secure(cookieSecure)
                 .sameSite(cookieSameSite)
                 .path("/")
-                .maxAge(14L * 24 * 60 * 60)
+                .maxAge(30L * 24 * 60 * 60)
                 .build();
 
         return ResponseEntity.ok()
