@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.post.dto;
 
+import com.example.tikitaka.domain.comment.entity.Comment;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.global.util.formatting.DateFormatting;
 import com.example.tikitaka.global.util.formatting.PostWriterFormatting;
@@ -19,13 +20,35 @@ public class ExhibitionReview implements ExhibitionPost {
 
     @JsonProperty("isWriter")
     private boolean isWriter;
+
+    private boolean hasAnswer;
+    private String answer;
+    private DateFormatting answerCreatedAt;
+    private Long answerId;
+
     private List<String> images;
     private int imageCount;
     @JsonProperty("isDeleted")
     private boolean isDeleted;
 
 
-    public static ExhibitionReview of(Post post, List<String> images, boolean isWriter) {
+    public static ExhibitionReview of(Post post, Comment comment, List<String> images, boolean isWriter) {
+        if (comment == null) {
+            return ExhibitionReview.builder()
+                    .postId(post.getPostId())
+                    .writer(new PostWriterFormatting(post.getDisplayNo()))
+                    .createdAt(new DateFormatting(post.getCreatedAt()))
+                    .content(post.getContent())
+                    .isWriter(isWriter)
+                    .images(images)
+                    .imageCount(images.size())
+                    .hasAnswer(post.isHasAnswer())
+                    .answer(null)
+                    .answerCreatedAt(null)
+                    .answerId(null)
+                    .isDeleted(post.isDeleted())
+                    .build();
+        }
         return ExhibitionReview.builder()
                 .postId(post.getPostId())
                 .writer(new PostWriterFormatting(post.getDisplayNo()))
@@ -34,6 +57,11 @@ public class ExhibitionReview implements ExhibitionPost {
                 .isWriter(isWriter)
                 .images(images)
                 .imageCount(images.size())
+                .hasAnswer(post.isHasAnswer())
+                .answer(comment.getContent())
+                .answerId(comment.getCommentId())
+                .answerCreatedAt(new DateFormatting(comment.getCreatedAt()))
+                .isDeleted(post.isDeleted())
                 .build();
     }
 

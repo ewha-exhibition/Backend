@@ -59,7 +59,7 @@ public class ReviewController {
             @RequestParam(required = true)
             int limit
     ) {
-        return previewService.getExhibitionPreviews(memberId, exhibitionId, PostType.REVIEW, pageNum, limit);
+        return reviewService.getExhibitionReviews(memberId, exhibitionId, pageNum, limit);
     }
 
     @DeleteMapping("/{postId}")
