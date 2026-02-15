@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.post.service;
 
+import com.example.tikitaka.domain.comment.validator.CommentValidator;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.member.entity.Member;
@@ -41,6 +42,7 @@ public class ReviewService {
     private final MemberValidator memberValidator;
     private final ViewService viewService;
     private final ViewRepository viewRepository;
+    private final CommentValidator commentValidator;
 
 
     public MyReviewListResponse getMyReviews(Long memberId, int pageNum, int limit) {
@@ -119,7 +121,8 @@ public class ReviewService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
 
         List<ExhibitionPost> exhibitionReviews = reviews.getContent().stream().map(
-                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
+                review -> (review.isHasAnswer())?(ExhibitionPost) ExhibitionReview.of(review, commentValidator.validateCommentContent(review), postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
+                : (ExhibitionPost) ExhibitionReview.of(review, null, postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);
