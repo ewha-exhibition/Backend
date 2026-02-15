@@ -1,19 +1,24 @@
 package com.example.tikitaka.domain.post.service;
 
+import com.example.tikitaka.domain.comment.validator.CommentValidator;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.member.entity.Member;
 import com.example.tikitaka.domain.member.validator.MemberValidator;
 import com.example.tikitaka.domain.post.dto.ExhibitionPost;
 import com.example.tikitaka.domain.post.dto.ExhibitionReview;
+import com.example.tikitaka.domain.post.dto.MyReviewItem;
 import com.example.tikitaka.domain.post.dto.PostCard;
 import com.example.tikitaka.domain.post.dto.request.ReviewPostRequest;
 import com.example.tikitaka.domain.post.dto.response.ExhibitionPostListResponse;
 import com.example.tikitaka.domain.post.dto.response.GuestBookResponse;
+import com.example.tikitaka.domain.post.dto.response.MyReviewListResponse;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
+import com.example.tikitaka.domain.scrap.repository.ViewRepository;
 import com.example.tikitaka.domain.scrap.service.ScrapService;
+import com.example.tikitaka.domain.scrap.service.ViewService;
 import com.example.tikitaka.global.dto.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,30 +40,36 @@ public class ReviewService {
     private final PostImageService postImageService;
     private final ScrapService scrapService;
     private final MemberValidator memberValidator;
+    private final ViewService viewService;
+    private final ViewRepository viewRepository;
+    private final CommentValidator commentValidator;
 
 
-    public ExhibitionPostListResponse getMyReviews(Long memberId, int pageNum, int limit) {
+    public MyReviewListResponse getMyReviews(Long memberId, int pageNum, int limit) {
         memberValidator.validateMember(memberId);
 
-        PageRequest pageReq =
-                PageRequest.of(Math.max(pageNum, 0), limit, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageReq = PageRequest.of(Math.max(pageNum, 0), limit,
+                Sort.by(Sort.Direction.DESC, "createdAt"));
 
-        Page<Post> page = postRepository
-                .findByMember_MemberIdAndPostType(memberId, PostType.REVIEW, pageReq);
+        Page<Post> page = postRepository.findMyReviewsWithExhibition(memberId, PostType.REVIEW, pageReq);
 
         PageInfo pageInfo = PageInfo.of(pageNum, limit, page.getTotalPages(), page.getTotalElements());
 
-        // 내 글이므로 isMine = true 고정
-        List<ExhibitionPost> items = page.getContent().stream()
-                .map(p -> (ExhibitionPost) ExhibitionReview.of(
-                        p,
-                        postImageService.getReviewImageUrls(p),
-                        true
-                ))
+        List<MyReviewItem> items = page.getContent().stream()
+                .map(p -> MyReviewItem.builder()
+                        .postId(p.getPostId())
+                        .content(p.getContent())
+                        .isMine(true)
+                        .exhibitionId(p.getExhibition().getExhibitionId())
+                        .exhibitionName(p.getExhibition().getExhibitionName())
+                        .posterUrl(p.getExhibition().getPosterUrl())
+                        .imageUrls(postImageService.getReviewImageUrls(p)) // (가능하면 배치 조회 추천)
+                        .build())
                 .toList();
 
-        return ExhibitionPostListResponse.of(items, pageInfo);
+        return MyReviewListResponse.of(items, pageInfo);
     }
+
 
     @Transactional
     public void addReview(Long memberId, Long exhibitionId, ReviewPostRequest reviewPostRequest) {
@@ -71,7 +82,7 @@ public class ReviewService {
 
         Long number = 0L;
 
-        if (posts.isEmpty()) {
+        if (!posts.isEmpty()) {
             number = posts.get(0).getDisplayNo();
         } else {
             number = exhibition.getReviewNo() + 1;
@@ -84,9 +95,9 @@ public class ReviewService {
         Post review = Post.toReviewEntity(member, exhibition, reviewPostRequest, PostType.REVIEW, number);
         postRepository.save(review);
 
-        exhibition.increaseReviewCount();
-
-        scrapService.markReviewed(memberId, exhibitionId);
+        if (!viewRepository.existsByMemberAndExhibition(member, exhibition)) {
+            viewService.addViewByReview(member, exhibition);
+        }
 
         // 리뷰 이미지 저장
         for (String url : reviewPostRequest.getImages()) {
@@ -110,7 +121,8 @@ public class ReviewService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
 
         List<ExhibitionPost> exhibitionReviews = reviews.getContent().stream().map(
-                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
+                review -> (review.isHasAnswer())?(ExhibitionPost) ExhibitionReview.of(review, commentValidator.validateCommentContent(review), postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
+                : (ExhibitionPost) ExhibitionReview.of(review, null, postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);

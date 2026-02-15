@@ -13,7 +13,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health, prometheus
   health:
     defaults:
       status:

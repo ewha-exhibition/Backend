@@ -22,6 +22,21 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             HttpServletResponse response,
             AuthenticationException authException
     ) throws IOException {
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/swagger-ui.html")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars")) {
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setHeader(
+                    "WWW-Authenticate",
+                    "Basic realm=\"Swagger API\""
+            );
+            return;
+        }
 
         // 전역 에러 코드
         GlobalErrorCode errorCode = GlobalErrorCode.ACCESS_DENIED;

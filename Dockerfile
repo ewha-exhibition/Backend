@@ -1,4 +1,5 @@
 FROM eclipse-temurin:17-jdk
+WORKDIR /app
 # (중요) cgroup 리소스 감지 비활성화
 ENV JAVA_TOOL_OPTIONS="-XX:-UseContainerSupport"
 
@@ -8,7 +9,12 @@ ENV SPRING_AUTOCONFIGURE_EXCLUDE="org.springframework.boot.actuate.autoconfigure
 # (중요) ProcessorMetrics 바인더 비활성화
 ENV MANAGEMENT_METRICS_BINDERS_PROCESSOR_ENABLED="false"
 
+WORKDIR /app
+
 EXPOSE 80
-ARG JAR_FILE=/build/libs/*.jar
+ARG JAR_FILE=build/libs/*.jar
+ARG PROFILES
+ARG ENV
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","-Duser.timezone=Asia/Seoul","-Dspring.profiles.active=prod","/app.jar"]
+
+ENTRYPOINT ["java","-jar","-Duser.timezone=Asia/Seoul","-Dspring.profiles.active=prod","/app/app.jar"]

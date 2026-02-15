@@ -86,6 +86,7 @@ public class ExhibitionMapper {
                 .questionCount(exhibition.getQuestionCount())
                 .isHost(isHost)
                 .isScrap(isScrap)
+                .category(exhibition.getCategory())
                 .build();
     }
 

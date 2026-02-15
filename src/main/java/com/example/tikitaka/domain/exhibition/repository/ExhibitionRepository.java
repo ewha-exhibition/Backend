@@ -55,9 +55,10 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     @Query("""
     SELECT e
     FROM Exhibition e
-    WHERE e.exhibitionName LIKE CONCAT('%', :keyword, '%')
+    WHERE (e.exhibitionName LIKE CONCAT('%', :keyword, '%')
        OR e.content LIKE CONCAT('%', :keyword, '%')
-       OR e.club.name LIKE CONCAT('%', :keyword, '%')
+       OR e.club.name LIKE CONCAT('%', :keyword, '%'))
+       AND e.isDeleted = FALSE
     """)
     Page<Exhibition> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 

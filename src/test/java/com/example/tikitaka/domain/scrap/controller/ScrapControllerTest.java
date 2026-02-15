@@ -161,28 +161,4 @@ class ScrapControllerTest {
 
         verify(scrapService).removeScrap(1L, exId);
     }
-
-    @Test
-    @DisplayName("PATCH /scraps/{exhibitionId}/viewed?viewed=true -> 관람표시: 204 & 서비스 호출( true )")
-    void markViewed_true_204_and_serviceCalled() throws Exception {
-        long exId = 10L;
-
-        mockMvc.perform(patch(BASE + "/{exhibitionId}/viewed", exId)
-                        .param("viewed", "true"))
-                .andExpect(status().isNoContent());
-
-        verify(scrapService).markViewed(1L, exId, true);
-    }
-
-    @Test
-    @DisplayName("PATCH /scraps/{exhibitionId}/viewed?viewed=false -> 관람해제: 204 & 서비스 호출( false )")
-    void markViewed_false_204_and_serviceCalled() throws Exception {
-        long exId = 10L;
-
-        mockMvc.perform(patch(BASE + "/{exhibitionId}/viewed", exId)
-                        .param("viewed", "false"))
-                .andExpect(status().isNoContent());
-
-        verify(scrapService).markViewed(1L, exId, false);
-    }
 }

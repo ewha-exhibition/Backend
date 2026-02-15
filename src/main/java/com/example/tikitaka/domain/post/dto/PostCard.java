@@ -16,7 +16,9 @@ public class PostCard {
     private String title;
     private String body;
     private int imageCount;
+    private Long exhibitionId;
     private List<String> imageUrls;
+    private boolean isDeleted;
 
     public static PostCard of(Post post, List<String> imageUrls) {
         return new PostCard(
@@ -25,7 +27,9 @@ public class PostCard {
                 post.getExhibition().getExhibitionName(),
                 post.getContent(),
                 imageUrls == null?0:imageUrls.size(),
-                imageUrls
+                post.getExhibition().getExhibitionId(),
+                imageUrls,
+                post.isDeleted()
         );
     }
 }

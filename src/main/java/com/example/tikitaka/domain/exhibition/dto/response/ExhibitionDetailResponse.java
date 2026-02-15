@@ -1,6 +1,7 @@
 package com.example.tikitaka.domain.exhibition.dto.response;
 
 import com.example.tikitaka.domain.exhibition.dto.ExhibitionImageGet;
+import com.example.tikitaka.domain.exhibition.entity.Category;
 import com.example.tikitaka.global.util.formatting.PeriodFormatting;
 import com.example.tikitaka.global.util.formatting.PriceFormatting;
 import com.example.tikitaka.global.util.formatting.TimeFormatting;
@@ -30,5 +31,6 @@ public class ExhibitionDetailResponse {
     private int questionCount;
     private boolean isHost;
     private boolean isScrap;
+    private Category category;
 
 }
