@@ -64,7 +64,7 @@ public class ViewService {
     @Transactional
     public void removeView(Long memberId, Long exhibitionId) {
         Member member = memberValidator.validateMember(memberId);
-        Exhibition exhibition = exhibitionValidator.validateExhibition(exhibitionId);
+        Exhibition exhibition = exhibitionValidator.validateAllExhibition(exhibitionId);
 
         View view = viewRepository.findByMemberAndExhibition(member, exhibition)
                 .orElseThrow(() -> new BaseErrorException(ViewErrorCode.NOT_FOUND_VIEW));

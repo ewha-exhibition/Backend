@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.post.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ public class MyReviewItem {
     private Long postId;
     private String content;
     private boolean isMine;
+    @JsonProperty("isDeleted")
     private boolean isDeleted;
 
     private Long exhibitionId;
