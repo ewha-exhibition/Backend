@@ -25,6 +25,11 @@ public interface HostRepository extends JpaRepository<Host, Long> {
 
     // 내가 호스트인 전시들 페이징 조회 (member.memberId 기준)
     @EntityGraph(attributePaths = "exhibition")   // N+1 방지: exhibition 같이 로딩
+    @Query("""
+    SELECT h
+    FROM Host h
+    WHERE h.member.memberId = :memberId AND NOT h.exhibition.isDeleted
+    """)
     Page<Host> findPageByMember_MemberId(Long memberId, Pageable pageable);
     boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
     Optional<Host> findByMemberAndExhibition(Member member, Exhibition exhibition);
