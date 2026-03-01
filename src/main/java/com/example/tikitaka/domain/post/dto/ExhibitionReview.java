@@ -28,8 +28,7 @@ public class ExhibitionReview implements ExhibitionPost {
 
     private List<String> images;
     private int imageCount;
-    @JsonProperty("isDeleted")
-    private boolean isDeleted;
+    private boolean deleted;
 
 
     public static ExhibitionReview of(Post post, Comment comment, List<String> images, boolean isWriter) {
@@ -46,7 +45,7 @@ public class ExhibitionReview implements ExhibitionPost {
                     .answer(null)
                     .answerCreatedAt(null)
                     .answerId(null)
-                    .isDeleted(post.isDeleted())
+                    .deleted(post.isDeleted())
                     .build();
         }
         return ExhibitionReview.builder()
@@ -56,13 +55,13 @@ public class ExhibitionReview implements ExhibitionPost {
                 .content(post.getContent())
                 .isWriter(isWriter)
                 .images(images)
-                .isDeleted(post.isDeleted())
+                .deleted(post.isDeleted())
                 .imageCount(images.size())
                 .hasAnswer(post.isHasAnswer())
                 .answer(comment.getContent())
                 .answerId(comment.getCommentId())
                 .answerCreatedAt(new DateFormatting(comment.getCreatedAt()))
-                .isDeleted(post.isDeleted())
+                .deleted(post.isDeleted())
                 .build();
     }
 

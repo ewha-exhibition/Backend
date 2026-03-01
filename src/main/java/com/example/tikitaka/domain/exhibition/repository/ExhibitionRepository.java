@@ -48,6 +48,13 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Long> {
     @Query("""
     SELECT e
     FROM Exhibition e
+    WHERE e.exhibitionId = :exhibitionId
+    """)
+    Optional<Exhibition> findAllByExhibitionId(Long exhibitionId);
+
+    @Query("""
+    SELECT e
+    FROM Exhibition e
     WHERE e.category = :category AND e.isDeleted = false
     """)
     Page<Exhibition> findByCategory(Category category, Pageable pageable);
