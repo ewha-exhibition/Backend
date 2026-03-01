@@ -28,9 +28,9 @@ public interface HostRepository extends JpaRepository<Host, Long> {
     @Query("""
     SELECT h
     FROM Host h
-    WHERE h.member.memberId = :memberId AND NOT h.exhibition.isDeleted
+    WHERE h.member.memberId = :memberId AND h.exhibition.isDeleted = false
     """)
-    Page<Host> findPageByMember_MemberId(Long memberId, Pageable pageable);
+    Page<Host> findPageByMember_MemberId(@Param("memberId") Long memberId, Pageable pageable);
     boolean existsByMemberAndExhibition(Member member, Exhibition exhibition);
     Optional<Host> findByMemberAndExhibition(Member member, Exhibition exhibition);
 
