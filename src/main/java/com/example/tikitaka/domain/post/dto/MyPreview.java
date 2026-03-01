@@ -26,7 +26,7 @@ public class MyPreview {
                 .postId(post.getPostId())
                 .createdAt(new DateFormatting(post.getCreatedAt()))
                 .content(post.getContent())
-                .deleted(post.isDeleted())
+                .deleted(post.getExhibition().getIsDeleted())
                 .build();
     }
 }
