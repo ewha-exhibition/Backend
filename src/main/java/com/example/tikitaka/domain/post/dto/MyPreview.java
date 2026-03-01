@@ -16,8 +16,7 @@ public class MyPreview {
     private Long postId;
     private DateFormatting createdAt;
     private String content;
-    @JsonProperty("isDeleted")
-    private boolean isDeleted;
+    private boolean deleted;
 
     public static MyPreview of(Post post) {
         return MyPreview.builder()
@@ -27,7 +26,7 @@ public class MyPreview {
                 .postId(post.getPostId())
                 .createdAt(new DateFormatting(post.getCreatedAt()))
                 .content(post.getContent())
-                .isDeleted(post.isDeleted())
+                .deleted(post.isDeleted())
                 .build();
     }
 }

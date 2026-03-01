@@ -12,8 +12,7 @@ public class MyReviewItem {
     private Long postId;
     private String content;
     private boolean isMine;
-    @JsonProperty("isDeleted")
-    private boolean isDeleted;
+    private boolean deleted;
 
     private Long exhibitionId;
     private String exhibitionName;
