@@ -16,6 +16,8 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    boolean existsByMember_MemberIdAndExhibitionAndIsDeleted(Long memberId, Exhibition exhibition, Boolean isDeleted);
+
     @Query(
             value = """
       SELECT p

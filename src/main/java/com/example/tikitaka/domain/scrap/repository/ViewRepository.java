@@ -29,19 +29,23 @@ public interface ViewRepository extends JpaRepository<View, Long> {
         e.place,
         e.startDate,
         e.endDate,
-        case when p.postId is null then false else true end
+        case when exists (
+            select 1
+            from Post p
+            where p.member = v.member
+              and p.exhibition = e
+              and p.postType = :postType
+        ) then true else false end
     )
     from View v
     join v.exhibition e
-    left join Post p
-           on p.member = v.member
-          and p.exhibition = e
-          and p.postType = :postType
     where v.member.memberId = :memberId
       and (e.isDeleted = false or e.isDeleted is null)
-    order by v.createdAt desc,
-             case when p.postId is null then 0 else 1 end asc
-    """,
+    group by
+        e.exhibitionId, e.exhibitionName, e.posterUrl, e.place, e.startDate, e.endDate,
+        v.member
+    order by max(v.createdAt) desc
+  """,
             countQuery = """
     select count(v)
     from View v

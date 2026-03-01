@@ -30,7 +30,9 @@ public class PostService {
 
         if (post.getPostType() == PostType.REVIEW) {
             post.getExhibition().decreaseReviewCount();
-            viewService.removeView(memberId, post.getExhibition().getExhibitionId());
+            if(!postRepository.existsByMember_MemberIdAndExhibitionAndIsDeleted(memberId, post.getExhibition(), false)) {
+                viewService.removeView(memberId, post.getExhibition().getExhibitionId());
+            }
         }
         if (post.getPostType() == PostType.CHEER) {
             post.getExhibition().decreaseCheerCount();

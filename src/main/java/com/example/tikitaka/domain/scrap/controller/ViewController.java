@@ -32,7 +32,7 @@ public class ViewController {
     }
 
     @GetMapping
-    public ViewsResponseDto getMemberScraps(
+    public ViewsResponseDto getMemberViews(
             @AuthenticationPrincipal Long memberId, // 로그인된 멤버
             @RequestParam(defaultValue = "0") @Min(0) int pageNum,
             @RequestParam(defaultValue = "10") @Min(1) @Max(20) int limit
