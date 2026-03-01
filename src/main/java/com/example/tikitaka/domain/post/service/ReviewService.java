@@ -60,6 +60,7 @@ public class ReviewService {
                         .postId(p.getPostId())
                         .content(p.getContent())
                         .isMine(true)
+                        .isDeleted(p.getExhibition().getIsDeleted())
                         .exhibitionId(p.getExhibition().getExhibitionId())
                         .exhibitionName(p.getExhibition().getExhibitionName())
                         .posterUrl(p.getExhibition().getPosterUrl())

@@ -11,6 +11,7 @@ public class MyReviewItem {
     private Long postId;
     private String content;
     private boolean isMine;
+    private boolean isDeleted;
 
     private Long exhibitionId;
     private String exhibitionName;
