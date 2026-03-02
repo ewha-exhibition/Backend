@@ -29,7 +29,7 @@ public class PostCard {
                 imageUrls == null?0:imageUrls.size(),
                 post.getExhibition().getExhibitionId(),
                 imageUrls,
-                post.isDeleted()
+                post.getExhibition().getIsDeleted()
         );
     }
 }
