@@ -1,9 +1,9 @@
-name: Deploy to EC2
+name: Deploy to ORACLE
 
 on:
   push:
     branches:
-      - main
+      - oracle-test
   workflow_dispatch:
     inputs:
       name:
@@ -73,10 +73,10 @@ jobs:
 
       - name: set target IP
         run: |
-          STATUS=$(curl -o /dev/null -w "%{http_code}" "http://${{ secrets.EC2_HOST }}/actuator/health")
+          STATUS=$(curl -o /dev/null -w "%{http_code}" "http://${{ secrets.ORACLE_HOST }}/actuator/health")
           echo $STATUS
           if [ $STATUS = 200 ]; then
-            CURRENT_UPSTREAM=$(curl -s "http://${{ secrets.EC2_HOST }}/env")
+            CURRENT_UPSTREAM=$(curl -s "http://${{ secrets.ORACLE_HOST }}/env")
           else
             CURRENT_UPSTREAM=green
           fi
@@ -98,9 +98,9 @@ jobs:
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.ORACLE_HOST }}
           username: ubuntu #  ec2-user 에서 변경
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.ORACLE_KEY }}
           script: |
             cd /home/ubuntu/nokknock
             
@@ -120,9 +120,9 @@ jobs:
       - name: Check deploy server URL
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.ORACLE_HOST }}
           username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.ORACLE_KEY }}
           script: |
             set -e
             for i in {1..10}; do
@@ -141,8 +141,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           username: ubuntu
-          host: ${{ secrets.EC2_HOST }}
-          key: ${{ secrets.EC2_KEY }}
+          host: ${{ secrets.ORACLE_HOST }}
+          key: ${{ secrets.ORACLE_KEY }}
           script: |
             sudo docker exec -i nginx bash -c 'echo "set \$service_url ${{ env.TARGET_UPSTREAM }};" > /etc/nginx/conf.d/service-env.inc && nginx -s reload' 
 
@@ -150,8 +150,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           username: ubuntu
-          host: ${{ secrets.EC2_HOST }}
-          key: ${{ secrets.EC2_KEY }}
+          host: ${{ secrets.ORACLE_HOST }}
+          key: ${{ secrets.ORACLE_KEY }}
           script: |
             sudo docker stop ${{env.CURRENT_UPSTREAM}}
             sudo docker rm ${{env.CURRENT_UPSTREAM}}
