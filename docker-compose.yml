@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   nginx:
-    image: nokmaster/nginx
+    image: nokmaster/nginx-arm
     container_name: nginx
     restart: always
     ports:
