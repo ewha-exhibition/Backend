@@ -58,18 +58,18 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64
+          platforms: linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/backend
+          tags: ${{ secrets.DOCKER_USERNAME }}/backend-arm
 
       - name: Docker nginx build & push
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./config/nginx/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/nginx
+          tags: ${{ secrets.DOCKER_USERNAME }}/nginx-arm
 
       - name: set target IP
         run: |
@@ -107,9 +107,9 @@ jobs:
             sudo touch .env
             echo "${{ secrets.ENV }}" | sudo tee .env > /dev/null
             
-            #sudo curl -o docker-compose.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/main/docker-compose.yml
-            #sudo curl -o docker-compose-blue.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/main/docker-compose-blue.yml
-            #sudo curl -o docker-compose-green.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/main/docker-compose-green.yml
+            sudo curl -o docker-compose.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/oracle-test/docker-compose.yml
+            sudo curl -o docker-compose-blue.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/oracle-test/docker-compose-blue.yml
+            sudo curl -o docker-compose-green.yml https://raw.githubusercontent.com/ewha-exhibition/Backend/oracle-test/docker-compose-green.yml
             
             sudo chmod 666 /var/run/docker.sock
 
