@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   green:
-    image: nokmaster/backend
+    image: nokmaster/backend-arm
     container_name: green
     ports:
       - "8081:8080"
