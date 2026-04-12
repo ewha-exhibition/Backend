@@ -21,6 +21,12 @@ public class ExhibitionValidator {
 //        );
     }
 
+    public Exhibition validateAllExhibition(Long exhibitionId) {
+        return exhibitionRepository.findAllByExhibitionId(exhibitionId).orElseThrow(
+                () -> new BaseErrorException(ExhibitionErrorCode.EXHIBITION_NOT_FOUND)
+        );
+    }
+
 
     public void validateAuthority(boolean role) {
         if (!role) {

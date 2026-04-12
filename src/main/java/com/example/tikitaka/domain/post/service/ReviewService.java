@@ -1,5 +1,6 @@
 package com.example.tikitaka.domain.post.service;
 
+import com.example.tikitaka.domain.comment.validator.CommentValidator;
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.exhibition.validator.ExhibitionValidator;
 import com.example.tikitaka.domain.member.entity.Member;
@@ -15,7 +16,9 @@ import com.example.tikitaka.domain.post.dto.response.MyReviewListResponse;
 import com.example.tikitaka.domain.post.entity.Post;
 import com.example.tikitaka.domain.post.entity.PostType;
 import com.example.tikitaka.domain.post.repository.PostRepository;
+import com.example.tikitaka.domain.scrap.repository.ViewRepository;
 import com.example.tikitaka.domain.scrap.service.ScrapService;
+import com.example.tikitaka.domain.scrap.service.ViewService;
 import com.example.tikitaka.global.dto.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +40,9 @@ public class ReviewService {
     private final PostImageService postImageService;
     private final ScrapService scrapService;
     private final MemberValidator memberValidator;
+    private final ViewService viewService;
+    private final ViewRepository viewRepository;
+    private final CommentValidator commentValidator;
 
 
     public MyReviewListResponse getMyReviews(Long memberId, int pageNum, int limit) {
@@ -54,6 +60,7 @@ public class ReviewService {
                         .postId(p.getPostId())
                         .content(p.getContent())
                         .isMine(true)
+                        .deleted(p.getExhibition().getIsDeleted())
                         .exhibitionId(p.getExhibition().getExhibitionId())
                         .exhibitionName(p.getExhibition().getExhibitionName())
                         .posterUrl(p.getExhibition().getPosterUrl())
@@ -89,7 +96,9 @@ public class ReviewService {
         Post review = Post.toReviewEntity(member, exhibition, reviewPostRequest, PostType.REVIEW, number);
         postRepository.save(review);
 
-        scrapService.markReviewed(memberId, exhibitionId);
+        if (!viewRepository.existsByMemberAndExhibition(member, exhibition)) {
+            viewService.addViewByReview(member, exhibition);
+        }
 
         // 리뷰 이미지 저장
         for (String url : reviewPostRequest.getImages()) {
@@ -113,7 +122,8 @@ public class ReviewService {
         PageInfo pageInfo = PageInfo.of(pageNum, limit, reviews.getTotalPages(), reviews.getTotalElements());
 
         List<ExhibitionPost> exhibitionReviews = reviews.getContent().stream().map(
-                review -> (ExhibitionPost) ExhibitionReview.of(review, postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
+                review -> (review.isHasAnswer())?(ExhibitionPost) ExhibitionReview.of(review, commentValidator.validateCommentContent(review), postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
+                : (ExhibitionPost) ExhibitionReview.of(review, null, postImageService.getReviewImageUrls(review),Objects.equals(memberId, review.getMember().getMemberId()))
         ).toList();
 
         return ExhibitionPostListResponse.of(exhibitionReviews, pageInfo);

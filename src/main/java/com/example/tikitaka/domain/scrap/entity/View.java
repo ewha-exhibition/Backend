@@ -1,4 +1,4 @@
-package com.example.tikitaka.domain.view.entity;
+package com.example.tikitaka.domain.scrap.entity;
 
 import com.example.tikitaka.domain.exhibition.entity.Exhibition;
 import com.example.tikitaka.domain.member.entity.Member;
@@ -28,4 +28,5 @@ public class View extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "exhibition_id")
     private Exhibition exhibition;
+
 }

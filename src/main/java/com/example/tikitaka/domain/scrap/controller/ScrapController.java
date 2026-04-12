@@ -66,38 +66,6 @@ public class ScrapController {
         scrapService.removeScrap(memberId, exhibitionId);
     }
 
-    /**
-     * 4.1. 관람 표시 / 해제
-     * - PATCH /scraps/{exhibitionId}/viewed?viewed=true
-     * - 스크랩된 전시만 가능
-     * - 성공 시 204 No Content
-     */
-    @PatchMapping("/{exhibitionId}/viewed")
-    public void markViewed(
-            @AuthenticationPrincipal Long memberId,
-            @PathVariable Long exhibitionId,
-            @RequestParam(defaultValue = "true") boolean viewed
-    ) {
-        scrapService.markViewed(memberId, exhibitionId, viewed);
-    }
-    /**
-     * 4.2. 관람 표시/해제 (스크랩된 전시만 가능)
-     * - PATCH /scraps/{exhibitionId}/viewed?viewed=true|false
-     * - 스크랩하지 않은 전시를 관람표시하려 하면 400/404(서비스에서 예외) 발생
-     */
-
-    /**
-     * 5. 스크랩 전시 중 관람한 전시 조회
-     * - 존재하지 않아도 무시(idempotent)
-     * - 성공 시 204 No Content
-     */
-    @GetMapping("/viewed")
-    public ScrapListResponseDto getViewedScraps(
-            @AuthenticationPrincipal  Long memberId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int limit) {
-        return scrapService.findScrapListByViewed(memberId, true, page, limit);
-    }
 
 
 
