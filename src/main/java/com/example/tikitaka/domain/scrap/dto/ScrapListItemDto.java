@@ -18,6 +18,7 @@ public class ScrapListItemDto {
     private String place;
     private LocalDate startDate;
     private LocalDate endDate;
+    private LocalDateTime createdAt;
     private boolean isViewed;
 
     public static ScrapListItemDto from(Scrap s, boolean isViewed) {
@@ -30,6 +31,7 @@ public class ScrapListItemDto {
                 .place(e.getPlace())
                 .startDate(e.getStartDate())
                 .endDate(e.getEndDate())
+                .createdAt(s.getCreatedAt())
                 .isViewed(isViewed)
                 .build();
     }

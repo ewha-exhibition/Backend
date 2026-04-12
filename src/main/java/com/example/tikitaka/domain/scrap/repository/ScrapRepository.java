@@ -24,12 +24,14 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     @Query(
             value = """
     select new com.example.tikitaka.domain.scrap.dto.ScrapListItemDto(
+        s.scrapId,
         e.exhibitionId,
         e.exhibitionName,
         e.posterUrl,
         e.place,
         e.startDate,
         e.endDate,
+        s.createdAt,
         case when v.viewId is null then false else true end
     )
     from Scrap s
@@ -39,8 +41,7 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
           and v.exhibition = e
     where s.member.memberId = :memberId
       and (e.isDeleted = false or e.isDeleted is null)
-    order by e.endDate asc,
-             case when v.viewId is null then 0 else 1 end asc
+    order by s.createdAt desc, s.scrapId desc
     """,
             countQuery = """
     select count(s)

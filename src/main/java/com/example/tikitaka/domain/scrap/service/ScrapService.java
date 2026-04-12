@@ -48,12 +48,13 @@ public class ScrapService {
 
         Page<Scrap> page = scrapRepository.findByMemberMemberIdOrderByCreatedAtDescScrapIdDesc(memberId, pageable);
 
-        // Exhibition DTO 변환
-        List<ScrapListItemDto> exhibitions = page.map(ScrapListItemDto::from).getContent();
+        List<ScrapListItemDto> exhibitions = page.getContent().stream()
+                .map(scrap -> {
+                    boolean isViewed = viewRepository.existsByMemberAndExhibition(member, scrap.getExhibition());
+                    return ScrapListItemDto.from(scrap, isViewed);
+                })
+                .toList();
 
-        List<ScrapListItemDto> exhibitions = page.getContent();
-
-        // username은 Scrap → Member를 통해 접근
         String username = member.getUsername();
 
         PageInfo pageInfo = PageInfo.of(
@@ -63,15 +64,12 @@ public class ScrapService {
                 page.getTotalElements()
         );
 
-        // username 추가
         return ScrapListResponseDto.from(
                 username,
                 exhibitions,
                 pageInfo
         );
     }
-
-
     /**
      * 스크랩 추가 (idempotent)
      * - 이미 스크랩되어 있으면 아무 동작 없이 리턴
