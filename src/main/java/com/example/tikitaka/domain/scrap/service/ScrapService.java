@@ -39,7 +39,7 @@ public class ScrapService {
     public ScrapListResponseDto findScrapList(Long memberId, int pageNum, int limit) {
         Pageable pageable = PageRequest.of(Math.max(pageNum - 1, 0), limit);
 
-        Page<Scrap> page = scrapRepository.findPageByMemberIdOrderByEndDateAndViewed(memberId, pageable);
+        Page<Scrap> page = scrapRepository.findByMemberMemberIdOrderByCreatedAtDescScrapIdDesc(memberId, pageable);
 
         // Exhibition DTO 변환
         List<ScrapListItemDto> exhibitions = page.map(ScrapListItemDto::from).getContent();

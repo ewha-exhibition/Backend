@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor @NoArgsConstructor
 public class ScrapListItemDto {
+    private Long scrapId;
     private Long exhibitionId;
     private String exhibitionName;
     private String posterUrl;     // S3 presigned 변환이 필요하면 여기서 가공
@@ -23,6 +24,7 @@ public class ScrapListItemDto {
     public static ScrapListItemDto from(Scrap s) {
         var e = s.getExhibition();
         return ScrapListItemDto.builder()
+                .scrapId(s.getScrapId())
                 .exhibitionId(e.getExhibitionId())
                 .exhibitionName(e.getExhibitionName())
                 .posterUrl(e.getPosterUrl())
