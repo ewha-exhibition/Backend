@@ -52,6 +52,8 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     )
     Page<ScrapListItemDto> findPageByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 
+    Page<Scrap> findByMemberMemberIdOrderByCreatedAtDescScrapIdDesc(Long memberId, Pageable pageable);
+
     boolean existsByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
 
     Optional<Scrap> findByMember_MemberIdAndExhibition_ExhibitionId(Long memberId, Long exhibitionId);
